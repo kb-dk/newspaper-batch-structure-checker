@@ -105,44 +105,4 @@ public class BatchStructureChecker {
                 return next.toString();
         }
     }
-
-    public void testIteratorWithSkipping() throws Exception {
-        List<TreeIterator> avisIterators = new ArrayList<TreeIterator>();
-
-        System.out.println("Print the batch and film, and store the iterators for the aviser");
-        int indent = 0;
-        while (getIterator().hasNext()){
-            Event next = getIterator().next();
-
-            String s;
-            switch (next.getType()){
-                case NodeBegin:
-                    s = getIndent(indent);
-                    System.out.println(s+printEvent(next));
-                    indent+=2;
-                    if (indent > 4){
-                        TreeIterator avis = getIterator().skipToNextSibling();
-                        avisIterators.add(avis);
-                        indent-=2;
-                    }
-                    break;
-                case NodeEnd:
-                    indent-=2;
-                    s = getIndent(indent);
-                    System.out.println(s+printEvent(next));
-                    break;
-                case Attribute:
-                    s = getIndent(indent);
-                    System.out.println(s+printEvent(next));
-                    break;
-            }
-        }
-
-        System.out.println("Print each of the newspapers in order");
-        for (TreeIterator avisIterator : avisIterators) {
-            System.out.println("We found this newspaper");
-            printStructure(avisIterator);
-        }
-
-    }
 }
