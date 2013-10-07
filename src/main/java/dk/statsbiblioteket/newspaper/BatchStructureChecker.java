@@ -1,9 +1,9 @@
 package dk.statsbiblioteket.newspaper;
 
-import dk.statsbiblioteket.doms.iterator.common.AttributeEvent;
-import dk.statsbiblioteket.doms.iterator.common.Event;
+import dk.statsbiblioteket.doms.iterator.common.AttributeParsingEvent;
+import dk.statsbiblioteket.doms.iterator.common.ParsingEvent;
 import dk.statsbiblioteket.doms.iterator.common.TreeIterator;
-import dk.statsbiblioteket.doms.iterator.filesystem.TransformingIteratorForFileSystems;
+import dk.statsbiblioteket.doms.iterator.filesystem.transforming.TransformingIteratorForFileSystems;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
@@ -17,7 +17,7 @@ import java.util.List;
  *
  * @author jrg
  */
-public class BatchStructureChecker {
+public class BatchStructureChecker {//TODO implements dk.statsbiblioteket.autonomous.RunnableComponent
     private TreeIterator iterator;
     private static final String indentString = "..................................................";
 
@@ -30,7 +30,8 @@ public class BatchStructureChecker {
         if (iterator == null){
             File file = new File(Thread.currentThread().getContextClassLoader().getResource("batch").toURI());
             System.out.println(file);
-            iterator = new TransformingIteratorForFileSystems(file, "\\.", "\\.jp2$");
+            iterator = new TransformingIteratorForFileSystems(file, "\\.", "\\.jp2$", "???");
+            // TODO what is argument checksumPostfix?
         }
         return iterator;
     }
@@ -44,7 +45,7 @@ public class BatchStructureChecker {
     private void printStructure(TreeIterator newspaperIterator) throws IOException {
         int indent = 0;
         while (newspaperIterator.hasNext()) {
-            Event next = newspaperIterator.next();
+            ParsingEvent next = newspaperIterator.next();
             String s;
 
             switch (next.getType()){
@@ -66,7 +67,7 @@ public class BatchStructureChecker {
                     // This is an attribute for current node, print it (not)
                     s = getIndent(indent);
 
-                    AttributeEvent attributeEvent = (AttributeEvent) next;
+                    AttributeParsingEvent attributeEvent = (AttributeParsingEvent) next;
                     List<String> content = IOUtils.readLines(attributeEvent.getText());
                     //System.out.println(s + printEvent(next));
                     s = getIndent(indent + 2);
@@ -93,14 +94,14 @@ public class BatchStructureChecker {
         return s;
     }
 
-    private String printEvent(Event next) {
+    private String printEvent(ParsingEvent next) {
         switch (next.getType()){
             case NodeBegin:
-                return "<"+next.getPath()+">";
+                return "<"+next.getLocalname()+">";
             case NodeEnd:
-                return "</"+next.getPath()+">";
+                return "</"+next.getLocalname()+">";
             case Attribute:
-                return "<"+next.getPath()+"/>";
+                return "<"+next.getLocalname()+"/>";
             default:
                 return next.toString();
         }
