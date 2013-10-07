@@ -22,7 +22,7 @@ public class BatchStructureChecker {//TODO implements dk.statsbiblioteket.autono
 
 
     public void checkBatchStructure() throws Exception {
-        printStructure(getIterator());
+        checkStructure(getIterator());
     }
 
     public TreeIterator getIterator() throws URISyntaxException {
@@ -35,17 +35,18 @@ public class BatchStructureChecker {//TODO implements dk.statsbiblioteket.autono
     }
 
     /**
-     * Pretty-print the batch structure tree received.
+     * Check the batch structure tree received for errors.
      *
-     * @param newspaperIterator Iterator for the batch structure tree to print
+     * @param newspaperIterator Iterator for the batch structure tree to check
      * @throws IOException
      */
-    private void printStructure(TreeIterator newspaperIterator) throws IOException {
+    private void checkStructure(TreeIterator newspaperIterator) throws IOException {
         int indent = 0;
         while (newspaperIterator.hasNext()) {
             ParsingEvent next = newspaperIterator.next();
             String s;
 
+            // TODO so far just traverses and pretty-prints.. do check for actual errors plz
             switch (next.getType()){
                 case NodeBegin: {
                     // We have entered a node, increase indent-level
@@ -58,18 +59,20 @@ public class BatchStructureChecker {//TODO implements dk.statsbiblioteket.autono
                     // We have exited a node, decrease indent-level again
                     indent -= 2;
                     s = getIndent(indent);
-                    //System.out.println(s + printEvent(next));
+                    System.out.println(s + printEvent(next));
                     break;
                 }
                 case Attribute: {
-                    // This is an attribute for current node, print it (not)
+                    // This is an attribute for current node, print it
                     s = getIndent(indent);
 
                     AttributeParsingEvent attributeEvent = (AttributeParsingEvent) next;
                     List<String> content = IOUtils.readLines(attributeEvent.getText());
-                    //System.out.println(s + printEvent(next));
+                    String checksum = attributeEvent.getChecksum();
+                    System.out.println(s + printEvent(next));
                     s = getIndent(indent + 2);
-                    //System.out.println(s + "[" + content.size() + " lines of content]");
+                    System.out.println(s + "[" + content.size() + " lines of content]");
+                    System.out.println(s + "Checksum: " + checksum);
                     break;
                 }
             }
