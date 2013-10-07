@@ -9,7 +9,6 @@ import org.apache.commons.io.IOUtils;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,8 +29,7 @@ public class BatchStructureChecker {//TODO implements dk.statsbiblioteket.autono
         if (iterator == null){
             File file = new File(Thread.currentThread().getContextClassLoader().getResource("batch").toURI());
             System.out.println(file);
-            iterator = new TransformingIteratorForFileSystems(file, "\\.", "\\.jp2$", "???");
-            // TODO what is argument checksumPostfix?
+            iterator = new TransformingIteratorForFileSystems(file, "\\.", "\\.jp2$", ".md5");
         }
         return iterator;
     }
