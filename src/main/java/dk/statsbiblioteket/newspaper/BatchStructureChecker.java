@@ -1,9 +1,11 @@
 package dk.statsbiblioteket.newspaper;
 
+import dk.statsbiblioteket.autonomous.ResultCollector;
 import dk.statsbiblioteket.doms.iterator.common.AttributeParsingEvent;
 import dk.statsbiblioteket.doms.iterator.common.ParsingEvent;
 import dk.statsbiblioteket.doms.iterator.common.TreeIterator;
 import dk.statsbiblioteket.doms.iterator.filesystem.transforming.TransformingIteratorForFileSystems;
+import dk.statsbiblioteket.newspaper.processmonitor.datasources.Batch;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
@@ -16,18 +18,18 @@ import java.util.List;
  *
  * @author jrg
  */
-public class BatchStructureChecker {//TODO implements dk.statsbiblioteket.autonomous.RunnableComponent
+public class BatchStructureChecker {
     private TreeIterator iterator;
     private static final String indentString = "..................................................";
 
 
-    public void checkBatchStructure() throws Exception {
-        checkStructure(getIterator());
+    public void checkBatchStructure(String batch, ResultCollector resultCollector) throws Exception {
+        checkStructure(getIterator(batch), resultCollector);
     }
 
-    public TreeIterator getIterator() throws URISyntaxException {
+    public TreeIterator getIterator(String batch) throws URISyntaxException {
         if (iterator == null){
-            File file = new File(Thread.currentThread().getContextClassLoader().getResource("batch").toURI());
+            File file = new File(Thread.currentThread().getContextClassLoader().getResource(batch).toURI());
             System.out.println(file);
             iterator = new TransformingIteratorForFileSystems(file, "\\.", "\\.jp2$", ".md5");
         }
@@ -37,10 +39,12 @@ public class BatchStructureChecker {//TODO implements dk.statsbiblioteket.autono
     /**
      * Check the batch structure tree received for errors.
      *
+     *
      * @param newspaperIterator Iterator for the batch structure tree to check
+     * @param resultCollector
      * @throws IOException
      */
-    private void checkStructure(TreeIterator newspaperIterator) throws IOException {
+    private void checkStructure(TreeIterator newspaperIterator, ResultCollector resultCollector) throws IOException {
         int indent = 0;
         while (newspaperIterator.hasNext()) {
             ParsingEvent next = newspaperIterator.next();

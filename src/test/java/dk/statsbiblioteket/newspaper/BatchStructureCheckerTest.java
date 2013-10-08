@@ -1,5 +1,7 @@
 package dk.statsbiblioteket.newspaper;
 
+import dk.statsbiblioteket.autonomous.ResultCollector;
+import dk.statsbiblioteket.newspaper.processmonitor.datasources.Batch;
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
@@ -15,7 +17,7 @@ public class BatchStructureCheckerTest {
     public void testBatchStructureCheck() throws Exception {
         BatchStructureChecker batchStructureChecker = new BatchStructureChecker();
 
-        batchStructureChecker.checkBatchStructure();
+        batchStructureChecker.checkBatchStructure("batch", new ResultCollector());
 
         assertTrue(true);
     }
