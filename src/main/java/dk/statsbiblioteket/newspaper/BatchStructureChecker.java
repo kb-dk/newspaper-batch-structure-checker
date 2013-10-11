@@ -45,18 +45,20 @@ public class BatchStructureChecker {
      */
     private void checkStructure(TreeIterator newspaperIterator, ResultCollector resultCollector)
             throws IOException {
+        boolean errorFound = false;
+
         int indent = 0;
         while (newspaperIterator.hasNext()) {
             ParsingEvent next = newspaperIterator.next();
             String s;
 
-            // TODO resultCollector.addMessage();
-            // TODO resultCollector.isSuccess();
 
             // TODO so far just traverses and pretty-prints.. do check for actual errors plz
             switch (next.getType()){
                 case NodeBegin: {
-
+                    //if (hasExtension(next, "jp2") || hasExtension(next, "xml")) {
+                    //    errorFound |= ();
+                    //}
 
                     // We have entered a node, increase indent-level TODO remove this before prod
                     s = getIndent(indent);
@@ -86,6 +88,9 @@ public class BatchStructureChecker {
                 }
             }
         }
+
+        resultCollector.setSuccess(!errorFound);
+        // TODO resultCollector.addMessage();
     }
 
     /**
@@ -119,5 +124,16 @@ public class BatchStructureChecker {
 
     private boolean hasExtension(ParsingEvent event, String s) {
         return event.getLocalname().endsWith("." + s);
+    }
+
+    private boolean hasChecksum(ParsingEvent event) {
+        AttributeParsingEvent attributeEvent = (AttributeParsingEvent) event;
+        String checksum;
+        try {
+            checksum = attributeEvent.getChecksum();
+        } catch (Exception e) {
+            return false;
+        }
+        return (checksum != null && !checksum.trim().equals(""));
     }
 }
