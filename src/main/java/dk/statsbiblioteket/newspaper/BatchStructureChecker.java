@@ -23,8 +23,8 @@ public class BatchStructureChecker {
     private static final String indentString = "..................................................";
 
 
-    public void checkBatchStructure(String batch, ResultCollector resultCollector) throws Exception {
-        checkStructure(getIterator(batch), resultCollector);
+    public void checkBatchStructure(String batchPid, ResultCollector resultCollector) throws Exception {
+        checkStructure(getIterator(batchPid), resultCollector);
     }
 
     public TreeIterator getIterator(String batch) throws URISyntaxException {
@@ -39,16 +39,19 @@ public class BatchStructureChecker {
     /**
      * Check the batch structure tree received for errors.
      *
-     *
      * @param newspaperIterator Iterator for the batch structure tree to check
-     * @param resultCollector
+     * @param resultCollector Object to collect results of the structure check
      * @throws IOException
      */
-    private void checkStructure(TreeIterator newspaperIterator, ResultCollector resultCollector) throws IOException {
+    private void checkStructure(TreeIterator newspaperIterator, ResultCollector resultCollector)
+            throws IOException {
         int indent = 0;
         while (newspaperIterator.hasNext()) {
             ParsingEvent next = newspaperIterator.next();
             String s;
+
+            // TODO resultCollector.addMessage();
+            // TODO resultCollector.isSuccess();
 
             // TODO so far just traverses and pretty-prints.. do check for actual errors plz
             switch (next.getType()){
