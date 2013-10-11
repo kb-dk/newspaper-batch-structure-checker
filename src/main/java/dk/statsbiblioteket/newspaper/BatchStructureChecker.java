@@ -52,6 +52,8 @@ public class BatchStructureChecker {
             ParsingEvent next = newspaperIterator.next();
             String s;
 
+            // TODO checksum check below is broken, and the whole traversal should be done with
+            // a proper xml-traverser instead, methinks
 
             // TODO so far just traverses and pretty-prints.. do check for actual errors plz
             switch (next.getType()){
