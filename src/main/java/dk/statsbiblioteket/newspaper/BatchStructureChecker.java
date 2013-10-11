@@ -56,21 +56,23 @@ public class BatchStructureChecker {
             // TODO so far just traverses and pretty-prints.. do check for actual errors plz
             switch (next.getType()){
                 case NodeBegin: {
-                    // We have entered a node, increase indent-level
+
+
+                    // We have entered a node, increase indent-level TODO remove this before prod
                     s = getIndent(indent);
                     System.out.println(s + printEvent(next));
                     indent += 2;
                     break;
                 }
                 case NodeEnd: {
-                    // We have exited a node, decrease indent-level again
+                    // We have exited a node, decrease indent-level again TODO remove this before prod
                     indent -= 2;
                     s = getIndent(indent);
                     System.out.println(s + printEvent(next));
                     break;
                 }
                 case Attribute: {
-                    // This is an attribute for current node, print it
+                    // This is an attribute for current node, print it TODO remove this before prod
                     s = getIndent(indent);
 
                     AttributeParsingEvent attributeEvent = (AttributeParsingEvent) next;
@@ -113,5 +115,9 @@ public class BatchStructureChecker {
             default:
                 return next.toString();
         }
+    }
+
+    private boolean hasExtension(ParsingEvent event, String s) {
+        return event.getLocalname().endsWith("." + s);
     }
 }
