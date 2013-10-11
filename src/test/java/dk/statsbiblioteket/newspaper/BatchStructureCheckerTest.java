@@ -16,9 +16,11 @@ public class BatchStructureCheckerTest {
     @Test
     public void testBatchStructureCheck() throws Exception {
         BatchStructureChecker batchStructureChecker = new BatchStructureChecker();
+        ResultCollector resultCollector = new ResultCollector("Batch Structure Checker", "v0.1");
 
-        batchStructureChecker.checkBatchStructure("batch", new ResultCollector("Batch Structure Checker", "v0.1"));
+        batchStructureChecker.checkBatchStructure("batch", resultCollector);
 
+        System.out.println("isSuccess: " + resultCollector.isSuccess());
         assertTrue(true);
     }
 

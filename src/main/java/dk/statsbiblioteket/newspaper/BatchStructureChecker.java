@@ -56,9 +56,9 @@ public class BatchStructureChecker {
             // TODO so far just traverses and pretty-prints.. do check for actual errors plz
             switch (next.getType()){
                 case NodeBegin: {
-                    //if (hasExtension(next, "jp2") || hasExtension(next, "xml")) {
-                    //    errorFound |= ();
-                    //}
+                    if (hasExtension(next, "jp2") || hasExtension(next, "xml")) {
+                        errorFound |= !hasChecksum(next);
+                    }
 
                     // We have entered a node, increase indent-level TODO remove this before prod
                     s = getIndent(indent);
@@ -126,6 +126,12 @@ public class BatchStructureChecker {
         return event.getLocalname().endsWith("." + s);
     }
 
+    /**
+     * Returns whether event has a checksum attached
+     *
+     * @param event The event to check
+     * @return Whether event has a checksum attached
+     */
     private boolean hasChecksum(ParsingEvent event) {
         AttributeParsingEvent attributeEvent = (AttributeParsingEvent) event;
         String checksum;
