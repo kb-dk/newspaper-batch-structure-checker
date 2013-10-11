@@ -124,6 +124,13 @@ public class BatchStructureChecker {
         }
     }
 
+    /**
+     * Returns whether the name of the given event has the given extension
+     *
+     * @param event The event whose name is to be checked
+     * @param s The extension to check for
+     * @return
+     */
     private boolean hasExtension(ParsingEvent event, String s) {
         return event.getLocalname().endsWith("." + s);
     }
