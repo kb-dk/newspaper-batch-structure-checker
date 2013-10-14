@@ -51,16 +51,9 @@ public class BatchStructureChecker {
             ParsingEvent next = newspaperIterator.next();
             String s;
 
-            // TODO checksum check below is broken
-
             // TODO more checks for actual errors
             switch (next.getType()){
                 case NodeBegin: {
-                    //if (hasExtension(next, "jpg") || hasExtension(next, "xml")) {
-                    //    errorFound = true;
-                        //errorFound |= !hasChecksum(next);
-                    //}
-
                     // We have entered a node, increase indent-level TODO remove this before prod
                     s = getIndent(indent);
                     System.out.println(s + printEvent(next));
@@ -79,6 +72,11 @@ public class BatchStructureChecker {
                     s = getIndent(indent);
 
                     AttributeParsingEvent attributeEvent = (AttributeParsingEvent) next;
+
+                    if (hasExtension(next, "jpg") || hasExtension(next, "xml")) {
+                        errorFound |= !hasChecksum(next);
+                    }
+
                     List<String> content = IOUtils.readLines(attributeEvent.getText());
                     String checksum = attributeEvent.getChecksum();
                     System.out.println(s + printEvent(next));
@@ -131,7 +129,6 @@ public class BatchStructureChecker {
      * @return Whether the name of the given event has the given extension
      */
     private boolean hasExtension(ParsingEvent event, String extension) {
-        //System.out.println("HER: " + event.getLocalname());  // TODO 4 debugging - remove
         return event.getLocalname().endsWith("." + extension);
     }
 
