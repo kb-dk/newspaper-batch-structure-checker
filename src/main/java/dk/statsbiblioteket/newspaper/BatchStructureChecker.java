@@ -5,7 +5,6 @@ import dk.statsbiblioteket.doms.iterator.common.AttributeParsingEvent;
 import dk.statsbiblioteket.doms.iterator.common.ParsingEvent;
 import dk.statsbiblioteket.doms.iterator.common.TreeIterator;
 import dk.statsbiblioteket.doms.iterator.filesystem.transforming.TransformingIteratorForFileSystems;
-import dk.statsbiblioteket.newspaper.processmonitor.datasources.Batch;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
@@ -52,15 +51,15 @@ public class BatchStructureChecker {
             ParsingEvent next = newspaperIterator.next();
             String s;
 
-            // TODO checksum check below is broken, and the whole traversal should be done with
-            // a proper xml-traverser instead, methinks
+            // TODO checksum check below is broken
 
-            // TODO so far just traverses and pretty-prints.. do check for actual errors plz
+            // TODO more checks for actual errors
             switch (next.getType()){
                 case NodeBegin: {
-                    if (hasExtension(next, "jp2") || hasExtension(next, "xml")) {
-                        errorFound |= !hasChecksum(next);
-                    }
+                    //if (hasExtension(next, "jpg") || hasExtension(next, "xml")) {
+                    //    errorFound = true;
+                        //errorFound |= !hasChecksum(next);
+                    //}
 
                     // We have entered a node, increase indent-level TODO remove this before prod
                     s = getIndent(indent);
@@ -128,11 +127,12 @@ public class BatchStructureChecker {
      * Returns whether the name of the given event has the given extension
      *
      * @param event The event whose name is to be checked
-     * @param s The extension to check for
-     * @return
+     * @param extension The extension to check for
+     * @return Whether the name of the given event has the given extension
      */
-    private boolean hasExtension(ParsingEvent event, String s) {
-        return event.getLocalname().endsWith("." + s);
+    private boolean hasExtension(ParsingEvent event, String extension) {
+        //System.out.println("HER: " + event.getLocalname());  // TODO 4 debugging - remove
+        return event.getLocalname().endsWith("." + extension);
     }
 
     /**
