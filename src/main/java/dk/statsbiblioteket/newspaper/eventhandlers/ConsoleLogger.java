@@ -10,22 +10,26 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: jrg
- * Date: 10/15/13
- * Time: 1:36 PM
- * To change this template use File | Settings | File Templates.
+ * Prints the tree to the console. Used for testing purposes.
  */
 public class ConsoleLogger extends DefaultTreeEventHandler {
     private static final String indentString = "..................................................";
     int indentLevel = 0;
 
+    /**
+     * Prints a begin node and indents a step
+     * @param event    The event to handle
+     */
     @Override
     public void handleNodeBegin(NodeBeginsParsingEvent event) {
         printIndentNode(event);
         indentLevel += 2;
     }
 
+    /**
+     * Prints an end node and unindents a step
+     * @param event    The event to handle
+     */
     @Override
     public void handleNodeEnd(NodeEndParsingEvent event) {
         // We have exited a node, decrease indentLevel-level again
@@ -34,7 +38,8 @@ public class ConsoleLogger extends DefaultTreeEventHandler {
     }
 
     /**
-     * This is an attribute for current node, print it
+     * Prints an attribute event and its attributes, properly indented
+     * @param event    The event to handle
      */
     @Override
     public void handleAttribute(AttributeParsingEvent event) {
@@ -50,14 +55,21 @@ public class ConsoleLogger extends DefaultTreeEventHandler {
         }
     }
 
+    /**
+     * Prints an indented node
+     * @param event    The event to handle
+     */
     private void printIndentNode(ParsingEvent event) {
         System.out.println(getIndentString() + printEvent(event));
     }
 
+    /**
+     * Prints an indented attribute event
+     * @param event    The event to handle
+     */
     private void printIndentAttribute(String attributeString) {
         System.out.println(getIndentString() + ".." + attributeString);
     }
-
 
     /**
      * Create a string of dots, used for indenting.
@@ -74,6 +86,11 @@ public class ConsoleLogger extends DefaultTreeEventHandler {
         return s;
     }
 
+    /**
+     * Print the name of an event to a string
+     * @param event    The event to handle
+     * @return The name of the event as a string
+     */
     private String printEvent(ParsingEvent event) {
         switch (event.getType()){
             case NodeBegin:
