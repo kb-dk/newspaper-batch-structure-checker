@@ -15,12 +15,11 @@ import org.junit.Test;
  */
 public class BatchStructureCheckerIT {
     /**
-     * Test BatchStructureChecker
-     * @throws Exception
+     * Tests that the BatchStructureChecker can parse a production like batch.
      */
     @Test
     public void testBatchStructureCheck() throws Exception {
-        TreeIterator iterator = getIterator("batch");
+        TreeIterator iterator = getIterator();
         BatchStructureChecker batchStructureChecker = new BatchStructureChecker(iterator);
         ResultCollector resultCollector = new ResultCollector("Batch Structure Checker", "v0.1");
 
@@ -32,8 +31,13 @@ public class BatchStructureCheckerIT {
         System.out.println("Result: " + resultCollector);
     }
 
-    public TreeIterator getIterator(String batch) throws URISyntaxException {
-        File file = new File(Thread.currentThread().getContextClassLoader().getResource(batch).toURI());
+    /**
+     * Creates and returns a iteration based on the test batch file structure found in the test/ressources folder.
+     * @return A iterator the the test batch
+     * @throws URISyntaxException
+     */
+    public TreeIterator getIterator() throws URISyntaxException {
+        File file = new File(Thread.currentThread().getContextClassLoader().getResource("batch").toURI());
         System.out.println(file);
         return new TransformingIteratorForFileSystems(file, "\\.", "\\.jp2$", ".md5");
     }

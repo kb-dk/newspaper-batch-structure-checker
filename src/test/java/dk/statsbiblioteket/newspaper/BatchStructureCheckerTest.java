@@ -14,8 +14,15 @@ import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
 
+/**
+ * Test of the BatchStructureChecker class.
+ */
 public class BatchStructureCheckerTest {
 
+    /**
+     * Verifies that the BatchStructureChecker correctly passes the event for a simple batch with two leafs
+     * to the attached event handlers.
+     */
     @Test
     public void testStructureCalls() throws Exception {
         // Setup fixture
@@ -65,6 +72,9 @@ public class BatchStructureCheckerTest {
         verifyNoMoreInteractions(resultCollectorMock);
     }
 
+    /**
+     * @return Creates a attribute event and marks is as type 'Attribute'.
+     */
     private AttributeParsingEvent createAttributeParsingEventStub(final String name) {
         AttributeParsingEvent event = mock(AttributeParsingEvent.class);
         when(event.getType()).thenReturn(ParsingEventType.Attribute);
