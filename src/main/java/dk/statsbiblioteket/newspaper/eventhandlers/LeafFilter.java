@@ -37,4 +37,9 @@ public class LeafFilter extends DefaultTreeEventHandler {
             }
         }
     }
+
+    @Override
+    public void handleFinish() {
+        leafHandler.handleFinish();
+    }
 }

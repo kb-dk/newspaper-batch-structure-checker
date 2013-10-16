@@ -67,6 +67,7 @@ public class BatchStructureCheckerTest {
         verify(treeEventHandlerMock).handleNodeEnd(dateNodeEnd);
         verify(treeEventHandlerMock).handleNodeEnd(reelNodeEnd);
         verify(treeEventHandlerMock).handleNodeEnd(batchNodeEnd);
+        verify(treeEventHandlerMock).handleFinish();
         verifyNoMoreInteractions(treeEventHandlerMock);
 
         verifyNoMoreInteractions(resultCollectorMock);

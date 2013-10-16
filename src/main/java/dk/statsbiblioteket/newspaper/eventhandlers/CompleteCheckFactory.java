@@ -18,8 +18,9 @@ public class CompleteCheckFactory implements EventHandlerFactory {
     @Override
     public List<TreeEventHandler> createEventHandlers() {
         final List<TreeEventHandler> eventHandlers = new ArrayList<>();
-        eventHandlers.add(new ConsoleLogger());
+        //eventHandlers.add(new ConsoleLogger());
         eventHandlers.add(new ChecksumExistenceChecker(resultCollector));
+        eventHandlers.add(new LeafFilter(LeafType.JP2, new SequenceChecker(resultCollector)));
         return eventHandlers;
     }
 }

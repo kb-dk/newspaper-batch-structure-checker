@@ -19,4 +19,8 @@ public abstract class DefaultTreeEventHandler implements TreeEventHandler {
     @Override
     public void handleAttribute(AttributeParsingEvent event) {
     }
+
+    @Override
+    public void handleFinish() {
+    }
 }

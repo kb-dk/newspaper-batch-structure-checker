@@ -55,6 +55,10 @@ public class BatchStructureChecker {
                 }
             }
         }
+
+        for (TreeEventHandler handler : eventHandlers) {
+            handler.handleFinish();
+        }
     }
 
     /**
