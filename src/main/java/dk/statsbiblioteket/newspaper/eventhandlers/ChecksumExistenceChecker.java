@@ -23,7 +23,8 @@ public class ChecksumExistenceChecker extends DefaultTreeEventHandler {
     @Override
     public void handleAttribute(AttributeParsingEvent event) {
         if (!hasChecksum(event)) {
-            resultCollector.addFailure("ref", "typ", "comp", "Missing checksum for " + event.getLocalname());
+            resultCollector.addFailure(event.getLocalname(), "filestructure", "ChecksumExistenceChecker",
+                    "Missing checksum for " + event.getLocalname());
         }
     }
 
