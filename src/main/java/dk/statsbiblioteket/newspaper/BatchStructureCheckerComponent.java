@@ -17,12 +17,10 @@ import dk.statsbiblioteket.newspaper.processmonitor.datasources.EventID;
 public class BatchStructureCheckerComponent implements RunnableComponent {
     private Properties properties;
     private BatchStructureChecker batchStructureChecker;
-    private EventHandlerFactory eventHandlerFactory;
 
     public BatchStructureCheckerComponent(Properties properties, TreeIterator iterator) {
         this.properties = properties;
         batchStructureChecker = new BatchStructureChecker(iterator);
-
     }
 
     @Override
