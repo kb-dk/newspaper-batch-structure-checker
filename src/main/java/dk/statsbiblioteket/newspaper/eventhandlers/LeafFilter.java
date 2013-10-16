@@ -26,8 +26,14 @@ public class LeafFilter extends DefaultTreeEventHandler {
     public void handleAttribute(AttributeParsingEvent event) {
         for (LeafType leafType : allowedTypes) {
             if(event.getLocalname().endsWith(leafType.value())) {
-                leafHandler.handleAttribute(event);
-                break;
+                // Special case for jp2 inclusion, brik exclusion.
+                if (event.getLocalname().endsWith("brik.jp2") &&
+                        !allowedTypes.contains(LeafType.BRIK)) {
+                    // Special case for jp2 inclusion, brik exclusion, no hit.
+                } else {
+                    leafHandler.handleAttribute(event);
+                    break;
+                }
             }
         }
     }

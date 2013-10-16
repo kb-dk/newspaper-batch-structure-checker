@@ -29,7 +29,7 @@ public class LeafFilterTest {
         verifyNoMoreInteractions(treeEventHandlerMock);
     }
 
-    //@Test
+    @Test
     public void jp2LeafTest() throws Exception {
         TreeEventHandler treeEventHandlerMock = mock(TreeEventHandler.class);
         LeafFilter filter = new LeafFilter(LeafType.JP2, treeEventHandlerMock);
@@ -51,7 +51,7 @@ public class LeafFilterTest {
         verifyNoMoreInteractions(treeEventHandlerMock);
     }
 
-    //@Test
+    @Test
     public void brikLeafTest() throws Exception {
         TreeEventHandler treeEventHandlerMock = mock(TreeEventHandler.class);
         LeafFilter filter = new LeafFilter(LeafType.BRIK, treeEventHandlerMock);
