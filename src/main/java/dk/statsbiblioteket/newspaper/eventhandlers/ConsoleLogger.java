@@ -65,7 +65,7 @@ public class ConsoleLogger extends DefaultTreeEventHandler {
 
     /**
      * Prints an indented attribute event
-     * @param event    The event to handle
+     * @param attributeString    The event to handle
      */
     private void printIndentAttribute(String attributeString) {
         System.out.println(getIndentString() + ".." + attributeString);
