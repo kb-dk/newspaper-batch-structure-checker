@@ -1,41 +1,73 @@
 package dk.statsbiblioteket.newspaper;
 
+import java.util.Arrays;
+import java.util.List;
+
 import dk.statsbiblioteket.autonomous.ResultCollector;
+import dk.statsbiblioteket.doms.iterator.common.AttributeParsingEvent;
 import dk.statsbiblioteket.doms.iterator.common.NodeBeginsParsingEvent;
-import dk.statsbiblioteket.doms.iterator.common.ParsingEvent;
+import dk.statsbiblioteket.doms.iterator.common.NodeEndParsingEvent;
+import dk.statsbiblioteket.doms.iterator.common.ParsingEventType;
 import dk.statsbiblioteket.doms.iterator.common.TreeIterator;
-import dk.statsbiblioteket.doms.iterator.filesystem.transforming.TransformingIteratorForFileSystems;
-import dk.statsbiblioteket.newspaper.processmonitor.datasources.Batch;
-import org.junit.Test;
+import dk.statsbiblioteket.newspaper.eventhandlers.TreeEventHandler;
+import org.testng.annotations.Test;
 
-import java.io.File;
-import java.net.URISyntaxException;
+import static org.mockito.Mockito.*;
 
-import static org.junit.Assert.assertTrue;
-
-/**
- * @author jrg
- */
 public class BatchStructureCheckerTest {
-    /**
-     * Test BatchStructureChecker
-     * @throws Exception
-     */
+
     @Test
-    public void testBatchStructureCheck() throws Exception {
-        TreeIterator iterator = getIterator("batch");
-        BatchStructureChecker batchStructureChecker = new BatchStructureChecker(iterator);
-        ResultCollector resultCollector = new ResultCollector("Batch Structure Checker", "v0.1");
+    public void testStructureCalls() throws Exception {
+        // Setup fixture
+        TreeIterator treeIteratorMock = mock(TreeIterator.class);
+        when(treeIteratorMock.hasNext()).
+                thenReturn(true).thenReturn(true).thenReturn(true).//Begins
+                thenReturn(true).thenReturn(true).                 //Attributes
+                thenReturn(true).thenReturn(true).thenReturn(true).//Ends
+                thenReturn(false);
+        NodeBeginsParsingEvent batchNodeBegin = new NodeBeginsParsingEvent("BatchNode");
+        NodeBeginsParsingEvent reelNodeBegin = new NodeBeginsParsingEvent("ReelNode");
+        NodeBeginsParsingEvent dateNodeBegin = new NodeBeginsParsingEvent("DateNode");
+        AttributeParsingEvent pageJp2Attribute = createAttributeParsingEventStub("pageJp2Attribute");
+        AttributeParsingEvent pageXmlAttribute = createAttributeParsingEventStub("pageXmlAttribute");
+        NodeEndParsingEvent dateNodeEnd = new NodeEndParsingEvent("DateNode");
+        NodeEndParsingEvent reelNodeEnd = new NodeEndParsingEvent("ReelNode");
+        NodeEndParsingEvent batchNodeEnd = new NodeEndParsingEvent("BatchNode");
+        when(treeIteratorMock.next()).
+                thenReturn(batchNodeBegin).
+                thenReturn(reelNodeBegin).
+                thenReturn(dateNodeBegin).
+                thenReturn(pageJp2Attribute).
+                thenReturn(pageXmlAttribute).
+                thenReturn(dateNodeEnd).
+                thenReturn(reelNodeEnd).
+                thenReturn(batchNodeEnd);
 
-        batchStructureChecker.checkBatchStructure(resultCollector);
+        ResultCollector resultCollectorMock = mock(ResultCollector.class);
+        TreeEventHandler treeEventHandlerMock = mock(TreeEventHandler.class);
 
-        System.out.println("isSuccess: " + resultCollector.isSuccess());
-        assertTrue(true);
+        //Perform test
+        BatchStructureChecker batchStructureCheckerUT = new BatchStructureChecker(treeIteratorMock);
+        List<TreeEventHandler> eventHandlers = Arrays.asList(new TreeEventHandler[]{treeEventHandlerMock});
+        batchStructureCheckerUT.checkBatchStructure(eventHandlers, resultCollectorMock);
+
+        //Verify
+        verify(treeEventHandlerMock).handleNodeBegin(batchNodeBegin);
+        verify(treeEventHandlerMock).handleNodeBegin(reelNodeBegin);
+        verify(treeEventHandlerMock).handleNodeBegin(dateNodeBegin);
+        verify(treeEventHandlerMock).handleAttribute(pageJp2Attribute);
+        verify(treeEventHandlerMock).handleAttribute(pageXmlAttribute);
+        verify(treeEventHandlerMock).handleNodeEnd(dateNodeEnd);
+        verify(treeEventHandlerMock).handleNodeEnd(reelNodeEnd);
+        verify(treeEventHandlerMock).handleNodeEnd(batchNodeEnd);
+        verifyNoMoreInteractions(treeEventHandlerMock);
+
+        verifyNoMoreInteractions(resultCollectorMock);
     }
 
-    public TreeIterator getIterator(String batch) throws URISyntaxException {
-        File file = new File(Thread.currentThread().getContextClassLoader().getResource(batch).toURI());
-        System.out.println(file);
-        return new TransformingIteratorForFileSystems(file, "\\.", "\\.jp2$", ".md5");
+    private AttributeParsingEvent createAttributeParsingEventStub(final String name) {
+        AttributeParsingEvent event = mock(AttributeParsingEvent.class);
+        when(event.getType()).thenReturn(ParsingEventType.Attribute);
+        return event;
     }
 }

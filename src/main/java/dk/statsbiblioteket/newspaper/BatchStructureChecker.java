@@ -1,17 +1,15 @@
 package dk.statsbiblioteket.newspaper;
 
-import dk.statsbiblioteket.autonomous.ResultCollector;
-import dk.statsbiblioteket.doms.iterator.common.*;
-import dk.statsbiblioteket.doms.iterator.filesystem.transforming.TransformingIteratorForFileSystems;
-import dk.statsbiblioteket.newspaper.eventhandlers.ChecksumExistenceChecker;
-import dk.statsbiblioteket.newspaper.eventhandlers.ConsoleLogger;
-import dk.statsbiblioteket.newspaper.eventhandlers.TreeEventHandler;
-
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
+
+import dk.statsbiblioteket.autonomous.ResultCollector;
+import dk.statsbiblioteket.doms.iterator.common.AttributeParsingEvent;
+import dk.statsbiblioteket.doms.iterator.common.NodeBeginsParsingEvent;
+import dk.statsbiblioteket.doms.iterator.common.NodeEndParsingEvent;
+import dk.statsbiblioteket.doms.iterator.common.ParsingEvent;
+import dk.statsbiblioteket.doms.iterator.common.TreeIterator;
+import dk.statsbiblioteket.newspaper.eventhandlers.TreeEventHandler;
 
 /**
  * Checks the directory structure of a batch. This should run both at Ninestars and at SB.
@@ -31,14 +29,8 @@ public class BatchStructureChecker {
      * @param resultCollector Object to collect results of the structure check
      * @throws IOException
      */
-    public void checkBatchStructure(ResultCollector resultCollector)
+    public void checkBatchStructure(List<TreeEventHandler> eventHandlers, ResultCollector resultCollector)
             throws IOException {
-        final List<TreeEventHandler> eventHandlers = new ArrayList<>();
-        eventHandlers.add(new ConsoleLogger());
-        eventHandlers.add(new ChecksumExistenceChecker(resultCollector));
-
-        // TODO add more checkers
-
         while (iterator.hasNext()) {
             ParsingEvent next = iterator.next();
 
