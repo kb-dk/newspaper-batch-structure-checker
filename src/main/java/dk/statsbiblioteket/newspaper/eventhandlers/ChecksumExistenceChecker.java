@@ -7,11 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Created with IntelliJ IDEA.
- * User: jrg
- * Date: 10/15/13
- * Time: 3:00 PM
- * To change this template use File | Settings | File Templates.
+ * Checks that every event has a checksum attached. An event being either a file or a DOMS object
+ * representing a file.
+ *
+ * @author jrg
  */
 public class ChecksumExistenceChecker extends DefaultTreeEventHandler {
     private static Logger log = LoggerFactory.getLogger(ChecksumExistenceChecker.class);
@@ -24,12 +23,14 @@ public class ChecksumExistenceChecker extends DefaultTreeEventHandler {
     @Override
     public void handleAttribute(AttributeParsingEvent event) {
         if (!hasChecksum(event)) {
-            resultCollector.addFailure("ref", "typ", "comp", "Missing checksum for " + event.getLocalname());
+            resultCollector.addFailure(event.getLocalname(), "filestructure", "ChecksumExistenceChecker",
+                    "Missing checksum for " + event.getLocalname());
         }
     }
 
     /**
-     * Returns whether event has a checksum attached. An event being either a file or a DOMS object representing a file.
+     * Returns whether event has a checksum attached. An event being either a file or a DOMS object
+     * representing a file.
      *
      * @param event The event to check
      * @return Whether event has a checksum attached
@@ -44,11 +45,7 @@ public class ChecksumExistenceChecker extends DefaultTreeEventHandler {
             return false;
         }
 
-        if (checksum == null) {
-            return false;
-        }
-
-        return true;
+        return (checksum != null);
 
     }
 }

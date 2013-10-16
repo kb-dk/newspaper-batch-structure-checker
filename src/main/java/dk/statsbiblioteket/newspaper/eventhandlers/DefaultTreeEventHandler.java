@@ -5,11 +5,7 @@ import dk.statsbiblioteket.doms.iterator.common.NodeBeginsParsingEvent;
 import dk.statsbiblioteket.doms.iterator.common.NodeEndParsingEvent;
 
 /**
- * Created with IntelliJ IDEA.
- * User: jrg
- * Date: 10/15/13
- * Time: 1:36 PM
- * To change this template use File | Settings | File Templates.
+ * Abstract tree event handler, with no-op methods
  */
 public abstract class DefaultTreeEventHandler implements TreeEventHandler {
     @Override

@@ -11,7 +11,6 @@ import dk.statsbiblioteket.newspaper.eventhandlers.EventHandlerFactory;
 import org.junit.Test;
 
 /**
- * @author jrg
  */
 public class BatchStructureCheckerIT {
     /**
