@@ -24,7 +24,8 @@ public class BatchStructureChecker {
     }
 
     /**
-     * Check the batch structure tree received for errors.
+     * Check the batch-structure tree received for errors. (I.e. we are gonna check the received tree for
+     * errors. The tree received represents a batch structure, which is the structure of a batch).
      *
      * @param resultCollector Object to collect results of the structure check
      * @throws IOException
