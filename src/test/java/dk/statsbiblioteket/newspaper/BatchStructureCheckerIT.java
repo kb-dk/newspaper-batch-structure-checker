@@ -24,8 +24,7 @@ public class BatchStructureCheckerIT {
 
         EventHandlerFactory eventHandlerFactory = new CompleteCheckFactory(resultCollector);
         batchStructureChecker.checkBatchStructure(
-                eventHandlerFactory.createEventHandlers(),
-                resultCollector);
+                eventHandlerFactory.createEventHandlers());
 
         System.out.println("Result: " + resultCollector);
     }

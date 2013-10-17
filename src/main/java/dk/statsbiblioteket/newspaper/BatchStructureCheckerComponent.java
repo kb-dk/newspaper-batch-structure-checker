@@ -42,6 +42,6 @@ public class BatchStructureCheckerComponent implements RunnableComponent {
     public void doWorkOnBatch(Batch batch, ResultCollector resultCollector) throws Exception {
         EventHandlerFactory eventHandlerFactory = new CompleteCheckFactory(resultCollector);
         batchStructureChecker.checkBatchStructure(
-                eventHandlerFactory.createEventHandlers(), resultCollector);
+                eventHandlerFactory.createEventHandlers());
     }
 }

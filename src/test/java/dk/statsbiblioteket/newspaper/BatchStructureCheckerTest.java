@@ -56,7 +56,7 @@ public class BatchStructureCheckerTest {
         //Perform test
         BatchStructureChecker batchStructureCheckerUT = new BatchStructureChecker(treeIteratorMock);
         List<TreeEventHandler> eventHandlers = Arrays.asList(new TreeEventHandler[]{treeEventHandlerMock});
-        batchStructureCheckerUT.checkBatchStructure(eventHandlers, resultCollectorMock);
+        batchStructureCheckerUT.checkBatchStructure(eventHandlers);
 
         //Verify
         verify(treeEventHandlerMock).handleNodeBegin(batchNodeBegin);
