@@ -27,30 +27,29 @@ public class BatchStructureChecker {
      * Check the batch-structure tree received for errors. (I.e. we are gonna check the received tree for
      * errors. The tree received represents a batch structure, which is the structure of a batch).
      *
-     * @param resultCollector Object to collect results of the structure check
      * @throws IOException
      */
-    public void checkBatchStructure(List<TreeEventHandler> eventHandlers, ResultCollector resultCollector)
+    public void checkBatchStructure(List<TreeEventHandler> eventHandlers)
             throws IOException {
         while (iterator.hasNext()) {
-            ParsingEvent next = iterator.next();
+            ParsingEvent current = iterator.next();
 
-            switch (next.getType()){
+            switch (current.getType()){
                 case NodeBegin: {
                     for (TreeEventHandler handler : eventHandlers) {
-                        handler.handleNodeBegin((NodeBeginsParsingEvent)next);
+                        handler.handleNodeBegin((NodeBeginsParsingEvent)current);
                     }
                     break;
                 }
                 case NodeEnd: {
                     for (TreeEventHandler handler : eventHandlers) {
-                        handler.handleNodeEnd((NodeEndParsingEvent) next);
+                        handler.handleNodeEnd((NodeEndParsingEvent) current);
                     }
                     break;
                 }
                 case Attribute: {
                     for (TreeEventHandler handler : eventHandlers) {
-                        handler.handleAttribute((AttributeParsingEvent) next);
+                        handler.handleAttribute((AttributeParsingEvent) current);
                     }
                     break;
                 }

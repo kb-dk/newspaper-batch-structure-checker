@@ -20,6 +20,10 @@ public class ChecksumExistenceChecker extends DefaultTreeEventHandler {
         resultCollector = r;
     }
 
+    /**
+     * Mark it as a failure if given event does not have a checksum
+     * @param event Event to be checked
+     */
     @Override
     public void handleAttribute(AttributeParsingEvent event) {
         if (!hasChecksum(event)) {
