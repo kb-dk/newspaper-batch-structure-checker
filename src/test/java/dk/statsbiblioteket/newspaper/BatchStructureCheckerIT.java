@@ -3,9 +3,9 @@ package dk.statsbiblioteket.newspaper;
 import java.io.File;
 import java.net.URISyntaxException;
 
-import dk.statsbiblioteket.autonomous.ResultCollector;
-import dk.statsbiblioteket.doms.iterator.common.TreeIterator;
-import dk.statsbiblioteket.doms.iterator.filesystem.transforming.TransformingIteratorForFileSystems;
+import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.TreeIterator;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.filesystem.transforming.TransformingIteratorForFileSystems;
 import dk.statsbiblioteket.newspaper.eventhandlers.CompleteCheckFactory;
 import dk.statsbiblioteket.newspaper.eventhandlers.EventHandlerFactory;
 import org.junit.Test;

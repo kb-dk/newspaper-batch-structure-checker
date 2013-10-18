@@ -3,12 +3,11 @@ package dk.statsbiblioteket.newspaper;
 import java.io.IOException;
 import java.util.List;
 
-import dk.statsbiblioteket.autonomous.ResultCollector;
-import dk.statsbiblioteket.doms.iterator.common.AttributeParsingEvent;
-import dk.statsbiblioteket.doms.iterator.common.NodeBeginsParsingEvent;
-import dk.statsbiblioteket.doms.iterator.common.NodeEndParsingEvent;
-import dk.statsbiblioteket.doms.iterator.common.ParsingEvent;
-import dk.statsbiblioteket.doms.iterator.common.TreeIterator;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.AttributeParsingEvent;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeBeginsParsingEvent;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeEndParsingEvent;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.ParsingEvent;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.TreeIterator;
 import dk.statsbiblioteket.newspaper.eventhandlers.TreeEventHandler;
 
 /**
@@ -69,7 +68,7 @@ public class BatchStructureChecker {
      * @return Whether the name of the given event has the given extension
      */
     private boolean hasExtension(ParsingEvent event, String extension) {
-        return event.getLocalname().endsWith("." + extension);
+        return event.getName().endsWith("." + extension);
     }
 
 }

@@ -1,8 +1,9 @@
 package dk.statsbiblioteket.newspaper.eventhandlers;
 
-import dk.statsbiblioteket.autonomous.ResultCollector;
-import dk.statsbiblioteket.doms.iterator.common.AttributeParsingEvent;
-import dk.statsbiblioteket.doms.iterator.common.ParsingEvent;
+import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.AttributeParsingEvent;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.ParsingEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,8 +28,8 @@ public class ChecksumExistenceChecker extends DefaultTreeEventHandler {
     @Override
     public void handleAttribute(AttributeParsingEvent event) {
         if (!hasChecksum(event)) {
-            resultCollector.addFailure(event.getLocalname(), "filestructure", "ChecksumExistenceChecker",
-                    "Missing checksum for " + event.getLocalname());
+            resultCollector.addFailure(event.getName(), "filestructure", "ChecksumExistenceChecker",
+                    "Missing checksum for " + event.getName());
         }
     }
 

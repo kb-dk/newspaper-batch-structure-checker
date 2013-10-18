@@ -1,10 +1,11 @@
 package dk.statsbiblioteket.newspaper.eventhandlers;
 
-import dk.statsbiblioteket.doms.iterator.common.AttributeParsingEvent;
-import dk.statsbiblioteket.doms.iterator.common.NodeBeginsParsingEvent;
-import dk.statsbiblioteket.doms.iterator.common.NodeEndParsingEvent;
-import dk.statsbiblioteket.doms.iterator.common.ParsingEvent;
 import org.apache.commons.io.IOUtils;
+
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.AttributeParsingEvent;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeBeginsParsingEvent;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeEndParsingEvent;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.ParsingEvent;
 
 import java.io.IOException;
 import java.util.List;
@@ -44,7 +45,7 @@ public class ConsoleLogger extends DefaultTreeEventHandler {
     @Override
     public void handleAttribute(AttributeParsingEvent event) {
         try {
-            List<String> content = IOUtils.readLines(event.getText());
+            List<String> content = IOUtils.readLines(event.getData());
 
             String checksum = event.getChecksum();
             printIndentNode(event);
@@ -94,11 +95,11 @@ public class ConsoleLogger extends DefaultTreeEventHandler {
     private String printEvent(ParsingEvent event) {
         switch (event.getType()){
             case NodeBegin:
-                return "<"+event.getLocalname()+">";
+                return "<"+event.getName()+">";
             case NodeEnd:
-                return "</"+event.getLocalname()+">";
+                return "</"+event.getName()+">";
             case Attribute:
-                return "<"+event.getLocalname()+"/>";
+                return "<"+event.getName()+"/>";
             default:
                 return event.toString();
         }

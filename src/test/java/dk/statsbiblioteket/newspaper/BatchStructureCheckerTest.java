@@ -3,12 +3,12 @@ package dk.statsbiblioteket.newspaper;
 import java.util.Arrays;
 import java.util.List;
 
-import dk.statsbiblioteket.autonomous.ResultCollector;
-import dk.statsbiblioteket.doms.iterator.common.AttributeParsingEvent;
-import dk.statsbiblioteket.doms.iterator.common.NodeBeginsParsingEvent;
-import dk.statsbiblioteket.doms.iterator.common.NodeEndParsingEvent;
-import dk.statsbiblioteket.doms.iterator.common.ParsingEventType;
-import dk.statsbiblioteket.doms.iterator.common.TreeIterator;
+import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.AttributeParsingEvent;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeBeginsParsingEvent;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeEndParsingEvent;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.ParsingEventType;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.TreeIterator;
 import dk.statsbiblioteket.newspaper.eventhandlers.TreeEventHandler;
 import org.testng.annotations.Test;
 

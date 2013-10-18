@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import dk.statsbiblioteket.autonomous.ResultCollector;
-import dk.statsbiblioteket.doms.iterator.common.AttributeParsingEvent;
+import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.AttributeParsingEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +30,7 @@ public class SequenceChecker extends DefaultTreeEventHandler {
 
     @Override
     public void handleAttribute(AttributeParsingEvent event) {
-        billedIDs.add(event.getLocalname());
+        billedIDs.add(event.getName());
     }
 
     @Override

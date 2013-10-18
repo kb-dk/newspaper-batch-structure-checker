@@ -1,8 +1,9 @@
 package dk.statsbiblioteket.newspaper.eventhandlers;
 
-import dk.statsbiblioteket.autonomous.ResultCollector;
-import dk.statsbiblioteket.doms.iterator.common.AttributeParsingEvent;
 import org.testng.annotations.Test;
+
+import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.AttributeParsingEvent;
 
 import static org.mockito.Mockito.*;
 

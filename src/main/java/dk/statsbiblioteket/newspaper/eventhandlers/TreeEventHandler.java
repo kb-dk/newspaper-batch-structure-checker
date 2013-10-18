@@ -1,8 +1,8 @@
 package dk.statsbiblioteket.newspaper.eventhandlers;
 
-import dk.statsbiblioteket.doms.iterator.common.AttributeParsingEvent;
-import dk.statsbiblioteket.doms.iterator.common.NodeBeginsParsingEvent;
-import dk.statsbiblioteket.doms.iterator.common.NodeEndParsingEvent;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.AttributeParsingEvent;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeBeginsParsingEvent;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeEndParsingEvent;
 
 /**
  * Interface for tree event handlers

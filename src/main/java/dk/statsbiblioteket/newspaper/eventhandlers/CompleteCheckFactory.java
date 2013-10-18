@@ -3,7 +3,7 @@ package dk.statsbiblioteket.newspaper.eventhandlers;
 import java.util.ArrayList;
 import java.util.List;
 
-import dk.statsbiblioteket.autonomous.ResultCollector;
+import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 
 /**
  * Provides the complete set of structure checkers.

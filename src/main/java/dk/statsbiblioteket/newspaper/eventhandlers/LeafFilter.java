@@ -1,9 +1,9 @@
 package dk.statsbiblioteket.newspaper.eventhandlers;
 
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.AttributeParsingEvent;
+
 import java.util.Arrays;
 import java.util.List;
-
-import dk.statsbiblioteket.doms.iterator.common.AttributeParsingEvent;
 
 /**
  * May be used to filter the leaf events according to certain leaf types.
@@ -25,9 +25,9 @@ public class LeafFilter extends DefaultTreeEventHandler {
     @Override
     public void handleAttribute(AttributeParsingEvent event) {
         for (LeafType leafType : allowedTypes) {
-            if(event.getLocalname().endsWith(leafType.value())) {
+            if(event.getName().endsWith(leafType.value())) {
                 // Special case for jp2 inclusion, brik exclusion.
-                if (event.getLocalname().endsWith("brik.jp2") &&
+                if (event.getName().endsWith("brik.jp2") &&
                         !allowedTypes.contains(LeafType.BRIK)) {
                     // Special case for jp2 inclusion, brik exclusion, no hit.
                 } else {
