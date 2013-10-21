@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.EventHandlerFactory;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.TreeEventHandler;
@@ -23,11 +24,11 @@ public class CompleteCheckFactory implements EventHandlerFactory {
     private final static String MFPAK_DATABASE_PASS = "mfpak.postgres.password";
     private final ResultCollector resultCollector;
     private final MfPakConfiguration mfpakConfig;
-    private final String batchID;
+    private final Batch batch;
 
-    public CompleteCheckFactory(Properties properties, String batchID, ResultCollector resultCollector) {
+    public CompleteCheckFactory(Properties properties, Batch batch, ResultCollector resultCollector) {
         this.resultCollector = resultCollector;
-        this.batchID = batchID;
+        this.batch = batch;
         mfpakConfig = new MfPakConfiguration();
         mfpakConfig.setDatabaseUrl(properties.getProperty(MFPAK_DATABASE_URL));
         mfpakConfig.setDatabaseUser(properties.getProperty(MFPAK_DATABASE_USER));
@@ -40,7 +41,7 @@ public class CompleteCheckFactory implements EventHandlerFactory {
         MfPakDAO mfpak = new MfPakDAO(mfpakConfig);
         String newspaperID;
         try {
-            newspaperID = mfpak.getNewspaperID(batchID);
+            newspaperID = mfpak.getNewspaperID(batch.getBatchID());
         } catch (SQLException e) {
             throw new IllegalStateException("Failed to get newspaperID from mfpak database", e);
         }

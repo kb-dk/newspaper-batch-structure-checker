@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.net.URISyntaxException;
 import java.util.Properties;
 
+import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.TreeIterator;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.EventHandlerFactory;
@@ -33,8 +34,10 @@ public class BatchStructureCheckerComponentIT {
         TreeIterator iterator = getIterator();
         EventRunner batchStructureChecker = new EventRunner(iterator);
         ResultCollector resultCollector = new ResultCollector("Batch Structure Checker", "v0.1");
+        Batch batch = new Batch();
+        batch.setBatchID(TEST_BATCH_ID);
 
-        EventHandlerFactory eventHandlerFactory = new CompleteCheckFactory(properties, TEST_BATCH_ID, resultCollector);
+        EventHandlerFactory eventHandlerFactory = new CompleteCheckFactory(properties, batch, resultCollector);
         batchStructureChecker.runEvents(eventHandlerFactory.createEventHandlers());
         //Assert.fail();
     }
