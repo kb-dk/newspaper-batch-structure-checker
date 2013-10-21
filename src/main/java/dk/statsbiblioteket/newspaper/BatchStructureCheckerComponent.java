@@ -5,12 +5,12 @@ import java.util.Properties;
 import dk.statsbiblioteket.medieplatform.autonomous.AbstractRunnableComponent;
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.EventHandlerFactory;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.EventRunner;
 import dk.statsbiblioteket.newspaper.eventhandlers.CompleteCheckFactory;
-import dk.statsbiblioteket.newspaper.eventhandlers.EventHandlerFactory;
 
 /**
- * Wraps the BatchStructureChecker as an autonomous component.
- * @author baj
+ * Checks the directory structure of a batch. This should run both at Ninestars and at SB.
  */
 public class BatchStructureCheckerComponent extends AbstractRunnableComponent {
     public BatchStructureCheckerComponent(Properties properties) {
@@ -33,9 +33,14 @@ public class BatchStructureCheckerComponent extends AbstractRunnableComponent {
     }
 
     @Override
+    /**
+     * Check the batch-structure tree received for errors. (I.e. we are gonna check the received tree for
+     * errors. The tree received represents a batch structure, which is the structure of a batch).
+     *
+     * @throws IOException
+     */
     public void doWorkOnBatch(Batch batch, ResultCollector resultCollector) throws Exception {
-        EventHandlerFactory eventHandlerFactory = new CompleteCheckFactory(resultCollector);
-        new BatchStructureChecker(createIterator(batch)).checkBatchStructure(
-                eventHandlerFactory.createEventHandlers());
+        EventHandlerFactory eventHandlerFactory = new CompleteCheckFactory(getProperties(), batch.getBatchID(), resultCollector);
+        new EventRunner(createIterator(batch)).runEvents(eventHandlerFactory.createEventHandlers());
     }
 }

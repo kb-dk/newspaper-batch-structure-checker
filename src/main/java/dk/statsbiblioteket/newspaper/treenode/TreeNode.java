@@ -1,7 +1,5 @@
 package dk.statsbiblioteket.newspaper.treenode;
 
-import dk.statsbiblioteket.newspaper.eventhandlers.filter.NodeType;
-
 public class TreeNode {
     private final String name;
     private final NodeType type;

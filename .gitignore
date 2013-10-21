@@ -6,3 +6,4 @@
 **/*.ipr
 **/*.iml
 target/*
+test-output/*

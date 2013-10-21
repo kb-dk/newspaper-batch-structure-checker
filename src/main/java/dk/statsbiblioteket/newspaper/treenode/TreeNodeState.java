@@ -2,13 +2,12 @@ package dk.statsbiblioteket.newspaper.treenode;
 
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeBeginsParsingEvent;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeEndParsingEvent;
-import dk.statsbiblioteket.newspaper.eventhandlers.DefaultTreeEventHandler;
-import dk.statsbiblioteket.newspaper.eventhandlers.filter.NodeType;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.DefaultTreeEventHandler;
 
 /**
  * Provides functionality for accessing the current state for the current node in the batch structure.
  */
-public class TreeNodeState  extends DefaultTreeEventHandler {
+public class TreeNodeState extends DefaultTreeEventHandler {
     private TreeNode currentNode = null;
 
     public TreeNode getCurrentNode() {

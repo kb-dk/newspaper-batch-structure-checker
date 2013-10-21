@@ -2,7 +2,6 @@ package dk.statsbiblioteket.newspaper.treenode;
 
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeBeginsParsingEvent;
 import dk.statsbiblioteket.newspaper.eventhandlers.TestEventHelper;
-import dk.statsbiblioteket.newspaper.eventhandlers.filter.NodeType;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.*;

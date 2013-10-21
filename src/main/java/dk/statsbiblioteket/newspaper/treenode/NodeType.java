@@ -1,4 +1,4 @@
-package dk.statsbiblioteket.newspaper.eventhandlers.filter;
+package dk.statsbiblioteket.newspaper.treenode;
 
 public enum NodeType {
     UDGAVE,
