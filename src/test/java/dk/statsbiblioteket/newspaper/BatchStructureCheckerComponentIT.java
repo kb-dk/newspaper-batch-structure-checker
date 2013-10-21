@@ -45,7 +45,8 @@ public class BatchStructureCheckerComponentIT {
      * @throws URISyntaxException
      */
     public TreeIterator getIterator() throws URISyntaxException {
-        File file = new File(Thread.currentThread().getContextClassLoader().getResource("batch").toURI());
+        String pathToTestBatch = System.getProperty("integration.test.newspaper.testdata");
+        File file = new File(pathToTestBatch + "/small-test-batch/");
         System.out.println(file);
         return new TransformingIteratorForFileSystems(file, "\\.", "\\.jp2$", ".md5");
     }
