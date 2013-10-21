@@ -1,6 +1,8 @@
 package dk.statsbiblioteket.newspaper.eventhandlers;
 
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.AttributeParsingEvent;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.DefaultTreeEventHandler;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.TreeEventHandler;
 
 import java.util.Arrays;
 import java.util.List;
