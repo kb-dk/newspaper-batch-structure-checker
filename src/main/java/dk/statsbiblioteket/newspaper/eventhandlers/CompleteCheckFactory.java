@@ -54,6 +54,7 @@ public class CompleteCheckFactory implements EventHandlerFactory {
         eventHandlers.add(nodeState);
         eventHandlers.add(new ChecksumExistenceChecker(resultCollector));
         eventHandlers.add(new LeafFilter(LeafType.JP2, new SequenceChecker(resultCollector)));
+        eventHandlers.add(new BatchIDAndRoundtripChecker(batch, resultCollector, nodeState));
         return eventHandlers;
     }
 }
