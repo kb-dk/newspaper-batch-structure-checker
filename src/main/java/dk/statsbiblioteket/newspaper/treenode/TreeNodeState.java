@@ -28,7 +28,9 @@ public class TreeNodeState extends DefaultTreeEventHandler {
         NodeType nextNodeType = null;
         if (currentNode == null) {
             nextNodeType = NodeType.BATCH;
-        } else if (currentNode.getType().equals(NodeType.BATCH)) {
+        }  else if (currentNode.getType().equals(NodeType.BATCH)) {
+            nextNodeType = NodeType.ROUNDTRIP;
+        } else if (currentNode.getType().equals(NodeType.ROUNDTRIP)) {
             if (event.getName().endsWith("WORKSHIFT-ISO-TARGET")) {
                 nextNodeType = NodeType.WORKSHIFT_ISO_TARGET;
             } else {
@@ -42,6 +44,10 @@ public class TreeNodeState extends DefaultTreeEventHandler {
             } else {
                 nextNodeType = NodeType.UDGAVE;
             }
+        } else if (currentNode.getType().equals(NodeType.UDGAVE)) {
+            nextNodeType = NodeType.PAGE;
+        }  else if (currentNode.getType().equals(NodeType.PAGE)) {
+            nextNodeType = NodeType.PAGE_IMAGE;
         } else {
             throw new IllegalStateException("Unexpected event: " + event + " for current node: " + currentNode);
         }
