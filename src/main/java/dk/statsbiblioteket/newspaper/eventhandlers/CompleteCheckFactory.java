@@ -9,8 +9,6 @@ import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.EventHandlerFactory;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.TreeEventHandler;
-import dk.statsbiblioteket.newspaper.eventhandlers.filter.LeafFilter;
-import dk.statsbiblioteket.newspaper.eventhandlers.filter.LeafType;
 import dk.statsbiblioteket.newspaper.mfpakintegration.configuration.MfPakConfiguration;
 import dk.statsbiblioteket.newspaper.mfpakintegration.database.MfPakDAO;
 import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
@@ -53,7 +51,7 @@ public class CompleteCheckFactory implements EventHandlerFactory {
         TreeNodeState nodeState = new TreeNodeState();
         eventHandlers.add(nodeState); // Must be the first eventhandler to ensure a update state used by the following handlers (a bit fragile).
         eventHandlers.add(new ChecksumExistenceChecker(resultCollector));
-        eventHandlers.add(new LeafFilter(LeafType.JP2, new SequenceChecker(resultCollector, nodeState)));
+        eventHandlers.add(new SequenceChecker(resultCollector, nodeState));
         eventHandlers.add(new BatchIDAndRoundtripChecker(batch, resultCollector, nodeState));        
         return eventHandlers;
     }
