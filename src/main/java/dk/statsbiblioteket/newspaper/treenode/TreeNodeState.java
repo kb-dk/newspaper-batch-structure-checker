@@ -32,11 +32,11 @@ public class TreeNodeState extends DefaultTreeEventHandler {
             if (event.getName().endsWith("WORKSHIFT-ISO-TARGET")) {
                 nextNodeType = NodeType.WORKSHIFT_ISO_TARGET;
             } else {
-                nextNodeType = NodeType.FILMID;
+                nextNodeType = NodeType.FILM;
             }
-        } else if (currentNode.getType().equals(NodeType.FILMID)) {
+        } else if (currentNode.getType().equals(NodeType.FILM)) {
             if (event.getName().endsWith("FILM-ISO-TARGET")) {
-                nextNodeType = NodeType.FILMID;
+                nextNodeType = NodeType.ISO_TARGET_ON_FILM;
             } else if (event.getName().endsWith("UNMATCHED")) {
                 nextNodeType = NodeType.UNMATCHED;
             } else {
