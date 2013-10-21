@@ -16,6 +16,8 @@ import dk.statsbiblioteket.newspaper.eventhandlers.CompleteCheckFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import static org.testng.Assert.assertTrue;
+
 /**
  */
 public class BatchStructureCheckerComponentIT {
@@ -36,9 +38,11 @@ public class BatchStructureCheckerComponentIT {
         ResultCollector resultCollector = new ResultCollector("Batch Structure Checker", "v0.1");
         Batch batch = new Batch();
         batch.setBatchID(TEST_BATCH_ID);
+        batch.setRoundTripNumber(1);
 
         EventHandlerFactory eventHandlerFactory = new CompleteCheckFactory(properties, batch, resultCollector);
         batchStructureChecker.runEvents(eventHandlerFactory.createEventHandlers());
+        assertTrue(resultCollector.isSuccess());
         //Assert.fail();
     }
 
