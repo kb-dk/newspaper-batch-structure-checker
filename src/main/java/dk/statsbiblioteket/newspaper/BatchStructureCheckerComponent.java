@@ -11,7 +11,6 @@ import dk.statsbiblioteket.newspaper.eventhandlers.CompleteCheckFactory;
 
 /**
  * Checks the directory structure of a batch. This should run both at Ninestars and at SB.
- * @author baj
  */
 public class BatchStructureCheckerComponent extends AbstractRunnableComponent {
     public BatchStructureCheckerComponent(Properties properties) {
@@ -41,7 +40,7 @@ public class BatchStructureCheckerComponent extends AbstractRunnableComponent {
      * @throws IOException
      */
     public void doWorkOnBatch(Batch batch, ResultCollector resultCollector) throws Exception {
-        EventHandlerFactory eventHandlerFactory = new CompleteCheckFactory(getProperties(), batch.getBatchID(), resultCollector);
+        EventHandlerFactory eventHandlerFactory = new CompleteCheckFactory(getProperties(), batch, resultCollector);
         new EventRunner(createIterator(batch)).runEvents(eventHandlerFactory.createEventHandlers());
     }
 }

@@ -8,6 +8,8 @@ import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.AttributeParsingEvent;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.DefaultTreeEventHandler;
 
+import dk.statsbiblioteket.newspaper.treenode.NodeType;
+import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,15 +25,19 @@ import org.slf4j.LoggerFactory;
 public class SequenceChecker extends DefaultTreeEventHandler {
     private static Logger log = LoggerFactory.getLogger(SequenceChecker.class);
     private final ResultCollector resultCollector;
+    private final TreeNodeState treeNodeState;
     private List<String> billedIDs = new ArrayList<>();
 
-    public SequenceChecker(ResultCollector r) {
+    public SequenceChecker(ResultCollector r, TreeNodeState treeNodeState) {
         resultCollector = r;
+        this.treeNodeState = treeNodeState;
     }
 
     @Override
     public void handleAttribute(AttributeParsingEvent event) {
-        billedIDs.add(event.getName());
+        if (treeNodeState.getCurrentNode().getType().equals(NodeType.UDGAVE)) {
+            billedIDs.add(event.getName());
+        }
     }
 
     @Override

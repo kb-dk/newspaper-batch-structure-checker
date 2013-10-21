@@ -1,11 +1,12 @@
-package dk.statsbiblioteket.newspaper.eventhandlers;
+
+package dk.statsbiblioteket.newspaper.eventhandlers.filter;
+
+import java.util.Arrays;
+import java.util.List;
 
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.AttributeParsingEvent;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.DefaultTreeEventHandler;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.TreeEventHandler;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * May be used to filter the leaf events according to certain leaf types.
