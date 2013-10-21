@@ -1,4 +1,4 @@
-package dk.statsbiblioteket.newspaper.eventhandlers;
+package dk.statsbiblioteket.newspaper.eventhandlers.filter;
 
 public enum LeafType {
     ALTO_XML(".alto.xml"),
