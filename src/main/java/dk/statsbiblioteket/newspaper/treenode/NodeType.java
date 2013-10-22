@@ -12,5 +12,5 @@ public enum NodeType {
     UNMATCHED,
     UDGAVE,
     PAGE,
-    PAGE_IMAGE;
+    IMAGE;
 }

@@ -50,7 +50,7 @@ public class TreeNodeState extends DefaultTreeEventHandler {
                 currentNode.getType().equals(NodeType.WORKSHIFT_ISO_TARGET)) {
             nextNodeType = NodeType.PAGE;
         }  else if (currentNode.getType().equals(NodeType.PAGE)) {
-            nextNodeType = NodeType.PAGE_IMAGE;
+            nextNodeType = NodeType.IMAGE;
         } else {
             throw new IllegalStateException("Unexpected event: " + event + " for current node: " + currentNode);
         }

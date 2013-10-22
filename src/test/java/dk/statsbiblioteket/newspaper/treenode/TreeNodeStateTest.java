@@ -181,7 +181,7 @@ public class TreeNodeStateTest {
         treeNodeState.handleNodeBegin(pageImageNodeBegin);
 
         assertNotNull(treeNodeState.getCurrentNode());
-        assertEquals(treeNodeState.getCurrentNode().getType(), NodeType.PAGE_IMAGE);
+        assertEquals(treeNodeState.getCurrentNode().getType(), NodeType.IMAGE);
         assertEquals(treeNodeState.getCurrentNode().getName(), pageImageNodeBegin.getName());
         assertNotNull(treeNodeState.getCurrentNode().getParent());
         assertEquals(treeNodeState.getCurrentNode().getParent().getType(), NodeType.PAGE);
