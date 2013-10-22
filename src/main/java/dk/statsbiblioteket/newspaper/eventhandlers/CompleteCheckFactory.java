@@ -51,7 +51,7 @@ public class CompleteCheckFactory implements EventHandlerFactory {
         TreeNodeState nodeState = new TreeNodeState();
         eventHandlers.add(nodeState); // Must be the first eventhandler to ensure a update state used by the following handlers (a bit fragile).
         eventHandlers.add(new ChecksumExistenceChecker(resultCollector));
-        eventHandlers.add(new SequenceChecker(resultCollector, nodeState));
+        eventHandlers.add(new BilledIDSequenceChecker(resultCollector, nodeState));
         eventHandlers.add(new BatchIDAndRoundtripChecker(batch, resultCollector, nodeState));        
         return eventHandlers;
     }
