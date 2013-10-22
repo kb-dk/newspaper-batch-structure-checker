@@ -36,13 +36,16 @@ public class SequenceChecker extends DefaultTreeEventHandler {
     @Override
     public void handleNodeBegin(NodeBeginsParsingEvent event) {
         if (treeNodeState.getCurrentNode().getType().equals(NodeType.PAGE_IMAGE)) {
-            billedIDs.add(event.getName());
+            if (!treeNodeState.getCurrentNode().getName().contains("brik")) {
+                billedIDs.add(event.getName());
+            }
         }
     }
 
     @Override
     public void handleNodeEnd(NodeEndParsingEvent event) {
-        if (treeNodeState.getCurrentNode().getType().equals(NodeType.FILM)) {
+        if (treeNodeState.getCurrentNode() != null && //Finished
+            treeNodeState.getCurrentNode().getType().equals(NodeType.FILM)) {
             checkSequence();
         }
     }
@@ -50,9 +53,22 @@ public class SequenceChecker extends DefaultTreeEventHandler {
     public void checkSequence() {
         //ToDO Check the collected billedIDs, properly by filtering them first.
         Collections.sort(billedIDs);
+        int pageCounter = 0;
+        String lastScan;
         for (String billedID : billedIDs) {
+            // initialize the first time.
+            if (pageCounter == 0) {
+                //pageCounter =
+            }
 
         }
         billedIDs = new ArrayList<>();
+    }
+
+    private String getBilledID(String fileName) {
+        int lenght = fileName.length();
+        int startIndex = fileName.indexOf(".jp2");
+        int endIndex = fileName.indexOf(".jp2");
+        return fileName.substring(startIndex, endIndex);
     }
 }
