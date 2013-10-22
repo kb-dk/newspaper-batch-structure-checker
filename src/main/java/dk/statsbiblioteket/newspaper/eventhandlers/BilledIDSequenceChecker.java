@@ -22,13 +22,13 @@ import org.slf4j.LoggerFactory;
  *     in the sequence.</li>
  * </ol>
  */
-public class SequenceChecker extends DefaultTreeEventHandler {
-    private static Logger log = LoggerFactory.getLogger(SequenceChecker.class);
+public class BilledIDSequenceChecker extends DefaultTreeEventHandler {
+    private static Logger log = LoggerFactory.getLogger(BilledIDSequenceChecker.class);
     private final ResultCollector resultCollector;
     private final TreeNodeState treeNodeState;
     private List<String> billedIDs = new ArrayList<>();
 
-    public SequenceChecker(ResultCollector r, TreeNodeState treeNodeState) {
+    public BilledIDSequenceChecker(ResultCollector r, TreeNodeState treeNodeState) {
         resultCollector = r;
         this.treeNodeState = treeNodeState;
     }
@@ -53,22 +53,48 @@ public class SequenceChecker extends DefaultTreeEventHandler {
     public void checkSequence() {
         //ToDO Check the collected billedIDs, properly by filtering them first.
         Collections.sort(billedIDs);
-        int pageCounter = 0;
-        String lastScan;
+        int lastPageCounter = 0;
+        String lastBilledIDCounter = null;
         for (String billedID : billedIDs) {
-            // initialize the first time.
-            if (pageCounter == 0) {
+            String currentBilledIDCounter = getBilledID(billedID);
+            int currentPageCounter = getPageCounter(currentBilledIDCounter);
+
+            if (lastPageCounter != 0 && lastBilledIDCounter != null) {
+                if (lastBilledIDCounter.endsWith("A") && !currentBilledIDCounter.endsWith("B")) {
+                    registerFailure(billedID, "NNNNA billedID found without matching NNNNB billedID");
+                } else if (currentBilledIDCounter.endsWith("B") && !lastBilledIDCounter.endsWith("A")) {
+                    registerFailure(billedID, "NNNNB billedID found without matching NNNNA billedID");
+                }
                 //pageCounter =
+            } else {
+                if (!(currentBilledIDCounter.length() == 4 || currentBilledIDCounter.endsWith("A"))) {
+                    registerFailure(billedID, "The first BilledID in a Udgavemust either be a clean number or contain a 'A' postfix");
+                }
             }
 
+            lastBilledIDCounter =  currentBilledIDCounter;
+            lastPageCounter = currentPageCounter;
         }
         billedIDs = new ArrayList<>();
     }
 
     private String getBilledID(String fileName) {
-        int lenght = fileName.length();
-        int startIndex = fileName.indexOf(".jp2");
+        int startIndex = fileName.lastIndexOf('-') + 1;
         int endIndex = fileName.indexOf(".jp2");
         return fileName.substring(startIndex, endIndex);
+    }
+
+    private int getPageCounter(String billedIDCounter) {
+        String pageCounterString;
+        if (billedIDCounter.length() == 5) {
+            pageCounterString =  billedIDCounter.substring(0,4);
+        } else {
+            pageCounterString = billedIDCounter;
+        }
+        return Integer.parseInt(pageCounterString);
+    }
+
+    private void registerFailure(String billedID, String description) {
+        resultCollector.addFailure(billedID, "PageSequenceCheck", getClass().getSimpleName(), description);
     }
 }

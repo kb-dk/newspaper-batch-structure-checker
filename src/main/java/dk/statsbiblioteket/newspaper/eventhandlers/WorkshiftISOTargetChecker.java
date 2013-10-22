@@ -3,13 +3,11 @@ package dk.statsbiblioteket.newspaper.eventhandlers;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.AttributeParsingEvent;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.DefaultTreeEventHandler;
-import dk.statsbiblioteket.newspaper.treenode.NodeType;
 import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -18,7 +16,7 @@ import java.util.List;
  * @author jrg
  */
 public class WorkshiftISOTargetChecker extends DefaultTreeEventHandler {
-    private static Logger log = LoggerFactory.getLogger(SequenceChecker.class);
+    private static Logger log = LoggerFactory.getLogger(BilledIDSequenceChecker.class);
     private final ResultCollector resultCollector;
     private final TreeNodeState treeNodeState;
     private List<String> targetSerialisedNumbers = new ArrayList<>();
