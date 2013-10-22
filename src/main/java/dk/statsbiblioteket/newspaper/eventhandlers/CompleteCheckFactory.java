@@ -46,13 +46,13 @@ public class CompleteCheckFactory implements EventHandlerFactory {
         } catch (SQLException e) {
             throw new IllegalStateException("Failed to get newspaperID from mfpak database", e);
         }
-        //eventHandlers.add(new NewspaperIDChecker(newspaperID, resultCollector));
         //eventHandlers.add(new ConsoleLogger());
         TreeNodeState nodeState = new TreeNodeState();
         eventHandlers.add(nodeState); // Must be the first eventhandler to ensure a update state used by the following handlers (a bit fragile).
         eventHandlers.add(new ChecksumExistenceChecker(resultCollector));
         eventHandlers.add(new SequenceChecker(resultCollector, nodeState));
-        eventHandlers.add(new BatchIDAndRoundtripChecker(batch, resultCollector, nodeState));        
+        eventHandlers.add(new BatchIDAndRoundtripChecker(batch, resultCollector, nodeState));
+        eventHandlers.add(new NewspaperIDChecker(newspaperID, resultCollector));
         return eventHandlers;
     }
 }
