@@ -16,7 +16,7 @@ import java.util.List;
  * @author jrg
  */
 public class WorkshiftISOTargetChecker extends DefaultTreeEventHandler {
-    private static Logger log = LoggerFactory.getLogger(BilledIDSequenceChecker.class);
+    private static Logger log = LoggerFactory.getLogger(ImageIDSequenceChecker.class);
     private final ResultCollector resultCollector;
     private final TreeNodeState treeNodeState;
     private List<String> targetSerialisedNumbers = new ArrayList<>();
