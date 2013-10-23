@@ -50,16 +50,24 @@ public class BatchNodeChecker extends AbstractNodeChecker {
         } else {
             batchNumberString = m.group(1);
         }
+        boolean foundWorkshopIsoTarget = false;
+        int numberOfFilmDirectories = 0; //TODO What to do with this?
         for (String childNode: childNodes) {
             String childNodeName = getLastTokenInPath(childNode);
             switch (childNodeName) {
                 case("WORKSHOP-ISO-TARGET"):
+                    foundWorkshopIsoTarget = true;
                     break;
                 default:    //Should be a film directory
                     String expectedName = batchNumberString + "-[0-9]{2}";
                     if (!name.matches(expectedName)) {
                         addFailure("unexpecteddirectory", "Found unexpected directory " + childNodeName + " in " + name);
+                    } else {
+                        numberOfFilmDirectories++;
                     }
+            }
+            if (!foundWorkshopIsoTarget) {
+                addFailure("missingdirectory", "No WORKSHOP-ISO-TARGET directory found in " + name);
             }
         }
     }

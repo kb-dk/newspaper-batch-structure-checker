@@ -139,10 +139,10 @@ public class BatchNodeCheckerTest {
     private final static String TEST_BATCH_ID = "400022028241";
 
     /**
-     * Tests that the BatchStructureChecker can parse a production like batch.
+     * Tests the BatchNodeChecker on real file-based data.
      */
     @Test(groups = "integrationTest")
-    public void testBatchNodeChecker() throws Exception {
+    public void testBatchNodeCheckerIT() throws Exception {
         String pathToProperties = System.getProperty("integration.test.newspaper.properties");
         Properties properties = new Properties();
         properties.load(new FileInputStream(pathToProperties));
