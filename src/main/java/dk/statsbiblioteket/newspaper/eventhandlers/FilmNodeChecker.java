@@ -5,11 +5,7 @@ import dk.statsbiblioteket.newspaper.treenode.NodeType;
 import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
 
 /**
- * Created with IntelliJ IDEA.
- * User: csr
- * Date: 23/10/13
- * Time: 08:06
- * To change this template use File | Settings | File Templates.
+ * STUB IMPLEMENTATION !!!
  */
 public class FilmNodeChecker extends AbstractNodeChecker {
 
