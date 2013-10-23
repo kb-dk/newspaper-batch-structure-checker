@@ -29,8 +29,6 @@ public class TreeNodeState extends DefaultTreeEventHandler {
         if (currentNode == null) {
             nextNodeType = NodeType.BATCH;
         }  else if (currentNode.getType().equals(NodeType.BATCH)) {
-            nextNodeType = NodeType.ROUNDTRIP;
-        } else if (currentNode.getType().equals(NodeType.ROUNDTRIP)) {
             if (event.getName().endsWith("WORKSHIFT-ISO-TARGET")) {
                 nextNodeType = NodeType.WORKSHIFT_ISO_TARGET;
             } else {
