@@ -22,7 +22,7 @@ public class BatchStructureCheckerComponentIT {
         String pathToTestBatch = System.getProperty("integration.test.newspaper.testdata");
         Properties properties = new Properties();
         properties.load(new FileInputStream(pathToProperties));
-        properties.setProperty("scratch", pathToTestBatch);
+        properties.setProperty("scratch", pathToTestBatch + "/" + "small-test-batch");
 
         BatchStructureCheckerComponent batchStructureCheckerComponent =
                 new BatchStructureCheckerComponent(properties);
