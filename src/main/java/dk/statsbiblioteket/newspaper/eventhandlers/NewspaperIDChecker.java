@@ -40,7 +40,9 @@ public class NewspaperIDChecker extends DefaultTreeEventHandler {
     @Override
     public void handleAttribute(AttributeParsingEvent event) {
         if(checkBranch) {
-             if(!event.getName().startsWith(newspaperID)) {
+            String[] filenameParts = event.getName().split("/");
+            String filename = filenameParts[filenameParts.length-1];
+             if(!filename.startsWith(newspaperID + "-")) {
                  resultCollector.addFailure(event.getName(), "filestructure", "NewspaperIDChecker",
                          "Bad newspaperID for " + event.getName());
              }
