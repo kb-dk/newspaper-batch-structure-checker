@@ -39,7 +39,7 @@ public class BatchNodeChecker extends AbstractNodeChecker {
         }
         if (!attributes.isEmpty()) {
             for (String attribute: attributes) {
-                addFailure("unexpectedfile", "Found unexpected file " + getLastTokenInPath(attribute) + " in " + name);
+                addFailure("unexpectedfile", "Found unexpected file " + Util.getLastTokenInPath(attribute) + " in " + name);
             }
         }
         String batchNumberString = null;
@@ -52,8 +52,9 @@ public class BatchNodeChecker extends AbstractNodeChecker {
         }
         boolean foundWorkshopIsoTarget = false;
         int numberOfFilmDirectories = 0; //TODO What to do with this?
+                                         //Collect file suffices at check that they are sequential?
         for (String childNode: childNodes) {
-            String childNodeName = getLastTokenInPath(childNode);
+            String childNodeName = Util.getLastTokenInPath(childNode);
             switch (childNodeName) {
                 case("WORKSHOP-ISO-TARGET"):
                     foundWorkshopIsoTarget = true;
@@ -74,11 +75,6 @@ public class BatchNodeChecker extends AbstractNodeChecker {
 
     private void addFailure(String type, String description) {
         resultCollector.addFailure(name, type, this.getClass().getName(), description);
-    }
-
-    private static String getLastTokenInPath(String name) {
-        String [] nameSplit = name.split("/");
-        return nameSplit[nameSplit.length -1];
     }
 
     @Override
