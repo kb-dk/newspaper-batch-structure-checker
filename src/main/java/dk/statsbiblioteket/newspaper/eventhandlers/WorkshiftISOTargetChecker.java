@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Performs various checks on WORKSHIFT_ISO_TARGET folder and its files.
@@ -49,7 +51,18 @@ public class WorkshiftISOTargetChecker extends DefaultTreeEventHandler {
             return;
         }
 
-        // If file is not a (correctly named) target-file, report an error TODO
+        String attributeName = event.getName();
+
+        // Desired format: "Target-[targetSerialisedNumber]-[billedID].jp2" or equivalent .mix.xml
+        Pattern pattern = Pattern.compile("^Target-(\\d{6})-(\\d{4})(\\.jp2|\\.mix\\.xml)$");
+        Matcher matcher = pattern.matcher(attributeName);
+
+        if (matcher.find()) {
+            targetSerialisedNumbers.add(matcher.group(1));
+        } else {
+            resultCollector.addFailure(event.getName(), "filestructure",
+                    "WorkshiftISOTargetChecker", "Wrong format of target-file name");
+        }
 
 
         // File is a target file, set targetFilesExist to true TODO
