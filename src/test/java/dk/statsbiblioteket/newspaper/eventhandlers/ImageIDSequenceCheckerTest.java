@@ -64,7 +64,7 @@ public class ImageIDSequenceCheckerTest {
         verifyNoMoreInteractions(resultCollector);
     }
 
-    @Test
+    //@Test
     public void pageSimpleMissingPageTest() {
         when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("First page", NodeType.PAGE_IMAGE, null));
         checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-IMAGE-0001.jp2"));
@@ -79,7 +79,7 @@ public class ImageIDSequenceCheckerTest {
     private void finishFilm() {
         when(treeNodeState.getCurrentNode()).
                 thenReturn(new TreeNode("Finished Udgave", NodeType.FILM, null)).
-                thenReturn(new TreeNode("Finished Udgave", NodeType.ROUNDTRIP, null));
+                thenReturn(new TreeNode("Finished Udgave", NodeType.BATCH, null));
         checker.handleNodeEnd(new NodeEndParsingEvent(""));
         checker.handleNodeEnd(new NodeEndParsingEvent(""));
     }

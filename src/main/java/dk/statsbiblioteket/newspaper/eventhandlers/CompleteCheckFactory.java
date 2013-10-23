@@ -7,7 +7,6 @@ import java.util.Properties;
 
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
-import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.ConsoleLogger;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.EventHandlerFactory;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.TreeEventHandler;
 import dk.statsbiblioteket.newspaper.mfpakintegration.configuration.MfPakConfiguration;
@@ -48,7 +47,7 @@ public class CompleteCheckFactory implements EventHandlerFactory {
             throw new IllegalStateException("Failed to get newspaperID from mfpak database", e);
         }
         //eventHandlers.add(new NewspaperIDChecker(newspaperID, resultCollector));
-        eventHandlers.add(new ConsoleLogger());
+        //eventHandlers.add(new ConsoleLogger());
         TreeNodeState nodeState = new TreeNodeState();
         eventHandlers.add(nodeState); // Must be the first eventhandler to ensure a update state used by the following handlers (a bit fragile).
         eventHandlers.add(new ChecksumExistenceChecker(resultCollector));

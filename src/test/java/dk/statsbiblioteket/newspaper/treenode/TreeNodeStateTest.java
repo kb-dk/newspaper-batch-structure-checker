@@ -23,27 +23,9 @@ public class TreeNodeStateTest {
     }
 
     @Test
-    public void roundtripNodeTest() {
-        TreeNodeState treeNodeState = new TreeNodeState();
-
-        TestEventHelper.createBatchBeginEvent(1);
-        treeNodeState.handleNodeBegin(TestEventHelper.createBatchBeginEvent(1));
-        NodeBeginsParsingEvent workNodeBegin = new NodeBeginsParsingEvent("B400022028241-RT1");
-        treeNodeState.handleNodeBegin(workNodeBegin);
-
-        assertNotNull(treeNodeState.getCurrentNode());
-        assertEquals(treeNodeState.getCurrentNode().getName(), workNodeBegin.getName());
-        assertEquals(treeNodeState.getCurrentNode().getType(), NodeType.ROUNDTRIP);
-        assertNotNull(treeNodeState.getCurrentNode().getParent());
-        assertEquals(treeNodeState.getCurrentNode().getParent().getType(), NodeType.BATCH);
-    }
-
-    @Test
     public void workshiftNodeTest() {
         TreeNodeState treeNodeState = new TreeNodeState();
 
-        TestEventHelper.createBatchBeginEvent(1);
-        treeNodeState.handleNodeBegin(TestEventHelper.createBatchBeginEvent(1));
         treeNodeState.handleNodeBegin(new NodeBeginsParsingEvent("B400022028241-RT1"));
         NodeBeginsParsingEvent workNodeBegin = new NodeBeginsParsingEvent("WORKSHIFT-ISO-TARGET");
         treeNodeState.handleNodeBegin(workNodeBegin);
@@ -52,15 +34,13 @@ public class TreeNodeStateTest {
         assertEquals(treeNodeState.getCurrentNode().getName(), workNodeBegin.getName());
         assertEquals(treeNodeState.getCurrentNode().getType(), NodeType.WORKSHIFT_ISO_TARGET);
         assertNotNull(treeNodeState.getCurrentNode().getParent());
-        assertEquals(treeNodeState.getCurrentNode().getParent().getType(), NodeType.ROUNDTRIP);
+        assertEquals(treeNodeState.getCurrentNode().getParent().getType(), NodeType.BATCH);
     }
 
     @Test
     public void filmNodeTest() {
         TreeNodeState treeNodeState = new TreeNodeState();
 
-        TestEventHelper.createBatchBeginEvent(1);
-        treeNodeState.handleNodeBegin(TestEventHelper.createBatchBeginEvent(1));
         treeNodeState.handleNodeBegin(new NodeBeginsParsingEvent("B400022028241-RT1"));
         NodeBeginsParsingEvent workNodeBegin = new NodeBeginsParsingEvent("400022028241-14");
         treeNodeState.handleNodeBegin(workNodeBegin);
@@ -69,15 +49,13 @@ public class TreeNodeStateTest {
         assertEquals(treeNodeState.getCurrentNode().getName(), workNodeBegin.getName());
         assertEquals(treeNodeState.getCurrentNode().getType(), NodeType.FILM);
         assertNotNull(treeNodeState.getCurrentNode().getParent());
-        assertEquals(treeNodeState.getCurrentNode().getParent().getType(), NodeType.ROUNDTRIP);
+        assertEquals(treeNodeState.getCurrentNode().getParent().getType(), NodeType.BATCH);
     }
 
     @Test
     public void unmatchedTest() {
         TreeNodeState treeNodeState = new TreeNodeState();
 
-        TestEventHelper.createBatchBeginEvent(1);
-        treeNodeState.handleNodeBegin(TestEventHelper.createBatchBeginEvent(1));
         treeNodeState.handleNodeBegin(new NodeBeginsParsingEvent("B400022028241-RT1"));
         treeNodeState.handleNodeBegin(new NodeBeginsParsingEvent("400022028241-14"));
         NodeBeginsParsingEvent unmatchNodeBegin = new NodeBeginsParsingEvent("UNMATCHED");
@@ -94,8 +72,6 @@ public class TreeNodeStateTest {
     public void filmIsoTargetTest() {
         TreeNodeState treeNodeState = new TreeNodeState();
 
-        TestEventHelper.createBatchBeginEvent(1);
-        treeNodeState.handleNodeBegin(TestEventHelper.createBatchBeginEvent(1));
         treeNodeState.handleNodeBegin(new NodeBeginsParsingEvent("B400022028241-RT1"));
         treeNodeState.handleNodeBegin(new NodeBeginsParsingEvent("400022028241-14"));
         NodeBeginsParsingEvent unmatchNodeBegin = new NodeBeginsParsingEvent("FILM-ISO-TARGET");
@@ -112,8 +88,6 @@ public class TreeNodeStateTest {
     public void udgaveTest() {
         TreeNodeState treeNodeState = new TreeNodeState();
 
-        TestEventHelper.createBatchBeginEvent(1);
-        treeNodeState.handleNodeBegin(TestEventHelper.createBatchBeginEvent(1));
         treeNodeState.handleNodeBegin(new NodeBeginsParsingEvent("B400022028241-RT1"));
         treeNodeState.handleNodeBegin(new NodeBeginsParsingEvent("400022028241-14"));
         NodeBeginsParsingEvent udgaveNodeBegin = new NodeBeginsParsingEvent("1860-10-18-01");
@@ -141,8 +115,6 @@ public class TreeNodeStateTest {
     public void pageTest() {
         TreeNodeState treeNodeState = new TreeNodeState();
 
-        TestEventHelper.createBatchBeginEvent(1);
-        treeNodeState.handleNodeBegin(TestEventHelper.createBatchBeginEvent(1));
         treeNodeState.handleNodeBegin(new NodeBeginsParsingEvent("B400022028241-RT1"));
         treeNodeState.handleNodeBegin(new NodeBeginsParsingEvent("400022028241-14"));
         treeNodeState.handleNodeBegin(new NodeBeginsParsingEvent("1860-10-18-01"));
@@ -171,8 +143,6 @@ public class TreeNodeStateTest {
     public void pageImageTest() {
         TreeNodeState treeNodeState = new TreeNodeState();
 
-        TestEventHelper.createBatchBeginEvent(1);
-        treeNodeState.handleNodeBegin(TestEventHelper.createBatchBeginEvent(1));
         treeNodeState.handleNodeBegin(new NodeBeginsParsingEvent("B400022028241-RT1"));
         treeNodeState.handleNodeBegin(new NodeBeginsParsingEvent("400022028241-14"));
         treeNodeState.handleNodeBegin(new NodeBeginsParsingEvent("1860-10-18-01"));
@@ -193,8 +163,6 @@ public class TreeNodeStateTest {
     public void nodeEndTest() {
         TreeNodeState treeNodeState = new TreeNodeState();
 
-        TestEventHelper.createBatchBeginEvent(1);
-        treeNodeState.handleNodeBegin(TestEventHelper.createBatchBeginEvent(1));
         treeNodeState.handleNodeBegin(new NodeBeginsParsingEvent("B400022028241-RT1"));
         treeNodeState.handleNodeBegin(new NodeBeginsParsingEvent("400022028241-14"));
         NodeBeginsParsingEvent udgaveNodeBegin = new NodeBeginsParsingEvent("1860-10-18-01");
@@ -205,9 +173,6 @@ public class TreeNodeStateTest {
 
         treeNodeState.handleNodeEnd(new NodeEndParsingEvent(udgaveNodeBegin.getName()));
         assertEquals(treeNodeState.getCurrentNode().getType(), NodeType.FILM);
-
-        treeNodeState.handleNodeEnd(new NodeEndParsingEvent(""));
-        assertEquals(treeNodeState.getCurrentNode().getType(), NodeType.ROUNDTRIP);
 
         treeNodeState.handleNodeEnd(new NodeEndParsingEvent(""));
         assertEquals(treeNodeState.getCurrentNode().getType(), NodeType.BATCH);

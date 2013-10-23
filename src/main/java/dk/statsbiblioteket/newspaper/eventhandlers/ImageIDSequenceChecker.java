@@ -98,23 +98,25 @@ public class ImageIDSequenceChecker extends DefaultTreeEventHandler {
             for (String imageID : imageIDs) {
                 String currentImageIDCounter = getImageID(imageID);
                 int currentPageCounter = getPageCounter(currentImageIDCounter);
-                if (!isCleanNumber(currentImageIDCounter) && !currentImageIDCounter.endsWith("A")) {
-                    registerFailure(imageID, "The first ImageID in a edition must either be a clean number or contain a 'A' postfix");
-                } else if (currentPageCounter != 1) {
-                    registerFailure(imageID, "The first ImageID must start with 1");
-                }
-                else if (lastPageCounter != 0 && lastImageIDCounter != null) {
-                    if (lastImageIDCounter.endsWith("A") && !currentImageIDCounter.endsWith("B")) {
-                        registerFailure(imageID, "NNNNA imageID found without matching NNNNB imageID");
-                    } else if (currentImageIDCounter.endsWith("B") && !lastImageIDCounter.endsWith("A")) {
-                        registerFailure(imageID, "NNNNB imageID found without matching NNNNA imageID");
-                    } else if (currentImageIDCounter.endsWith("B")) {
-                        if (lastPageCounter != currentPageCounter) {
+                if (lastPageCounter == 0) {
+                    if (!isCleanNumber(currentImageIDCounter) && !currentImageIDCounter.endsWith("A")) {
+                        registerFailure(imageID, "The first ImageID in a edition must either be a clean number or contain a 'A' postfix");
+                    } else if (currentPageCounter != 1) {
+                        registerFailure(imageID, "The first ImageID must start with 1");
+                    }
+                    else if (lastPageCounter != 0 && lastImageIDCounter != null) {
+                        if (lastImageIDCounter.endsWith("A") && !currentImageIDCounter.endsWith("B")) {
+                            registerFailure(imageID, "NNNNA imageID found without matching NNNNB imageID");
+                        } else if (currentImageIDCounter.endsWith("B") && !lastImageIDCounter.endsWith("A")) {
                             registerFailure(imageID, "NNNNB imageID found without matching NNNNA imageID");
+                        } else if (currentImageIDCounter.endsWith("B")) {
+                            if (lastPageCounter != currentPageCounter) {
+                                registerFailure(imageID, "NNNNB imageID found without matching NNNNA imageID");
+                            }
+                        } else if (currentImageIDCounter.endsWith("A") || !currentImageIDCounter.endsWith("B")) {
+                            if (currentPageCounter != lastPageCounter + 1)
+                                registerFailure(imageID, "Missing sequence number, the previous imageID was " + lastImageIDCounter);
                         }
-                    } else if (currentImageIDCounter.endsWith("A") || !currentImageIDCounter.endsWith("B")) {
-                        if (currentPageCounter != lastPageCounter + 1)
-                            registerFailure(imageID, "Missing sequence number, the previous imageID was " + lastImageIDCounter);
                     }
                 }
 
