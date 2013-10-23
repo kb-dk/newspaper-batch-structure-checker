@@ -29,7 +29,7 @@ public class ImageIDSequenceChecker extends DefaultTreeEventHandler {
     private static Logger log = LoggerFactory.getLogger(ImageIDSequenceChecker.class);
     private final ResultCollector resultCollector;
     private final TreeNodeState treeNodeState;
-    private final SequenceModel sequenceModel;
+    private SequenceModel sequenceModel;
 
     public ImageIDSequenceChecker(ResultCollector r, TreeNodeState treeNodeState) {
         resultCollector = r;
@@ -39,7 +39,7 @@ public class ImageIDSequenceChecker extends DefaultTreeEventHandler {
 
     @Override
     public void handleNodeBegin(NodeBeginsParsingEvent event) {
-        if (treeNodeState.getCurrentNode().getType().equals(NodeType.IMAGE)) {
+        if (treeNodeState.getCurrentNode().getType().equals(NodeType.PAGE_IMAGE)) {
             if (!treeNodeState.getCurrentNode().getName().contains("brik")) {
                 sequenceModel.addImageID(event.getName());
             }
@@ -52,6 +52,7 @@ public class ImageIDSequenceChecker extends DefaultTreeEventHandler {
         if (currentNode != null && //Finished
                 currentNode.getType().equals(NodeType.BATCH)) {
             sequenceModel.verifySequence();
+            sequenceModel = new SequenceModel();
         }
     }
 
@@ -61,31 +62,24 @@ public class ImageIDSequenceChecker extends DefaultTreeEventHandler {
         return fileName.substring(startIndex, endIndex);
     }
 
-    /**
-     * Returns true if the ImageID is in the format NNNN, eg. not followed by a letter.
-     * @return
-     */
-    private boolean isCleanNumber(String imageIDCounter) {
-        return imageIDCounter.length() == 4;
-    }
-
-    private int getPageCounter(String imageIDCounter) {
-        String pageCounterString;
-        if (imageIDCounter.length() == 5) {
-            pageCounterString =  imageIDCounter.substring(0,4);
-        } else {
-            pageCounterString = imageIDCounter;
-        }
-        return Integer.parseInt(pageCounterString);
-    }
-
     private void registerFailure(String imageID, String description) {
         log.info("Found ImageID sequence problem: " + description + " for imageID: " + imageID);
         resultCollector.addFailure(imageID, "PageSequenceCheck", getClass().getSimpleName(), description);
     }
 
-    private class SequenceModel {
+    /**
+     * Implements the page image sequence rules by breaking the check down into 4 rules depending on the type
+     * of page image: <ol>
+     *     <li>First page image. The rules are implemented in the #checkFirstImage(String)</li>
+     *     <li>First page image in </li>
+     * </ol>
+     */
+    public class SequenceModel {
         private List<String> imageIDs = new ArrayList<>();
+        private int lastPageCounter = 0;
+        private String lastImageIDCounter = null;
+        private String currentImageIDCounter;
+        private int currentPageCounter;
 
         public void addImageID(String imageID) {
             imageIDs.add(imageID);
@@ -93,41 +87,102 @@ public class ImageIDSequenceChecker extends DefaultTreeEventHandler {
 
         public void verifySequence() {
             Collections.sort(imageIDs);
-            int lastPageCounter = 0;
-            String lastImageIDCounter = null;
             for (String imageID : imageIDs) {
-                String currentImageIDCounter = getImageID(imageID);
-                int currentPageCounter = getPageCounter(currentImageIDCounter);
+                currentImageIDCounter = getImageID(imageID);
+                currentPageCounter = getPageCounter(currentImageIDCounter);
                 if (lastPageCounter == 0) {
-                    if (!isCleanNumber(currentImageIDCounter) && !currentImageIDCounter.endsWith("A")) {
-                        registerFailure(imageID, "The first ImageID in a edition must either be a clean number or contain a 'A' postfix");
-                    } else if (currentPageCounter != 1) {
-                        registerFailure(imageID, "The first ImageID must start with 1");
-                    }
-                    else if (lastPageCounter != 0 && lastImageIDCounter != null) {
-                        if (lastImageIDCounter.endsWith("A") && !currentImageIDCounter.endsWith("B")) {
-                            registerFailure(imageID, "NNNNA imageID found without matching NNNNB imageID");
-                        } else if (currentImageIDCounter.endsWith("B") && !lastImageIDCounter.endsWith("A")) {
-                            registerFailure(imageID, "NNNNB imageID found without matching NNNNA imageID");
-                        } else if (currentImageIDCounter.endsWith("B")) {
-                            if (lastPageCounter != currentPageCounter) {
-                                registerFailure(imageID, "NNNNB imageID found without matching NNNNA imageID");
-                            }
-                        } else if (currentImageIDCounter.endsWith("A") || !currentImageIDCounter.endsWith("B")) {
-                            if (currentPageCounter != lastPageCounter + 1)
-                                registerFailure(imageID, "Missing sequence number, the previous imageID was " + lastImageIDCounter);
-                        }
-                    }
+                    checkFirstImage(imageID);
+                } else if (currentImageIDCounter.endsWith("A") || isCleanNumber(currentImageIDCounter)) {
+                    checkFirstPartImage(imageID);
+                } else {
+                    checkFollowingPartImage(imageID);
                 }
 
                 lastImageIDCounter =  currentImageIDCounter;
                 lastPageCounter = currentPageCounter;
             }
+            if (currentImageIDCounter != null) {
+                checkFinalPartImage(currentImageIDCounter);
+            }
             imageIDs = new ArrayList<>();
         }
 
-        private abstract class PriorCounterChecker {
-
+        /**
+         * Implements the rules for checking the very first page image.
+         */
+        public void checkFirstImage(String imageID) {
+            if (!isCleanNumber(currentImageIDCounter) && !currentImageIDCounter.endsWith("A")) {
+                registerFailure(imageID, "The first ImageID in a edition must either be a clean number or contain a 'A' postfix");
+            } else if (currentPageCounter != 1) {
+                registerFailure(imageID, "The first ImageID must start with 1");
+            }
         }
+
+        /**
+         * Implements the rules for checking the first page image part of a physical image. This means either
+         * a NNNN or a NNNNA image
+         */
+        public void checkFirstPartImage(String imageID) {
+            if (lastImageIDCounter.endsWith("A") || !isCleanNumber(lastImageIDCounter)) {
+                registerFailure(lastImageIDCounter, "NNNNA imageID found without matching NNNNB imageID");
+            }
+            if (currentPageCounter > lastPageCounter + 1)
+                registerFailure(imageID, "Missing sequence number, the previous imageID was " + lastImageIDCounter);
+            if (currentPageCounter == lastPageCounter)
+                registerFailure(imageID, "Duplicate sequence number, the previous imageID was " + lastImageIDCounter);
+        }
+
+        /**
+         * Implements the rules for checking the second or later page image part of a physical image. This means either
+         * a NNNN or a NNNNA image
+         */
+        public void checkFollowingPartImage(String imageID) {
+            if (currentPageCounter != lastPageCounter)
+                registerFailure(imageID, "Missing sequence number, the previous imageID was " + lastImageIDCounter);
+            if (currentPageCounter != lastPageCounter)
+                registerFailure(imageID, "Missing sequence number, the previous imageID was " + lastImageIDCounter);
+            //if ()
+        }
+
+        /**
+         * Implements the rules for checking the second or later page image part of a physical image. This means either
+         * a NNNN or a NNNNA image
+         */
+        public void checkFinalPartImage(String imageID) {
+            if (imageID.endsWith("A"))
+                registerFailure(imageID, "Final imageID found without matching B imageID");
+        }
+
+        /**
+         * Returns true if the ImageID is in the format NNNN, eg. not followed by a letter.
+         * @return
+         */
+        public boolean isCleanNumber(String imageIDCounter) {
+            return imageIDCounter.length() == 4;
+        }
+
+        /**
+         * Returns true if the ImageID is in the format NNNN, eg. not followed by a letter.
+         * @return
+         */
+        public boolean isFollowPartNumber(String imageIDCounter) {
+            return imageIDCounter.length() == 5 && !imageIDCounter.endsWith("A");
+        }
+
+        private String getPriorPageIDForLetter(String letter) {
+            int charValue = letter.charAt(0);
+            return String.valueOf( (char) (charValue - 1));
+        }
+
+        public int getPageCounter(String imageIDCounter) {
+            String pageCounterString;
+            if (imageIDCounter.length() == 5) {
+                pageCounterString =  imageIDCounter.substring(0,4);
+            } else {
+                pageCounterString = imageIDCounter;
+            }
+            return Integer.parseInt(pageCounterString);
+        }
+
     }
 }

@@ -12,8 +12,6 @@ import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
 import org.testng.annotations.Test;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
@@ -66,7 +64,7 @@ public class FilmNodeCheckerTest {
         NodeEndParsingEvent filmEndEvent = new NodeEndParsingEvent("400022028241-14");
         checker.handleNodeBegin(filmStartEvent);
         checker.handleAttribute(filexmlEvent);
-        state.setCurrentNode(new TreeNode(null, NodeType.UDGAVE, null));
+        state.setCurrentNode(new TreeNode(null, NodeType.EDITION, null));
         checker.handleNodeBegin(firstEditionStart);
         checker.handleNodeEnd(firstEditionEnd);
         checker.handleNodeBegin(secondEditionStart);
@@ -91,7 +89,7 @@ public class FilmNodeCheckerTest {
         NodeEndParsingEvent firstEditionEnd = new NodeEndParsingEvent("2001-01-01-03");
         NodeEndParsingEvent filmEndEvent = new NodeEndParsingEvent("400022028241-14");
         checker.handleNodeBegin(filmStartEvent);
-        state.setCurrentNode(new TreeNode(null, NodeType.UDGAVE, null));
+        state.setCurrentNode(new TreeNode(null, NodeType.EDITION, null));
         checker.handleNodeBegin(firstEditionStart);
         checker.handleNodeEnd(firstEditionEnd);
         state.setCurrentNode(new TreeNode(null, NodeType.FILM, null));
@@ -121,7 +119,7 @@ public class FilmNodeCheckerTest {
         NodeEndParsingEvent filmEndEvent = new NodeEndParsingEvent("400022028241-14");
         checker.handleNodeBegin(filmStartEvent);
         checker.handleAttribute(filexmlEvent);
-        state.setCurrentNode(new TreeNode(null, NodeType.UDGAVE, null));
+        state.setCurrentNode(new TreeNode(null, NodeType.EDITION, null));
         checker.handleNodeBegin(firstEditionStart);
         checker.handleNodeEnd(firstEditionEnd);
         checker.handleNodeBegin(secondEditionStart);

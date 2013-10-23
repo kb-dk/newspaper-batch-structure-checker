@@ -36,19 +36,25 @@ public class TreeNodeState extends DefaultTreeEventHandler {
             }
         } else if (currentNode.getType().equals(NodeType.FILM)) {
             if (event.getName().endsWith("FILM-ISO-TARGET")) {
-                nextNodeType = NodeType.ISO_TARGET_ON_FILM;
+                nextNodeType = NodeType.FILM_ISO_TARGET;
             } else if (event.getName().endsWith("UNMATCHED")) {
                 nextNodeType = NodeType.UNMATCHED;
             } else {
-                nextNodeType = NodeType.UDGAVE;
+                nextNodeType = NodeType.EDITION;
             }
-        } else if (currentNode.getType().equals(NodeType.UDGAVE) ||
-                currentNode.getType().equals(NodeType.UNMATCHED) ||
-                currentNode.getType().equals(NodeType.ISO_TARGET_ON_FILM) ||
-                currentNode.getType().equals(NodeType.WORKSHIFT_ISO_TARGET)) {
+        } else if (currentNode.getType().equals(NodeType.EDITION) ||
+                currentNode.getType().equals(NodeType.UNMATCHED)) {
             nextNodeType = NodeType.PAGE;
-        }  else if (currentNode.getType().equals(NodeType.PAGE)) {
-            nextNodeType = NodeType.IMAGE;
+        } else if (currentNode.getType().equals(NodeType.FILM_ISO_TARGET)) {
+            nextNodeType = NodeType.FILM_TARGET;
+        } else if (currentNode.getType().equals(NodeType.WORKSHIFT_ISO_TARGET)) {
+            nextNodeType = NodeType.WORKSHIFT_TARGET;
+        } else if (currentNode.getType().equals(NodeType.PAGE)) {
+            nextNodeType = NodeType.PAGE_IMAGE;
+        } else if (currentNode.getType().equals(NodeType.FILM_TARGET)) {
+            nextNodeType = NodeType.TARGET_IMAGE;
+        } else if (currentNode.getType().equals(NodeType.WORKSHIFT_TARGET)) {
+            nextNodeType = NodeType.TARGET_IMAGE;
         } else {
             throw new IllegalStateException("Unexpected event: " + event + " for current node: " + currentNode);
         }

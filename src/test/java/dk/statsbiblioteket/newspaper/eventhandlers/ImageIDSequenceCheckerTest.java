@@ -26,12 +26,12 @@ public class ImageIDSequenceCheckerTest {
 
     @Test
     public void pageSimpleSuccessTest() {
-        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("First page", NodeType.IMAGE, null));
-        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-IMAGE-0001.jp2"));
-        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Second page", NodeType.IMAGE, null));
-        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-IMAGE-0002.jp2"));
-        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Third page", NodeType.IMAGE, null));
-        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-IMAGE-0003.jp2"));
+        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("First page", NodeType.PAGE_IMAGE, null));
+        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0001.jp2"));
+        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Second page", NodeType.PAGE_IMAGE, null));
+        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0002.jp2"));
+        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Third page", NodeType.PAGE_IMAGE, null));
+        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0003.jp2"));
 
         finishFilm();
         verifyNoMoreInteractions(resultCollector);
@@ -39,12 +39,8 @@ public class ImageIDSequenceCheckerTest {
 
     @Test
     public void pageHighStartFailureTest() {
-        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("First page", NodeType.IMAGE, null));
-        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-IMAGE-0004.jp2"));
-        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Second page", NodeType.IMAGE, null));
-        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-IMAGE-0005.jp2"));
-        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Third page", NodeType.IMAGE, null));
-        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-IMAGE-0006.jp2"));
+        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("First page", NodeType.PAGE_IMAGE, null));
+        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0004.jp2"));
 
         finishFilm();
         verify(resultCollector).addFailure(anyString(), anyString(), anyString(), anyString());
@@ -53,23 +49,81 @@ public class ImageIDSequenceCheckerTest {
 
     @Test
     public void pageABSuccessTest() {
-        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("First page", NodeType.IMAGE, null));
-        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-IMAGE-0001.jp2"));
-        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Second page", NodeType.IMAGE, null));
-        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-IMAGE-0002A.jp2"));
-        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Third page", NodeType.IMAGE, null));
-        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-IMAGE-0002B.jp2"));
+        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("First page", NodeType.PAGE_IMAGE, null));
+        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0001.jp2"));
+        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Second page", NodeType.PAGE_IMAGE, null));
+        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0002A.jp2"));
+        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Third page", NodeType.PAGE_IMAGE, null));
+        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0002B.jp2"));
 
         finishFilm();
         verifyNoMoreInteractions(resultCollector);
     }
 
-    //@Test
-    public void pageSimpleMissingPageTest() {
-        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("First page", NodeType.IMAGE, null));
-        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-IMAGE-0001.jp2"));
-        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Third page", NodeType.IMAGE, null));
-        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-IMAGE-0003.jp2"));
+    @Test
+    public void simpleMissingPageTest() {
+        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("First page", NodeType.PAGE_IMAGE, null));
+        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0001.jp2"));
+        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Third page", NodeType.PAGE_IMAGE, null));
+        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0003.jp2"));
+
+        finishFilm();
+        verify(resultCollector).addFailure(anyString(), anyString(), anyString(), anyString());
+        verifyNoMoreInteractions(resultCollector);
+    }
+
+    @Test
+    public void missingFinalBPageTest() {
+        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("First page", NodeType.PAGE_IMAGE, null));
+        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0001.jp2"));
+        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Last page", NodeType.PAGE_IMAGE, null));
+        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0002A.jp2"));
+
+        finishFilm();
+        verify(resultCollector).addFailure(anyString(), anyString(), anyString(), anyString());
+        verifyNoMoreInteractions(resultCollector);
+    }
+
+    @Test
+    public void missingBPageTest() {
+        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("First page", NodeType.PAGE_IMAGE, null));
+        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0001.jp2"));
+        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Second page", NodeType.PAGE_IMAGE, null));
+        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0002A.jp2"));
+        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Final page", NodeType.PAGE_IMAGE, null));
+        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0003.jp2"));
+
+        finishFilm();
+        verify(resultCollector).addFailure(anyString(), anyString(), anyString(), anyString());
+        verifyNoMoreInteractions(resultCollector);
+    }
+
+    @Test
+    public void pageCPageTest() {
+        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("First page", NodeType.PAGE_IMAGE, null));
+        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0001.jp2"));
+        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Second page", NodeType.PAGE_IMAGE, null));
+        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0002A.jp2"));
+        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Final page", NodeType.PAGE_IMAGE, null));
+        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0002B.jp2"));
+        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Final page", NodeType.PAGE_IMAGE, null));
+        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0002C.jp2"));
+
+        finishFilm();
+        verifyNoMoreInteractions(resultCollector);
+    }
+
+    @Test
+    public void pageMultiFilmResetTest() {
+        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("First page", NodeType.PAGE_IMAGE, null));
+        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0001.jp2"));
+        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Second page", NodeType.PAGE_IMAGE, null));
+        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0002.jp2"));
+        finishFilm();
+        verifyNoMoreInteractions(resultCollector);
+
+        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Final page", NodeType.PAGE_IMAGE, null));
+        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0003.jp2"));
 
         finishFilm();
         verify(resultCollector).addFailure(anyString(), anyString(), anyString(), anyString());

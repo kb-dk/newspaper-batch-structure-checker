@@ -78,7 +78,7 @@ public class TreeNodeStateTest {
         treeNodeState.handleNodeBegin(unmatchNodeBegin);
 
         assertNotNull(treeNodeState.getCurrentNode());
-        assertEquals(treeNodeState.getCurrentNode().getType(), NodeType.ISO_TARGET_ON_FILM);
+        assertEquals(treeNodeState.getCurrentNode().getType(), NodeType.FILM_ISO_TARGET);
         assertEquals(treeNodeState.getCurrentNode().getName(), unmatchNodeBegin.getName());
         assertNotNull(treeNodeState.getCurrentNode().getParent());
         assertEquals(treeNodeState.getCurrentNode().getParent().getType(), NodeType.FILM);
@@ -94,7 +94,7 @@ public class TreeNodeStateTest {
         treeNodeState.handleNodeBegin(udgaveNodeBegin);
 
         assertNotNull(treeNodeState.getCurrentNode());
-        assertEquals(treeNodeState.getCurrentNode().getType(), NodeType.UDGAVE);
+        assertEquals(treeNodeState.getCurrentNode().getType(), NodeType.EDITION);
         assertEquals(treeNodeState.getCurrentNode().getName(), udgaveNodeBegin.getName());
         assertNotNull(treeNodeState.getCurrentNode().getParent());
         assertEquals(treeNodeState.getCurrentNode().getParent().getType(), NodeType.FILM);
@@ -105,7 +105,7 @@ public class TreeNodeStateTest {
         NodeBeginsParsingEvent nextUdgaveNodeBegin = new NodeBeginsParsingEvent("1860-10-18-02");
         treeNodeState.handleNodeBegin(nextUdgaveNodeBegin);
         assertNotNull(treeNodeState.getCurrentNode());
-        assertEquals(treeNodeState.getCurrentNode().getType(), NodeType.UDGAVE);
+        assertEquals(treeNodeState.getCurrentNode().getType(), NodeType.EDITION);
         assertEquals(treeNodeState.getCurrentNode().getName(), nextUdgaveNodeBegin.getName());
         assertNotNull(treeNodeState.getCurrentNode().getParent());
         assertEquals(treeNodeState.getCurrentNode().getParent().getType(), NodeType.FILM);
@@ -125,10 +125,10 @@ public class TreeNodeStateTest {
         assertEquals(treeNodeState.getCurrentNode().getType(), NodeType.PAGE);
         assertEquals(treeNodeState.getCurrentNode().getName(), pageNodeBegin.getName());
         assertNotNull(treeNodeState.getCurrentNode().getParent());
-        assertEquals(treeNodeState.getCurrentNode().getParent().getType(), NodeType.UDGAVE);
+        assertEquals(treeNodeState.getCurrentNode().getParent().getType(), NodeType.EDITION);
 
         treeNodeState.handleNodeEnd(new NodeEndParsingEvent(""));
-        assertEquals(treeNodeState.getCurrentNode().getType(), NodeType.UDGAVE);
+        assertEquals(treeNodeState.getCurrentNode().getType(), NodeType.EDITION);
 
         NodeBeginsParsingEvent nextPageNodeBegin = new NodeBeginsParsingEvent("PAPERISSUE-PAGE2");
         treeNodeState.handleNodeBegin(nextPageNodeBegin);
@@ -136,7 +136,7 @@ public class TreeNodeStateTest {
         assertEquals(treeNodeState.getCurrentNode().getType(), NodeType.PAGE);
         assertEquals(treeNodeState.getCurrentNode().getName(), nextPageNodeBegin.getName());
         assertNotNull(treeNodeState.getCurrentNode().getParent());
-        assertEquals(treeNodeState.getCurrentNode().getParent().getType(), NodeType.UDGAVE);
+        assertEquals(treeNodeState.getCurrentNode().getParent().getType(), NodeType.EDITION);
     }
 
     @Test
@@ -147,11 +147,11 @@ public class TreeNodeStateTest {
         treeNodeState.handleNodeBegin(new NodeBeginsParsingEvent("400022028241-14"));
         treeNodeState.handleNodeBegin(new NodeBeginsParsingEvent("1860-10-18-01"));
         treeNodeState.handleNodeBegin(new NodeBeginsParsingEvent("PAPERISSUE-PAGE1"));
-        NodeBeginsParsingEvent pageImageNodeBegin = new NodeBeginsParsingEvent("JP2-IMAGE");
+        NodeBeginsParsingEvent pageImageNodeBegin = new NodeBeginsParsingEvent("JP2-PAGE_IMAGE");
         treeNodeState.handleNodeBegin(pageImageNodeBegin);
 
         assertNotNull(treeNodeState.getCurrentNode());
-        assertEquals(treeNodeState.getCurrentNode().getType(), NodeType.IMAGE);
+        assertEquals(treeNodeState.getCurrentNode().getType(), NodeType.PAGE_IMAGE);
         assertEquals(treeNodeState.getCurrentNode().getName(), pageImageNodeBegin.getName());
         assertNotNull(treeNodeState.getCurrentNode().getParent());
         assertEquals(treeNodeState.getCurrentNode().getParent().getType(), NodeType.PAGE);
@@ -169,7 +169,7 @@ public class TreeNodeStateTest {
         treeNodeState.handleNodeBegin(udgaveNodeBegin);
 
         assertNotNull(treeNodeState.getCurrentNode());
-        assertEquals(treeNodeState.getCurrentNode().getType(), NodeType.UDGAVE);
+        assertEquals(treeNodeState.getCurrentNode().getType(), NodeType.EDITION);
 
         treeNodeState.handleNodeEnd(new NodeEndParsingEvent(udgaveNodeBegin.getName()));
         assertEquals(treeNodeState.getCurrentNode().getType(), NodeType.FILM);

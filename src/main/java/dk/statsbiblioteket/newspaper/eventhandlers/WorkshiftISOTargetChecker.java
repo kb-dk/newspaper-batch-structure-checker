@@ -70,7 +70,7 @@ public class WorkshiftISOTargetChecker extends DefaultTreeEventHandler {
         // Mark current jp2 or mix file as found TODO
 
         // Collect targetSerialisedNumbers and billedIDs for later processing
-        if (treeNodeState.getCurrentNode().getType().equals(NodeType.IMAGE)) {
+        if (treeNodeState.getCurrentNode().getType().equals(NodeType.PAGE_IMAGE)) {
             //targetSerialisedNumbers.add(event.getName()); // TODO fix
         }
     }

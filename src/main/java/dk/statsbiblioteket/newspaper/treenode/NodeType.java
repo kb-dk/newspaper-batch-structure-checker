@@ -5,12 +5,14 @@ package dk.statsbiblioteket.newspaper.treenode;
  */
 public enum NodeType {
     BATCH,
-    ROUNDTRIP,
     WORKSHIFT_ISO_TARGET,
+    WORKSHIFT_TARGET,
     FILM,
-    ISO_TARGET_ON_FILM,
+    FILM_ISO_TARGET,
+    FILM_TARGET,
+    TARGET_IMAGE,
     UNMATCHED,
-    UDGAVE,
+    EDITION,
     PAGE,
-    IMAGE;
+    PAGE_IMAGE;
 }
