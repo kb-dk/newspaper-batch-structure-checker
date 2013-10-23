@@ -15,6 +15,7 @@ import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.Event
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.TreeEventHandler;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.filesystem.transforming.TransformingIteratorForFileSystems;
 import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
+import org.testng.annotations.Test;
 
 /**
  */
@@ -27,6 +28,7 @@ public class FilmNodeCheckerIT {
      */
     //@Test(groups = "integrationTest")
     //This is a integration test, please reimplement using BatchStructureCheckerComponent
+    //Yes, but it's still a valid test of a single component against the external file structure.
     public void testFileNodeChecker() throws Exception {
         String pathToProperties = System.getProperty("integration.test.newspaper.properties");
         Properties properties = new Properties();
@@ -38,12 +40,10 @@ public class FilmNodeCheckerIT {
         Batch batch = new Batch();
         batch.setBatchID(TEST_BATCH_ID);
         batch.setRoundTripNumber(1);
-
-        EventHandlerFactory eventHandlerFactory = new CompleteCheckFactory(properties, batch, resultCollector);
         List<TreeEventHandler> handlers = new ArrayList<>();
         TreeNodeState treeNodeState = new TreeNodeState();
         handlers.add(treeNodeState);
-        handlers.add(new FilmNodeChecker(treeNodeState, resultCollector));
+        handlers.add(new FilmNodeChecker(batch, treeNodeState, resultCollector));
         batchStructureChecker.runEvents(handlers);
     }
 
