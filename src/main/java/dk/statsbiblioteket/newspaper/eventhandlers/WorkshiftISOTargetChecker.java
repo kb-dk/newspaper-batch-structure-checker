@@ -13,12 +13,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Checks that workshift ISO target files have proper naming.
+ * Performs various checks on WORKSHIFT_ISO_TARGET folder and its files.
  *
  * @author jrg
  */
 public class WorkshiftISOTargetChecker extends DefaultTreeEventHandler {
     private static Logger log = LoggerFactory.getLogger(BilledIDSequenceChecker.class);
+
+    private final String WORKSHIFT_ISO_TARGET_NAME = "WORKSHIFT-ISO-TARGET";
+
     private final ResultCollector resultCollector;
     private final TreeNodeState treeNodeState;
     // make class mapping string (filename without extension) to pair of bools, for checking matching jp2's + mix's TODO
@@ -31,14 +34,23 @@ public class WorkshiftISOTargetChecker extends DefaultTreeEventHandler {
 
     @Override
     public void handleNodeBegin(NodeBeginsParsingEvent event) {
-        // If this is not a WORKSHIFT-ISO-TARGET folder, but our parent is, report an error TODO
+        // If this is not a WORKSHIFT-ISO-TARGET folder, but our parent is, it's an error TODO
+        if (!treeNodeState.getCurrentNode().getName().equals(WORKSHIFT_ISO_TARGET_NAME)
+                && treeNodeState.getCurrentNode().getParent().getName().equals(WORKSHIFT_ISO_TARGET_NAME)) {
+            resultCollector.addFailure(treeNodeState.getCurrentNode().getName(), "filestructure",
+                    "WorkshiftISOTargetChecker", "Unexpected directory in " + WORKSHIFT_ISO_TARGET_NAME);
+        }
     }
 
     @Override
     public void handleAttribute(AttributeParsingEvent event) {
-        // Parent folder must be called WORKSHIFT-ISO-TARGET, otherwise return TODO
+        // Parent folder must be called WORKSHIFT-ISO-TARGET
+        if (!treeNodeState.getCurrentNode().getParent().getName().equals(WORKSHIFT_ISO_TARGET_NAME)) {
+            return;
+        }
 
         // If file is not a (correctly named) target-file, report an error TODO
+
 
         // File is a target file, set targetFilesExist to true TODO
 
