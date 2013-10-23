@@ -1,5 +1,12 @@
 package dk.statsbiblioteket.newspaper.eventhandlers;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.TreeIterator;
@@ -8,15 +15,6 @@ import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.Event
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.TreeEventHandler;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.filesystem.transforming.TransformingIteratorForFileSystems;
 import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
-import org.testng.annotations.Test;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
 
 /**
  */
@@ -27,7 +25,8 @@ public class FilmNodeCheckerIT {
     /**
      * Tests that the BatchStructureChecker can parse a production like batch.
      */
-    @Test(groups = "integrationTest")
+    //@Test(groups = "integrationTest")
+    //This is a integration test, please reimplement using BatchStructureCheckerComponent
     public void testFileNodeChecker() throws Exception {
         String pathToProperties = System.getProperty("integration.test.newspaper.properties");
         Properties properties = new Properties();
