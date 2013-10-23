@@ -39,7 +39,7 @@ public class ImageIDSequenceChecker extends DefaultTreeEventHandler {
 
     @Override
     public void handleNodeBegin(NodeBeginsParsingEvent event) {
-        if (treeNodeState.getCurrentNode().getType().equals(NodeType.PAGE_IMAGE)) {
+        if (treeNodeState.getCurrentNode().getType().equals(NodeType.IMAGE)) {
             if (!treeNodeState.getCurrentNode().getName().contains("brik")) {
                 sequenceModel.addImageID(event.getName());
             }

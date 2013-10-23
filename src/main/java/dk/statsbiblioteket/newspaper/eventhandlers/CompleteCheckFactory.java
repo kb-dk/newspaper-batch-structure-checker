@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import dk.statsbibliokeket.newspaper.batcheventFramework.BatchEventClient;
+import dk.statsbibliokeket.newspaper.batcheventFramework.BatchEventClientImpl;
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.EventHandlerFactory;
@@ -25,6 +27,7 @@ public class CompleteCheckFactory implements EventHandlerFactory {
     private final static String MFPAK_DATABASE_PASS = "mfpak.postgres.password";
     private final ResultCollector resultCollector;
     private final MfPakConfiguration mfpakConfig;
+    private final BatchEventClient batchEventClient;
     private final Batch batch;
 
     public CompleteCheckFactory(Properties properties, Batch batch, ResultCollector resultCollector) {
@@ -34,6 +37,9 @@ public class CompleteCheckFactory implements EventHandlerFactory {
         mfpakConfig.setDatabaseUrl(properties.getProperty(MFPAK_DATABASE_URL));
         mfpakConfig.setDatabaseUser(properties.getProperty(MFPAK_DATABASE_USER));
         mfpakConfig.setDatabasePassword(properties.getProperty(MFPAK_DATABASE_PASS));
+        batchEventClient = new BatchEventClientImpl(properties.getProperty("summa"), properties.getProperty("domsUrl"),
+                                                               properties.getProperty("domsUser"), properties.getProperty("domsPass"),
+                                                               properties.getProperty("pidGenerator"));
     }
 
     @Override
@@ -46,13 +52,14 @@ public class CompleteCheckFactory implements EventHandlerFactory {
         } catch (SQLException e) {
             throw new IllegalStateException("Failed to get newspaperID from mfpak database", e);
         }
-        //eventHandlers.add(new NewspaperIDChecker(newspaperID, resultCollector));
         //eventHandlers.add(new ConsoleLogger());
         TreeNodeState nodeState = new TreeNodeState();
         eventHandlers.add(nodeState); // Must be the first eventhandler to ensure a update state used by the following handlers (a bit fragile).
         eventHandlers.add(new ChecksumExistenceChecker(resultCollector));
         eventHandlers.add(new ImageIDSequenceChecker(resultCollector, nodeState));
-        eventHandlers.add(new BatchIDAndRoundtripChecker(batch, resultCollector, nodeState));        
+        //eventHandlers.add(new LeafFilter(LeafType.JP2, new SequenceChecker(resultCollector, nodeState)));
+        eventHandlers.add(new BatchNodeChecker(batch, resultCollector, nodeState));
+        eventHandlers.add(new NewspaperIDChecker(newspaperID, resultCollector));
         return eventHandlers;
     }
 }
