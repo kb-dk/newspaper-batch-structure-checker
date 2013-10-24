@@ -1,18 +1,16 @@
 package dk.statsbiblioteket.newspaper.eventhandlers;
 
-import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
-import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.AttributeParsingEvent;
-import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeBeginsParsingEvent;
-import dk.statsbiblioteket.newspaper.treenode.NodeType;
-import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
+import dk.statsbiblioteket.newspaper.treenode.NodeType;
+import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Performs various checks on WORKSHIFT-ISO-TARGET folder and its files.
@@ -37,7 +35,7 @@ import java.util.regex.Pattern;
  * @author jrg
  */
 public class WorkshiftISOTargetChecker extends AbstractNodeChecker {
-    private static Logger log = LoggerFactory.getLogger(BilledIDSequenceChecker.class);
+    private static Logger log = LoggerFactory.getLogger(WorkshiftISOTargetChecker.class);
 
     private final String WORKSHIFT_ISO_TARGET_NAME = "WORKSHIFT-ISO-TARGET";
 
