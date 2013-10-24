@@ -60,8 +60,9 @@ public class CompleteCheckFactory implements EventHandlerFactory {
         //eventHandlers.add(new LeafFilter(LeafType.JP2, new SequenceChecker(resultCollector, nodeState)));
         eventHandlers.add(new BatchNodeChecker(batch, resultCollector, nodeState));
         eventHandlers.add(new NewspaperIDChecker(newspaperID, resultCollector));
-        eventHandlers.add(new BilledIDSequenceChecker(resultCollector, nodeState));
         eventHandlers.add(new FilmNodeChecker(batch, nodeState, resultCollector));
+        eventHandlers.add(new WorkshiftISOTargetChecker(resultCollector, nodeState));
+        //eventHandlers.add(new WorkshiftISOTargetSubChecker(resultCollector, nodeState));
         return eventHandlers;
     }
 }
