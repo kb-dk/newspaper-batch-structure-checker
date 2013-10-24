@@ -57,9 +57,7 @@ public class CompleteCheckFactory implements EventHandlerFactory {
         eventHandlers.add(nodeState); // Must be the first eventhandler to ensure a update state used by the following handlers (a bit fragile).
         eventHandlers.add(new ChecksumExistenceChecker(resultCollector));
         eventHandlers.add(new PageImageIDSequenceChecker(resultCollector, nodeState));
-        //eventHandlers.add(new LeafFilter(LeafType.JP2, new SequenceChecker(resultCollector, nodeState)));
         eventHandlers.add(new BatchNodeChecker(batch, resultCollector, nodeState));
-        eventHandlers.add(new NewspaperIDChecker(newspaperID, resultCollector));
         eventHandlers.add(new FilmNodeChecker(batch, nodeState, resultCollector));
         eventHandlers.add(new WorkshiftISOTargetChecker(resultCollector, nodeState));
         //eventHandlers.add(new WorkshiftISOTargetSubChecker(resultCollector, nodeState));
