@@ -62,7 +62,7 @@ public class BatchNodeChecker extends AbstractNodeChecker {
                     break;
                 default:    //Should be a film directory
                     String expectedName = batchNumberString + "-[0-9]{2}";
-                    if (childNodeName.matches(expectedName)) {
+                    if (!childNodeName.matches(expectedName)) {
                         addFailure("unexpecteddirectory", "Found unexpected directory " + childNodeName + " in " + name);
                     } else {
                         numberOfFilmDirectories++;
