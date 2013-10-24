@@ -8,7 +8,6 @@ import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeEndParsi
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.filesystem.FileAttributeParsingEvent;
 import dk.statsbiblioteket.newspaper.treenode.NodeType;
 import dk.statsbiblioteket.newspaper.treenode.TreeNode;
-import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -24,23 +23,6 @@ import static org.testng.Assert.assertTrue;
  * To change this template use File | Settings | File Templates.
  */
 public class FilmNodeCheckerTest {
-
-    static class SettableTreeNodeState extends TreeNodeState {
-        private TreeNode currentNode;
-
-        SettableTreeNodeState(TreeNode currentNode) {
-            this.currentNode = currentNode;
-        }
-
-        public void setCurrentNode(TreeNode node) {
-            currentNode = node;
-        }
-
-        @Override
-        public TreeNode getCurrentNode() {
-            return currentNode;
-        }
-    }
 
     /**
      * Simulate parsing a FILM node with an appropriate sequence of parsing events.

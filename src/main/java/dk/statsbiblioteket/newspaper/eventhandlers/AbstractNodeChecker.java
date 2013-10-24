@@ -11,7 +11,8 @@ import java.util.*;
 
 /**
  * A generic checker for a given node-level in the tree structure. This class just gathers up the names of all
- * child nodes and attributes at the given node level.
+ * child nodes and attributes at the given node level. The actual checks are run in the doCheck() method which is
+ * triggered when we reach the NodeEndParsingEvent for the relevant node.
  */
 public abstract class AbstractNodeChecker extends DefaultTreeEventHandler {
 
