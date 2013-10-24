@@ -8,39 +8,23 @@ import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Following https://sbforge.org/display/NEWSPAPER/Batch+structure+checks ,
- * This class must check the following:
- *
- * For the FILM node itself:
- *Potentiel eksistens af FILM-ISO-target
- *Potentiel eksistens af UNMATCHED
- *Eksistens af edition-mapper
- *Ikke andre filer og mapper
- *film.xml-fil
- *
- * For the  Film.xml-fil
- *Form: [avisID]-[batchID]-[filmSuffix].avis.xml
- *[avisId] er som forventet i MF-PAK
- *batchID er som i parent dir
- *filmSuffix er som i parent dir
- *
- * For edition childNodes:
- * Edition-mappe:
- *Form: [date]-[udgaveLbNummer]
- *[date] skal være iso8601
- *<udgaveLbNummer> fortløbende startende med 1
- *[date] svarer til informationer fra MF-PAK
  */
 public class FilmNodeChecker extends AbstractNodeChecker {
 
     private TreeNodeState state;
     private ResultCollector resultCollector;
     private Batch batch;
+    public static final String EDITION_PATTERN_STRING = "(.*-.*-.*)-(.*)";
+    public static final Pattern EDITION_PATTERN = Pattern.compile(EDITION_PATTERN_STRING);
+    public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     public FilmNodeChecker(Batch batch, TreeNodeState state, ResultCollector resultCollector) {
         this.state = state;
@@ -56,7 +40,7 @@ public class FilmNodeChecker extends AbstractNodeChecker {
     }
 
     private void checkChildNodes() {
-        List<Integer> editions = new ArrayList<Integer>();
+        Map<String, List<Integer>> editionsMap = new HashMap<>();  //Map of all editions for a given date
         for (String childNode: childNodes) {
             String childNodeName = Util.getLastTokenInPath(childNode);
             switch (childNodeName) {
@@ -65,23 +49,27 @@ public class FilmNodeChecker extends AbstractNodeChecker {
                 case ("UNMATCHED"):
                     break;
                 default:
-                    String editionPatternString = "(.*-.*-.*)-(.*)";
-                    Pattern editionPattern = Pattern.compile(editionPatternString);
-                    Matcher m = editionPattern.matcher(childNodeName);
+                    Matcher m = EDITION_PATTERN.matcher(childNodeName);
                     if (m.matches()) {
                         String dateString = m.group(1);
+                        if (!editionsMap.containsKey(dateString)) {
+                            editionsMap.put(dateString, new ArrayList<Integer>());
+                        }
                         String editionString = m.group(2);
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                         try {
-                            sdf.parse(dateString);
+                            SIMPLE_DATE_FORMAT.parse(dateString);
                             //TODO check this date against MF-PAK
                         } catch (ParseException e) {
                             addFailure("dateformat", "In " + childNodeName + " the date part is not a valid date in yyyy-MM-dd format.");
                         }
                         Integer edition = null;
                         try {
+                            if (!(editionString.length() == 2)) {
+                                addFailure("editionformat", "In " + childNodeName + " the edition part " + editionString + " is not two characters long" +
+                                        "." );
+                            }
                             edition = Integer.parseInt(editionString);
-                            editions.add(edition);
+                            editionsMap.get(dateString).add(edition);
                         } catch (NumberFormatException e) {
                             addFailure("editionformat", "In " + childNodeName + " the edition part " + editionString + " is not a number.");
                         }
@@ -90,19 +78,18 @@ public class FilmNodeChecker extends AbstractNodeChecker {
                     }
             }
         }
-        if (editions.size() == 0) {
+        if (editionsMap.size() == 0) {
             addFailure("missingdirectory", "There are no edition directories in " + name);
         }
-        //TODO Is this right? Surely we should be checking that the editions _for any given date_ are consecutive,
-        //not all the editions on any given film. And what if we are missing an edition - perhaps it was never
-        //collected in the first place?
-        if (!Util.validateRunningSequence(editions)) {
-            addFailure("editionsequence", "The sequence of editions in " + name + " is not consecutive.");
+        for (Map.Entry<String, List<Integer>> editionsEntry: editionsMap.entrySet()) {
+            if (!Util.validateRunningSequence(editionsEntry.getValue())) {
+                addFailure("editionsequence", "The sequence of editions in " + name + " on date " + editionsEntry.getKey() + " is not consecutive.");
+            }
         }
     }
 
     private void checkAttributes() {
-        String filmxmlPatternString = "(.*)-" + name + ".film.xml";
+        String filmxmlPatternString = "(.*)-" + Util.getLastTokenInPath(name) + ".film.xml";
         Pattern filmxmlPattern = Pattern.compile(filmxmlPatternString);
         boolean foundFilmXml = false;
         for (String attribute: attributes) {
