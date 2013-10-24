@@ -72,7 +72,8 @@ public class WorkshiftISOTargetChecker extends AbstractNodeChecker {
         // Check: There ARE Target-dddddd-dddd folder(s) with names of that format
         // and: There are no folders with other names
         boolean targetFoldersExist = false;
-        for (String nodeName : childNodes) {
+        for (String childNode : childNodes) {
+            String nodeName = Util.getLastTokenInPath(childNode);
             if (correctTargetFolderName(nodeName)) {
                 targetFoldersExist = true;
                 collectTargetFolderNumber(nodeName);
