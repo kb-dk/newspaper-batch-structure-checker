@@ -31,6 +31,12 @@ public class EditionNodeChecker extends AbstractNodeChecker {
     private final ResultCollector resultCollector;
     private final TreeNodeState treeNodeState;
     
+    /**
+     * Constructor for the EditionNodeChecker
+     * @param newspaperID The ID for the newspaper contained in the batch
+     * @param resultCollector The resultCollector to collect failures
+     * @param state The TreeNodeState 
+     */
     public EditionNodeChecker(String newspaperID, ResultCollector resultCollector, TreeNodeState state) {
         this.resultCollector = resultCollector;
         this.treeNodeState = state;
@@ -53,6 +59,9 @@ public class EditionNodeChecker extends AbstractNodeChecker {
         return treeNodeState;
     }
     
+    /**
+     * Check the attributes found on the node 
+     */
     private void checkAttributes() {
         String editionAttribute = getPathPrefix() + newspaperID + "-" + Util.getLastTokenInPath(name) + EDITION_ATTRIBUTE_SUFFIX;
         if(attributes.contains(editionAttribute)) {
@@ -67,6 +76,11 @@ public class EditionNodeChecker extends AbstractNodeChecker {
         }
     }
     
+    /**
+     * Check the childnodes 
+     * - Checks that all child nodes local names start with newspaperID
+     * - Delegates the rest of the checks for briks and pages
+     */
     private void checkChildNodes() {
         for(String childNode : childNodes) {
             String node = Util.getLastTokenInPath(childNode);
@@ -83,6 +97,11 @@ public class EditionNodeChecker extends AbstractNodeChecker {
         }
     }
 
+    /**
+     *  Checks a brik child node. 
+     *  - Checks that the picture id has the valid form
+     *  - Checks that the child nodes local name is of the expected form.
+     */
     private void checkBrikChildNode(String node) {
         String localNodeName = Util.getLastTokenInPath(node);
         String[] nameParts = localNodeName.split("-");
@@ -106,6 +125,11 @@ public class EditionNodeChecker extends AbstractNodeChecker {
         
     }
     
+    /**
+     * Checks a page child node
+     * - checks that the picture ID is of a valid form
+     * - checks that the local name is of the expected form 
+     */
     private void checkPageChildNode(String node) {
         String localNodeName = Util.getLastTokenInPath(node);
         String[] nameParts = localNodeName.split("-");
@@ -124,6 +148,11 @@ public class EditionNodeChecker extends AbstractNodeChecker {
         
     }
     
+    /**
+     * Check a pictureID is of the valid form. 
+     * @param pictureID The picture id
+     * @throws PictureIDCheckException if the id is malformed. 
+     */
     private void checkPictureID(String pictureID) throws PictureIDCheckException {
         Integer pageNumber = null;
         try {
