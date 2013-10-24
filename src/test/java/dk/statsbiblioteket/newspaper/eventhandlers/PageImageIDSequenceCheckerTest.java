@@ -11,16 +11,16 @@ import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
 
-public class ImageIDSequenceCheckerTest {
+public class PageImageIDSequenceCheckerTest {
     private TreeNodeState treeNodeState;
-    private ImageIDSequenceChecker checker;
+    private PageImageIDSequenceChecker checker;
     private ResultCollector resultCollector;
 
     @BeforeMethod
     public void setupBilledIDSequenceChecker () {
         resultCollector = mock(ResultCollector.class);
         treeNodeState = mock(TreeNodeState.class);
-        checker = new ImageIDSequenceChecker(resultCollector, treeNodeState);
+        checker = new PageImageIDSequenceChecker(resultCollector, treeNodeState);
         verifyNoMoreInteractions(resultCollector);
     }
 
@@ -99,7 +99,7 @@ public class ImageIDSequenceCheckerTest {
     }
 
     @Test
-    public void pageCPageTest() {
+    public void cPageTest() {
         when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("First page", NodeType.PAGE_IMAGE, null));
         checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0001.jp2"));
         when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Second page", NodeType.PAGE_IMAGE, null));
@@ -114,7 +114,36 @@ public class ImageIDSequenceCheckerTest {
     }
 
     @Test
-    public void pageMultiFilmResetTest() {
+    public void brikPageExclusionTest() {
+        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Brik page", NodeType.PAGE_IMAGE, null));
+        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0001-brik.jp2"));
+        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("First page", NodeType.PAGE_IMAGE, null));
+        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0001.jp2"));
+        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Second page", NodeType.PAGE_IMAGE, null));
+        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0002A.jp2"));
+        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Final page", NodeType.PAGE_IMAGE, null));
+        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0002B.jp2"));
+
+        finishFilm();
+        verifyNoMoreInteractions(resultCollector);
+    }
+
+    @Test
+    public void cPageMissingBPageTest() {
+        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("First page", NodeType.PAGE_IMAGE, null));
+        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0001.jp2"));
+        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Second page", NodeType.PAGE_IMAGE, null));
+        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0002A.jp2"));
+        when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Final page", NodeType.PAGE_IMAGE, null));
+        checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0002C.jp2"));
+
+        finishFilm();
+        verify(resultCollector).addFailure(anyString(), anyString(), anyString(), anyString());
+        verifyNoMoreInteractions(resultCollector);
+    }
+
+    @Test
+    public void pageMultiFilmTest() {
         when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("First page", NodeType.PAGE_IMAGE, null));
         checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0001.jp2"));
         when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Second page", NodeType.PAGE_IMAGE, null));
@@ -132,8 +161,8 @@ public class ImageIDSequenceCheckerTest {
 
     private void finishFilm() {
         when(treeNodeState.getCurrentNode()).
-                thenReturn(new TreeNode("Finished Udgave", NodeType.FILM, null)).
-                thenReturn(new TreeNode("Finished Udgave", NodeType.BATCH, null));
+                thenReturn(new TreeNode("Finished film", NodeType.FILM, null)).
+                thenReturn(new TreeNode("Finished batch", NodeType.BATCH, null));
         checker.handleNodeEnd(new NodeEndParsingEvent(""));
         checker.handleNodeEnd(new NodeEndParsingEvent(""));
     }

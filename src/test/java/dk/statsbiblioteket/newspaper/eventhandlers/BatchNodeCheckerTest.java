@@ -18,15 +18,12 @@ import dk.statsbiblioteket.newspaper.treenode.TreeNode;
 import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
 import org.testng.annotations.Test;
 
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 /**
- * Created with IntelliJ IDEA.
- * User: csr
- * Date: 10/21/13
- * Time: 3:03 PM
- * To change this template use File | Settings | File Templates.
+ *Various tests for BatchNodeChecker .
  */
 public class BatchNodeCheckerTest {
 
@@ -42,45 +39,81 @@ public class BatchNodeCheckerTest {
         Batch batch = new Batch();
         batch.setBatchID(batch_id);
         batch.setRoundTripNumber(1);
-        final TreeNode node = new TreeNode(null, NodeType.BATCH, null);
-        TreeNodeState state = new TreeNodeState() {
-            @Override
-            public TreeNode getCurrentNode() {
-                return node;
-            }
-        };
+        final TreeNode batchNode = new TreeNode(null, NodeType.BATCH, null);
+        SettableTreeNodeState state = new SettableTreeNodeState(batchNode);
         ResultCollector resultCollector = new ResultCollector("foo", "bar");
         BatchNodeChecker checker = new BatchNodeChecker(batch, resultCollector, state);
-        NodeBeginsParsingEvent event = new NodeBeginsParsingEvent("B" + batch_id + "-RT" + roundtrips);
-        NodeEndParsingEvent event2 = new NodeEndParsingEvent("B" + batch_id + "-RT" + roundtrips);
-        checker.handleNodeBegin(event);
-        checker.handleNodeEnd(event2);
+        NodeBeginsParsingEvent batchBeginEvent = new NodeBeginsParsingEvent("B" + batch_id + "-RT" + roundtrips);
+        NodeEndParsingEvent batchEndEvent = new NodeEndParsingEvent("B" + batch_id + "-RT" + roundtrips);
+        NodeBeginsParsingEvent witBeginEvent = new NodeBeginsParsingEvent("WORKSHIFT-ISO-TARGET");
+        NodeEndParsingEvent witEndEvent = new NodeEndParsingEvent("WORKSHIFT-ISO-TARGET");
+        checker.handleNodeBegin(batchBeginEvent);
+        state.setCurrentNode(new TreeNode(null, NodeType.WORKSHIFT_ISO_TARGET, null));
+        checker.handleNodeBegin(witBeginEvent);
+        checker.handleNodeEnd(witEndEvent);
+        state.setCurrentNode(batchNode);
+        checker.handleNodeEnd(batchEndEvent);
         assertTrue(resultCollector.isSuccess());
     }
 
+    /**
+        * Test that checking fails when WORKSHIFT-ISO-TARGET directory is missing.
+        * @throws Exception
+        */
+       @Test
+       public void testHandleBatchNoWIT() throws Exception {
+           String batch_id = "400022028241";
+           int roundtrips = 1;
+           Batch batch = new Batch();
+           batch.setBatchID(batch_id);
+           batch.setRoundTripNumber(1);
+           final TreeNode batchNode = new TreeNode(null, NodeType.BATCH, null);
+           SettableTreeNodeState state = new SettableTreeNodeState(batchNode);
+           ResultCollector resultCollector = new ResultCollector("foo", "bar");
+           BatchNodeChecker checker = new BatchNodeChecker(batch, resultCollector, state);
+           NodeBeginsParsingEvent batchBeginEvent = new NodeBeginsParsingEvent("B" + batch_id + "-RT" + roundtrips);
+           NodeEndParsingEvent batchEndEvent = new NodeEndParsingEvent("B" + batch_id + "-RT" + roundtrips);
+           NodeBeginsParsingEvent witBeginEvent = new NodeBeginsParsingEvent("WORKSHIFT-ISO-TARGET");
+           NodeEndParsingEvent witEndEvent = new NodeEndParsingEvent("WORKSHIFT-ISO-TARGET");
+           checker.handleNodeBegin(batchBeginEvent);
+           checker.handleNodeEnd(batchEndEvent);
+           assertFalse(resultCollector.isSuccess());
+           assertEquals(Util.countFailures(resultCollector), 1);
+       }
+
+    /**
+     * Test that checking fails when the id of the batch node doesn't match the id of the expected batch.
+     * @throws Exception
+     */
     @Test
     public void testHandleNodeBeginWrongId() throws Exception {
         String batch_id = "400022028241";
-        int roundtrips = 1;
-        Batch batch = new Batch();
-        batch.setBatchID(batch_id);
-        batch.setRoundTripNumber(1);
-        final TreeNode node = new TreeNode(null, NodeType.BATCH, null);
-        TreeNodeState state = new TreeNodeState() {
-            @Override
-            public TreeNode getCurrentNode() {
-                return node;
-            }
-        };
-        ResultCollector resultCollector = new ResultCollector("foo", "bar");
-        BatchNodeChecker checker = new BatchNodeChecker(batch, resultCollector, state);
-        NodeBeginsParsingEvent event = new NodeBeginsParsingEvent("B40002202821" + "-RT" + roundtrips);
-        NodeEndParsingEvent event2 = new NodeEndParsingEvent("B" + batch_id + "-RT" + roundtrips);
-        checker.handleNodeBegin(event);
-        checker.handleNodeEnd(event2);
+              int roundtrips = 1;
+              Batch batch = new Batch();
+              batch.setBatchID(batch_id);
+              batch.setRoundTripNumber(1);
+              final TreeNode batchNode = new TreeNode(null, NodeType.BATCH, null);
+              SettableTreeNodeState state = new SettableTreeNodeState(batchNode);
+              ResultCollector resultCollector = new ResultCollector("foo", "bar");
+              BatchNodeChecker checker = new BatchNodeChecker(batch, resultCollector, state);
+              NodeBeginsParsingEvent batchBeginEvent = new NodeBeginsParsingEvent("B400022028243" + "-RT" + roundtrips);
+              NodeEndParsingEvent batchEndEvent = new NodeEndParsingEvent("B400022028243" + "-RT" + roundtrips);
+              NodeBeginsParsingEvent witBeginEvent = new NodeBeginsParsingEvent("WORKSHIFT-ISO-TARGET");
+              NodeEndParsingEvent witEndEvent = new NodeEndParsingEvent("WORKSHIFT-ISO-TARGET");
+              checker.handleNodeBegin(batchBeginEvent);
+              state.setCurrentNode(new TreeNode(null, NodeType.WORKSHIFT_ISO_TARGET, null));
+              checker.handleNodeBegin(witBeginEvent);
+              checker.handleNodeEnd(witEndEvent);
+              state.setCurrentNode(batchNode);
+              checker.handleNodeEnd(batchEndEvent);
         assertFalse(resultCollector.isSuccess());
+        assertEquals(Util.countFailures(resultCollector), 1);
     }
 
+    /**
+     * Test for failure when batch node has unexpected name format.
+     * @throws Exception
+     */
     @Test
     public void testHandleNodeBeginStrangeFormat() throws Exception {
         String batch_id = "400022028241";
@@ -88,22 +121,28 @@ public class BatchNodeCheckerTest {
         Batch batch = new Batch();
         batch.setBatchID(batch_id);
         batch.setRoundTripNumber(1);
-        final TreeNode node = new TreeNode(null, NodeType.BATCH, null);
-        TreeNodeState state = new TreeNodeState() {
-            @Override
-            public TreeNode getCurrentNode() {
-                return node;
-            }
-        };
+        final TreeNode batchNode = new TreeNode(null, NodeType.BATCH, null);
+        SettableTreeNodeState state = new SettableTreeNodeState(batchNode);
         ResultCollector resultCollector = new ResultCollector("foo", "bar");
         BatchNodeChecker checker = new BatchNodeChecker(batch, resultCollector, state);
-        NodeBeginsParsingEvent event = new NodeBeginsParsingEvent("1234_helloworld.foobar");
-        NodeEndParsingEvent event2 = new NodeEndParsingEvent("B" + batch_id + "-RT" + roundtrips);
-        checker.handleNodeBegin(event);
-        checker.handleNodeEnd(event2);
+        NodeBeginsParsingEvent batchBeginEvent = new NodeBeginsParsingEvent("badbatch.name.foobar");
+        NodeEndParsingEvent batchEndEvent = new NodeEndParsingEvent("badbatch.name.foobar");
+        NodeBeginsParsingEvent witBeginEvent = new NodeBeginsParsingEvent("WORKSHIFT-ISO-TARGET");
+        NodeEndParsingEvent witEndEvent = new NodeEndParsingEvent("WORKSHIFT-ISO-TARGET");
+        checker.handleNodeBegin(batchBeginEvent);
+        state.setCurrentNode(new TreeNode(null, NodeType.WORKSHIFT_ISO_TARGET, null));
+        checker.handleNodeBegin(witBeginEvent);
+        checker.handleNodeEnd(witEndEvent);
+        state.setCurrentNode(batchNode);
+        checker.handleNodeEnd(batchEndEvent);
         assertFalse(resultCollector.isSuccess());
+        assertEquals(Util.countFailures(resultCollector), 2);
     }
 
+    /**
+     * Test for failure when the batch node contains an unexpected attribute.
+     * @throws Exception
+     */
     @Test
     public void testHandleUnexpectedFile() throws Exception {
         String batch_id = "400022028241";
@@ -111,22 +150,24 @@ public class BatchNodeCheckerTest {
         Batch batch = new Batch();
         batch.setBatchID(batch_id);
         batch.setRoundTripNumber(1);
-        final TreeNode node = new TreeNode(null, NodeType.BATCH, null);
-        TreeNodeState state = new TreeNodeState() {
-            @Override
-            public TreeNode getCurrentNode() {
-                return node;
-            }
-        };
+        final TreeNode batchNode = new TreeNode(null, NodeType.BATCH, null);
+        SettableTreeNodeState state = new SettableTreeNodeState(batchNode);
         ResultCollector resultCollector = new ResultCollector("foo", "bar");
         BatchNodeChecker checker = new BatchNodeChecker(batch, resultCollector, state);
-        NodeBeginsParsingEvent event = new NodeBeginsParsingEvent("B" + batch_id + "-RT" + roundtrips);
+        NodeBeginsParsingEvent batchBeginEvent = new NodeBeginsParsingEvent("B" + batch_id + "-RT" + roundtrips);
+        NodeEndParsingEvent batchEndEvent = new NodeEndParsingEvent("B" + batch_id + "-RT" + roundtrips);
+        NodeBeginsParsingEvent witBeginEvent = new NodeBeginsParsingEvent("WORKSHIFT-ISO-TARGET");
+        NodeEndParsingEvent witEndEvent = new NodeEndParsingEvent("WORKSHIFT-ISO-TARGET");
         AttributeParsingEvent attributeParsingEvent = new FileAttributeParsingEvent("foobar", new File("foobar"));
-        NodeEndParsingEvent event2 = new NodeEndParsingEvent("B" + batch_id + "-RT" + roundtrips);
-        checker.handleNodeBegin(event);
+        checker.handleNodeBegin(batchBeginEvent);
         checker.handleAttribute(attributeParsingEvent);
-        checker.handleNodeEnd(event2);
+        state.setCurrentNode(new TreeNode(null, NodeType.WORKSHIFT_ISO_TARGET, null));
+        checker.handleNodeBegin(witBeginEvent);
+        checker.handleNodeEnd(witEndEvent);
+        state.setCurrentNode(batchNode);
+        checker.handleNodeEnd(batchEndEvent);
         assertFalse(resultCollector.isSuccess());
+        assertEquals(Util.countFailures(resultCollector), 1);
     }
 
     private final static String TEST_BATCH_ID = "400022028241";

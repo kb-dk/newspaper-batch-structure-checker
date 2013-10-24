@@ -24,6 +24,7 @@ public class TreeNodeState extends DefaultTreeEventHandler {
         currentNode = currentNode.getParent();
     }
 
+    // Todo This is becoming a complicated. consider switch to state machine pattern.
     private void updateCurrentNode(NodeBeginsParsingEvent event) {
         NodeType nextNodeType = null;
         if (currentNode == null) {
@@ -35,7 +36,7 @@ public class TreeNodeState extends DefaultTreeEventHandler {
                 nextNodeType = NodeType.FILM;
             }
         } else if (currentNode.getType().equals(NodeType.FILM)) {
-            if (event.getName().endsWith("FILM-ISO-TARGET")) {
+            if (event.getName().endsWith("FILM-ISO-target")) {
                 nextNodeType = NodeType.FILM_ISO_TARGET;
             } else if (event.getName().endsWith("UNMATCHED")) {
                 nextNodeType = NodeType.UNMATCHED;
