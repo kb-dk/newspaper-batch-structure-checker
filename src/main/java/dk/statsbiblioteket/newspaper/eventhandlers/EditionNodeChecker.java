@@ -54,7 +54,7 @@ public class EditionNodeChecker extends AbstractNodeChecker {
     }
     
     private void checkAttributes() {
-        String editionAttribute = getPathPrefix() + newspaperID + "-" + name + EDITION_ATTRIBUTE_SUFFIX;
+        String editionAttribute = getPathPrefix() + newspaperID + "-" + Util.getLastTokenInPath(name) + EDITION_ATTRIBUTE_SUFFIX;
         if(attributes.contains(editionAttribute)) {
             attributes.remove(editionAttribute);
         } else {
@@ -69,7 +69,7 @@ public class EditionNodeChecker extends AbstractNodeChecker {
     
     private void checkChildNodes() {
         for(String childNode : childNodes) {
-            String node = getLocalName(childNode);
+            String node = Util.getLastTokenInPath(childNode);
             if(!node.startsWith(newspaperID)) {
                 reportFailure("badnewspaperid", "The name of the page node: '" + childNode + "' does not contain the correct newspaperID ('"
                         + newspaperID +"')");
@@ -84,7 +84,7 @@ public class EditionNodeChecker extends AbstractNodeChecker {
     }
 
     private void checkBrikChildNode(String node) {
-        String localNodeName = getLocalName(node);
+        String localNodeName = Util.getLastTokenInPath(node);
         String[] nameParts = localNodeName.split("-");
         String pictureID = nameParts[nameParts.length - 2];
         if(pictureID.length() != 4) {
@@ -107,7 +107,7 @@ public class EditionNodeChecker extends AbstractNodeChecker {
     }
     
     private void checkPageChildNode(String node) {
-        String localNodeName = getLocalName(node);
+        String localNodeName = Util.getLastTokenInPath(node);
         String[] nameParts = localNodeName.split("-");
         String pictureID = nameParts[nameParts.length - 1];
         try {
@@ -154,11 +154,6 @@ public class EditionNodeChecker extends AbstractNodeChecker {
     
     private String getPathPrefix() {
         return treeNodeState.getCurrentNode().getName() + "/";
-    }
-    
-    private String getLocalName(String fullPath) {
-        String[] namesplit = fullPath.split("/"); 
-        return namesplit[namesplit.length - 1];
     }
 
     private class PictureIDCheckException extends Exception {
