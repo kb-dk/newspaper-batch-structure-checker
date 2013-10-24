@@ -22,7 +22,7 @@ public class EditionPageNodeChecker extends AbstractNodeChecker {
      * - There only is the expected attributes {mix, mods, alto}
      * - Contain the expected child node (child node for the jp2 file). 
      */
-    public EditionPageNodeChecker(String newspaperID, ResultCollector resultCollector, TreeNodeState state) {
+    public EditionPageNodeChecker(ResultCollector resultCollector, TreeNodeState state) {
         this.resultCollector = resultCollector;
         this.treeNodeState = state;
     }
