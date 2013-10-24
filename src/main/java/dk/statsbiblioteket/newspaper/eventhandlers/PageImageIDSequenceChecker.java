@@ -16,14 +16,13 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Checks the the scanned pages are named in sequence. The image files for the scanned pages are used for the sequence
- * number check. The sequence covers a full film, eg. the MISMATCH dir and all the edition dir. The rules are: <ol>
- *     <li>sequence numbers are in the format NNNN or NNNNA/NNNNB NNNNA/NNNNB/NNNNC/NNNND, the later in case of two or
+ * number check. The sequence covers a full film, eg. the UNMATCH dir and all the edition dir. The rules are: <ol>
+ *     <li>sequence numbers are in the format NNNN or NNNNA/NNNNB NNNNA/NNNNB/NNNNC...., the later in case of two or
  *     four pages on a single physical image.</li>.
- *     <li>The most either on page of the format NNNN or a page pair in the format NNNNA/NNNNB for each int
- *     in the sequence.</li>
+ *     <li>The physical image numbers are in sequence.</li>
  * </ol>
- * Nodes not adhering to the naming stadard are just ignored, eg. not considered relevant for the sequence numbering. 
- * The format check is considered to be the responsability of another checker. 
+ * Nodes not adhering to the naming standard are just ignored, eg. not considered relevant for the sequence numbering.
+ * The format check is considered to be the responsibility of another checker.
  */
 public class PageImageIDSequenceChecker extends DefaultTreeEventHandler {
     private static Logger log = LoggerFactory.getLogger(PageImageIDSequenceChecker.class);
@@ -40,7 +39,7 @@ public class PageImageIDSequenceChecker extends DefaultTreeEventHandler {
     @Override
     public void handleNodeBegin(NodeBeginsParsingEvent event) {
         if (treeNodeState.getCurrentNode().getType().equals(NodeType.PAGE_IMAGE)) {
-            if (!treeNodeState.getCurrentNode().getName().contains("brik")) {
+            if (!event.getName().contains("brik")) {
                 sequenceModel.addImageID(event.getName());
             }
         }
@@ -68,7 +67,6 @@ public class PageImageIDSequenceChecker extends DefaultTreeEventHandler {
     }
 
     private void registerFailure(String imageID, String description) {
-        log.info("Found ImageID sequence problem: " + description + " for imageID: " + imageID);
         resultCollector.addFailure(imageID, "PageSequenceCheck", getClass().getSimpleName(), description);
     }
 
