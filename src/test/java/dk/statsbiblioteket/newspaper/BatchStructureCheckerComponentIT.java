@@ -33,7 +33,5 @@ public class BatchStructureCheckerComponentIT {
         batch.setRoundTripNumber(1);
 
         batchStructureCheckerComponent.doWorkOnBatch(batch, resultCollector);
-        System.out.println("Result: " + resultCollector);
-        //Assert.fail();
     }
 }
