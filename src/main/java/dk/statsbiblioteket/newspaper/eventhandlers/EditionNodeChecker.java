@@ -63,7 +63,8 @@ public class EditionNodeChecker extends AbstractNodeChecker {
      * Check the attributes found on the node 
      */
     private void checkAttributes() {
-        String editionAttribute = getPathPrefix() + newspaperID + "-" + Util.getLastTokenInPath(name) + EDITION_ATTRIBUTE_SUFFIX;
+        String localname = Util.getLastTokenInPath(name);
+        String editionAttribute = getPathPrefix() + localname + "/" + newspaperID + "-" + localname + EDITION_ATTRIBUTE_SUFFIX;
         if(attributes.contains(editionAttribute)) {
             attributes.remove(editionAttribute);
         } else {
@@ -117,10 +118,10 @@ public class EditionNodeChecker extends AbstractNodeChecker {
             }
         }
         
-        String expectedBrikNodeName = newspaperID + "-" + name + "-" + pictureID + "-" + BRIK_NODE_SUFFIX;
+        String expectedBrikNodeName = newspaperID + "-" + Util.getLastTokenInPath(name) + "-" + pictureID + "-" + BRIK_NODE_SUFFIX;
         if(!localNodeName.equals(expectedBrikNodeName)) {
             reportFailure("badbriknodename", "The brik node '" + node + "' is not of the expected format '" 
-                    + "[newspaperID]-[date]-[editionid]-[pictureid]-brik");
+                    + "[newspaperID]-[date]-[editionid]-[pictureid]-brik, expected value '" + expectedBrikNodeName + "'");
         }
         
     }
@@ -140,10 +141,10 @@ public class EditionNodeChecker extends AbstractNodeChecker {
             reportFailure("badpictureid", "PictureID check failed for node '" + node + "'. " + e.getReason());
         }
         
-        String expectedPageNodeName = newspaperID + "-" + name + "-" + pictureID;
+        String expectedPageNodeName = newspaperID + "-" + Util.getLastTokenInPath(name) + "-" + pictureID;
         if(!localNodeName.equals(expectedPageNodeName)) {
             reportFailure("badpagenodename", "The page node '" + node + "' is not of the expected format '" 
-                    + "[newspaperID]-[date]-[editionid]-[pictureid]");
+                    + "[newspaperID]-[date]-[editionid]-[pictureid], expected value '" + expectedPageNodeName + "'");
         }
         
     }

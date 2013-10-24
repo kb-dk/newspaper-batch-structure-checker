@@ -60,6 +60,7 @@ public class CompleteCheckFactory implements EventHandlerFactory {
         eventHandlers.add(new BatchNodeChecker(batch, resultCollector, nodeState));
         eventHandlers.add(new FilmNodeChecker(batch, nodeState, resultCollector));
         eventHandlers.add(new WorkshiftISOTargetChecker(resultCollector, nodeState));
+        eventHandlers.add(new EditionNodeChecker(newspaperID, resultCollector, nodeState));
         eventHandlers.add(new EditionPageNodeChecker(resultCollector, nodeState));
         //eventHandlers.add(new WorkshiftISOTargetSubChecker(resultCollector, nodeState));
         return eventHandlers;
