@@ -1,11 +1,11 @@
 package dk.statsbiblioteket.newspaper;
 
-import java.io.FileInputStream;
-import java.util.Properties;
-
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import org.testng.annotations.Test;
+
+import java.io.FileInputStream;
+import java.util.Properties;
 
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
@@ -36,6 +36,9 @@ public class BatchStructureCheckerComponentIT {
         batch.setRoundTripNumber(1);
 
         batchStructureCheckerComponent.doWorkOnBatch(batch, resultCollector);
+        if (! resultCollector.isSuccess()){
+            System.out.println(resultCollector.toReport());
+        }
         assertTrue(resultCollector.isSuccess(), "Found failure with run on good batch");
     }
 
