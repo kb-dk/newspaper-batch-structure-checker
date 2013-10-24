@@ -17,7 +17,7 @@ public class BatchNodeChecker extends AbstractNodeChecker {
     private TreeNodeState state;
     private ResultCollector resultCollector;
 
-    private static final String batchNamePatternString = "B([0-9])*-RT[0-9]*";
+    private static final String batchNamePatternString = "B([0-9]*)-RT[0-9]*";
     private static final Pattern batchNamePattern = Pattern.compile(batchNamePatternString);
 
     /**
@@ -43,7 +43,7 @@ public class BatchNodeChecker extends AbstractNodeChecker {
             }
         }
         String batchNumberString = null;
-        Matcher m = batchNamePattern.matcher(name);
+        Matcher m = batchNamePattern.matcher(Util.getLastTokenInPath(name));
         if (!m.matches()) {
             addFailure("batchname", "The name of the batch '" + name + "' does not match the expected pattern");
             return;
@@ -62,7 +62,7 @@ public class BatchNodeChecker extends AbstractNodeChecker {
                     break;
                 default:    //Should be a film directory
                     String expectedName = batchNumberString + "-[0-9]{2}";
-                    if (!name.matches(expectedName)) {
+                    if (!childNodeName.matches(expectedName)) {
                         addFailure("unexpecteddirectory", "Found unexpected directory " + childNodeName + " in " + name);
                     } else {
                         numberOfFilmDirectories++;

@@ -8,20 +8,23 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: csr
- * Date: 23/10/13
- * Time: 13:28
- * To change this template use File | Settings | File Templates.
+ * Some handy utility methods for checking.
  */
 public class Util {
+
+    /**
+     * We use a constant "/" as file separator in DOMS, not the system-dependent file-separator, so this
+     * method finds the last token in a path assuming that "/" is the file separator.
+     * @param name
+     * @return
+     */
     public static String getLastTokenInPath(String name) {
         String [] nameSplit = name.split("/");
         return nameSplit[nameSplit.length -1];
     }
 
     /**
-     * Returns true iff sequence contains a list of consecutive integers, but not necessarily in consecutive order.
+     * Returns true iff sequence contains a (possibly empty) list of consecutive integers (but not necessarily in consecutive order).
      * @param sequence
      * @return
      */
@@ -39,6 +42,12 @@ public class Util {
         return true;
     }
 
+    /**
+     * Uses standard library routines to count the number of <failure> elements in the xml representation of
+     * a ResultCollector.
+     * @param resultCollector
+     * @return the number of failures.
+     */
     public static int countFailures(ResultCollector resultCollector) {
         String resultCollectorXml = resultCollector.toReport();
         return StringUtils.countMatches(resultCollectorXml, "<failure>");

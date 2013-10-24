@@ -7,6 +7,8 @@ import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import org.testng.annotations.Test;
 
+import static org.testng.Assert.assertFalse;
+
 /**
  */
 public class BatchStructureCheckerComponentIT {
@@ -56,5 +58,6 @@ public class BatchStructureCheckerComponentIT {
         batch.setRoundTripNumber(1);
 
         batchStructureCheckerComponent.doWorkOnBatch(batch, resultCollector);
+        assertFalse(resultCollector.isSuccess());
     }
 }

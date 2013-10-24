@@ -55,6 +55,10 @@ public class WorkshiftISOTargetChecker extends AbstractNodeChecker {
         this.treeNodeState = treeNodeState;
     }
 
+    /**
+     * Called at the end node of folder by the name specified in getNodeType().
+     * Does the actual checks.
+     */
     @Override
     public void doCheck() {
         // Check: There are no files (attributes) in WORKSHIFT-ISO-TARGET
@@ -102,6 +106,11 @@ public class WorkshiftISOTargetChecker extends AbstractNodeChecker {
         }
     }
 
+    /**
+     * Specifies the kind of node to do checks on.
+     *
+     * @return The kind of node to do checks on.
+     */
     @Override
     public NodeType getNodeType() {
         return NodeType.WORKSHIFT_ISO_TARGET;

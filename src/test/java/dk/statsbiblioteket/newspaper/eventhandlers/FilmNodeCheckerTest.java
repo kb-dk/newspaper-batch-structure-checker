@@ -12,15 +12,12 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 /**
- * Created with IntelliJ IDEA.
- * User: csr
- * Date: 23/10/13
- * Time: 14:08
- * To change this template use File | Settings | File Templates.
+ * Tests for FilmNodeChecker.
  */
 public class FilmNodeCheckerTest {
 
@@ -37,13 +34,13 @@ public class FilmNodeCheckerTest {
         ResultCollector resultCollector = new ResultCollector("foo", "bar");
         SettableTreeNodeState state = new SettableTreeNodeState(node);
         FilmNodeChecker checker = new FilmNodeChecker(batch, state, resultCollector);
-        NodeBeginsParsingEvent filmStartEvent = new NodeBeginsParsingEvent("400022028241-14");
-        AttributeParsingEvent filexmlEvent = new FileAttributeParsingEvent("Politiken-" +batch_id + "-14.film.xml", new File("foobar"));
-        NodeBeginsParsingEvent firstEditionStart = new NodeBeginsParsingEvent("2001-01-01-03");
-        NodeEndParsingEvent firstEditionEnd = new NodeEndParsingEvent("2001-01-01-03");
-        NodeBeginsParsingEvent secondEditionStart = new NodeBeginsParsingEvent("2001-01-01-04");
-        NodeEndParsingEvent secondEditionEnd = new NodeEndParsingEvent("2001-01-01-04");
-        NodeEndParsingEvent filmEndEvent = new NodeEndParsingEvent("400022028241-14");
+        NodeBeginsParsingEvent filmStartEvent = new NodeBeginsParsingEvent("B400022028241-RT1/400022028241-14");
+        AttributeParsingEvent filexmlEvent = new FileAttributeParsingEvent("B400022028241-RT1/400022028241-14/Politiken-" +batch_id + "-14.film.xml", new File("foobar"));
+        NodeBeginsParsingEvent firstEditionStart = new NodeBeginsParsingEvent("B400022028241-RT1/400022028241-14/2001-01-01-03");
+        NodeEndParsingEvent firstEditionEnd = new NodeEndParsingEvent("B400022028241-RT1/400022028241-14/2001-01-01-03");
+        NodeBeginsParsingEvent secondEditionStart = new NodeBeginsParsingEvent("B400022028241-RT1/400022028241-14/2001-01-01-04");
+        NodeEndParsingEvent secondEditionEnd = new NodeEndParsingEvent("B400022028241-RT1/400022028241-14/2001-01-01-04");
+        NodeEndParsingEvent filmEndEvent = new NodeEndParsingEvent("B400022028241-RT1/400022028241-14");
         checker.handleNodeBegin(filmStartEvent);
         checker.handleAttribute(filexmlEvent);
         state.setCurrentNode(new TreeNode(null, NodeType.EDITION, null));
@@ -56,6 +53,9 @@ public class FilmNodeCheckerTest {
         assertTrue(resultCollector.isSuccess());
     }
 
+    /**
+     * Test that checking fails when film.xml file is missing,
+     */
     @Test
     public void testNoFilmXml() {
         String batch_id = "400022028241";
@@ -66,10 +66,10 @@ public class FilmNodeCheckerTest {
         ResultCollector resultCollector = new ResultCollector("foo", "bar");
         SettableTreeNodeState state = new SettableTreeNodeState(node);
         FilmNodeChecker checker = new FilmNodeChecker(batch, state, resultCollector);
-        NodeBeginsParsingEvent filmStartEvent = new NodeBeginsParsingEvent("400022028241-14");
-        NodeBeginsParsingEvent firstEditionStart = new NodeBeginsParsingEvent("2001-01-01-03");
-        NodeEndParsingEvent firstEditionEnd = new NodeEndParsingEvent("2001-01-01-03");
-        NodeEndParsingEvent filmEndEvent = new NodeEndParsingEvent("400022028241-14");
+        NodeBeginsParsingEvent filmStartEvent = new NodeBeginsParsingEvent("B400022028241-RT1/400022028241-14");
+        NodeBeginsParsingEvent firstEditionStart = new NodeBeginsParsingEvent("B400022028241-RT1/400022028241-14/2001-01-01-03");
+        NodeEndParsingEvent firstEditionEnd = new NodeEndParsingEvent("B400022028241-RT1/400022028241-14/2001-01-01-03");
+        NodeEndParsingEvent filmEndEvent = new NodeEndParsingEvent("B400022028241-RT1/400022028241-14");
         checker.handleNodeBegin(filmStartEvent);
         state.setCurrentNode(new TreeNode(null, NodeType.EDITION, null));
         checker.handleNodeBegin(firstEditionStart);
@@ -77,10 +77,11 @@ public class FilmNodeCheckerTest {
         state.setCurrentNode(new TreeNode(null, NodeType.FILM, null));
         checker.handleNodeEnd(filmEndEvent);
         assertFalse(resultCollector.isSuccess());
+        assertEquals(Util.countFailures(resultCollector), 1);
     }
 
     /**
-     * Simulate parsing a FILM node with an appropriate sequence of parsing events.
+     * Test that checking fails when editions are not consectutive.
      */
     @Test
     public void testCheckerNonConsecutiveEditions() {
@@ -92,13 +93,13 @@ public class FilmNodeCheckerTest {
         ResultCollector resultCollector = new ResultCollector("foo", "bar");
         SettableTreeNodeState state = new SettableTreeNodeState(node);
         FilmNodeChecker checker = new FilmNodeChecker(batch, state, resultCollector);
-        NodeBeginsParsingEvent filmStartEvent = new NodeBeginsParsingEvent("400022028241-14");
-        AttributeParsingEvent filexmlEvent = new FileAttributeParsingEvent("Politiken-" +batch_id + "-14.film.xml", new File("foobar"));
-        NodeBeginsParsingEvent firstEditionStart = new NodeBeginsParsingEvent("2001-01-01-03");
-        NodeEndParsingEvent firstEditionEnd = new NodeEndParsingEvent("2001-01-01-03");
-        NodeBeginsParsingEvent secondEditionStart = new NodeBeginsParsingEvent("2001-01-01-05");
-        NodeEndParsingEvent secondEditionEnd = new NodeEndParsingEvent("2001-01-01-05");
-        NodeEndParsingEvent filmEndEvent = new NodeEndParsingEvent("400022028241-14");
+        NodeBeginsParsingEvent filmStartEvent = new NodeBeginsParsingEvent("B400022028241-RT1/400022028241-14");
+        AttributeParsingEvent filexmlEvent = new FileAttributeParsingEvent("B400022028241-RT1/400022028241-14/Politiken-" +batch_id + "-14.film.xml", new File("foobar"));
+        NodeBeginsParsingEvent firstEditionStart = new NodeBeginsParsingEvent("B400022028241-RT1/400022028241-14/2001-01-01-03");
+        NodeEndParsingEvent firstEditionEnd = new NodeEndParsingEvent("B400022028241-RT1/400022028241-14/2001-01-01-03");
+        NodeBeginsParsingEvent secondEditionStart = new NodeBeginsParsingEvent("B400022028241-RT1/400022028241-14/2001-01-01-05");
+        NodeEndParsingEvent secondEditionEnd = new NodeEndParsingEvent("B400022028241-RT1/400022028241-14/2001-01-01-05");
+        NodeEndParsingEvent filmEndEvent = new NodeEndParsingEvent("B400022028241-RT1/400022028241-14");
         checker.handleNodeBegin(filmStartEvent);
         checker.handleAttribute(filexmlEvent);
         state.setCurrentNode(new TreeNode(null, NodeType.EDITION, null));
@@ -109,6 +110,40 @@ public class FilmNodeCheckerTest {
         state.setCurrentNode(new TreeNode(null, NodeType.FILM, null));
         checker.handleNodeEnd(filmEndEvent);
         assertFalse(resultCollector.isSuccess());
+        assertEquals(Util.countFailures(resultCollector), 1);
+    }
+
+    /**
+     * Test that it is checked that edition number is two characters,
+     */
+    @Test
+    public void testEditionNotTwoCharacters() {
+        String batch_id = "400022028241";
+        Batch batch = new Batch();
+        batch.setBatchID(batch_id);
+        batch.setRoundTripNumber(1);
+        final TreeNode node = new TreeNode(null, NodeType.FILM, null);
+        ResultCollector resultCollector = new ResultCollector("foo", "bar");
+        SettableTreeNodeState state = new SettableTreeNodeState(node);
+        FilmNodeChecker checker = new FilmNodeChecker(batch, state, resultCollector);
+        NodeBeginsParsingEvent filmStartEvent = new NodeBeginsParsingEvent("B400022028241-RT1/400022028241-14");
+        AttributeParsingEvent filexmlEvent = new FileAttributeParsingEvent("B400022028241-RT1/400022028241-14/Politiken-" +batch_id + "-14.film.xml", new File("foobar"));
+        NodeBeginsParsingEvent firstEditionStart = new NodeBeginsParsingEvent("B400022028241-RT1/400022028241-14/2001-01-01-03");
+        NodeEndParsingEvent firstEditionEnd = new NodeEndParsingEvent("B400022028241-RT1/400022028241-14/2001-01-01-03");
+        NodeBeginsParsingEvent secondEditionStart = new NodeBeginsParsingEvent("B400022028241-RT1/400022028241-14/2001-01-01-4");
+        NodeEndParsingEvent secondEditionEnd = new NodeEndParsingEvent("B400022028241-RT1/400022028241-14/2001-01-01-04");
+        NodeEndParsingEvent filmEndEvent = new NodeEndParsingEvent("B400022028241-RT1/400022028241-14");
+        checker.handleNodeBegin(filmStartEvent);
+        checker.handleAttribute(filexmlEvent);
+        state.setCurrentNode(new TreeNode(null, NodeType.EDITION, null));
+        checker.handleNodeBegin(firstEditionStart);
+        checker.handleNodeEnd(firstEditionEnd);
+        checker.handleNodeBegin(secondEditionStart);
+        checker.handleNodeEnd(secondEditionEnd);
+        state.setCurrentNode(new TreeNode(null, NodeType.FILM, null));
+        checker.handleNodeEnd(filmEndEvent);
+        assertFalse(resultCollector.isSuccess());
+        assertEquals(Util.countFailures(resultCollector), 1);
     }
 
 }
