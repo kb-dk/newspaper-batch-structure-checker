@@ -24,6 +24,7 @@ public class TreeNodeState extends DefaultTreeEventHandler {
         currentNode = currentNode.getParent();
     }
 
+    // Todo This is becoming a complicated. consider switch to state machine pattern.
     private void updateCurrentNode(NodeBeginsParsingEvent event) {
         NodeType nextNodeType = null;
         if (currentNode == null) {
