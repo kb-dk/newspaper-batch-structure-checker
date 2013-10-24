@@ -74,7 +74,7 @@ public class TreeNodeStateTest {
 
         treeNodeState.handleNodeBegin(new NodeBeginsParsingEvent("B400022028241-RT1"));
         treeNodeState.handleNodeBegin(new NodeBeginsParsingEvent("400022028241-14"));
-        NodeBeginsParsingEvent unmatchNodeBegin = new NodeBeginsParsingEvent("FILM-ISO-TARGET");
+        NodeBeginsParsingEvent unmatchNodeBegin = new NodeBeginsParsingEvent("FILM-ISO-target");
         treeNodeState.handleNodeBegin(unmatchNodeBegin);
 
         assertNotNull(treeNodeState.getCurrentNode());

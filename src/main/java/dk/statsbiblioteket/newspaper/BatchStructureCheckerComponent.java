@@ -41,6 +41,7 @@ public class BatchStructureCheckerComponent extends AbstractRunnableComponent {
      */
     public void doWorkOnBatch(Batch batch, ResultCollector resultCollector) throws Exception {
         EventHandlerFactory eventHandlerFactory = new CompleteCheckFactory(getProperties(), batch, resultCollector);
-        new EventRunner(createIterator(batch)).runEvents(eventHandlerFactory.createEventHandlers());
+        EventRunner eventRunner = new EventRunner(createIterator(batch));
+        eventRunner.runEvents(eventHandlerFactory.createEventHandlers());
     }
 }
