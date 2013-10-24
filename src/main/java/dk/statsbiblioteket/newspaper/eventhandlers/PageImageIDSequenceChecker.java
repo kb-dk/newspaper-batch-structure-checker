@@ -148,6 +148,8 @@ public class PageImageIDSequenceChecker extends DefaultTreeEventHandler {
                        if (!pageImage.endsWith("A")) {
                         registerFailure(name, "Composed film image without a A page. Pages are " + pageImageIDs);
                         }
+                    } else if (previousPage.equals(pageImage)) {
+                        registerFailure(name, "Duplicate page image: " + pageImage);
                     } else if (!isLetterPartPagesInSequence(previousPage, pageImage))  {
                         registerFailure(name, "Missing page image in film image. Page images are: " + pageImageIDs);
                     }
