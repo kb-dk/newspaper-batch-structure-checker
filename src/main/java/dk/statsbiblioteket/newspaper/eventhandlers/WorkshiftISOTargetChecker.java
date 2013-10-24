@@ -1,15 +1,18 @@
 package dk.statsbiblioteket.newspaper.eventhandlers;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.AttributeParsingEvent;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeBeginsParsingEvent;
 import dk.statsbiblioteket.newspaper.treenode.NodeType;
 import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Performs various checks on WORKSHIFT-ISO-TARGET folder and its files.
@@ -29,12 +32,12 @@ import org.slf4j.LoggerFactory;
  * - There are no files (attributes) in WORKSHIFT-ISO-TARGET
  * - There ARE Target-dddddd-dddd folder(s) with names of that format
  * - There are no folders with other names
- * - The targetSerialisedNumbers are sequential starting at 1           TODO
+ * - The targetSerialisedNumbers are sequential starting at 1
  *
  * @author jrg
  */
 public class WorkshiftISOTargetChecker extends AbstractNodeChecker {
-    private static Logger log = LoggerFactory.getLogger(WorkshiftISOTargetChecker.class);
+    private static Logger log = LoggerFactory.getLogger(BilledIDSequenceChecker.class);
 
     private final String WORKSHIFT_ISO_TARGET_NAME = "WORKSHIFT-ISO-TARGET";
 
@@ -70,6 +73,7 @@ public class WorkshiftISOTargetChecker extends AbstractNodeChecker {
         for (String nodeName : childNodes) {
             if (correctTargetFolderName(nodeName)) {
                 targetFoldersExist = true;
+                collectTargetFolderNumber(nodeName);
             } else {
                 resultCollector.addFailure(name, "filestructure", this.getClass().getName(),
                         "Unexpected folder: '" + nodeName + "'");
@@ -78,10 +82,26 @@ public class WorkshiftISOTargetChecker extends AbstractNodeChecker {
         if (!targetFoldersExist) {
             // Note that at Ninestars, our "target folder" are actually files
             resultCollector.addFailure(name, "filestructure", this.getClass().getName(),
-                    "Error: no targets under " + WORKSHIFT_ISO_TARGET_NAME);
+                    "No targets under " + WORKSHIFT_ISO_TARGET_NAME);
+            return;
         }
 
-
+        // Check: The targetSerialisedNumbers are sequential starting at 1
+        Collections.sort(targetSerialisedNumbers);
+        if (Integer.parseInt(targetSerialisedNumbers.get(0)) != 1) {
+            resultCollector.addFailure(name, "filestructure", this.getClass().getName(),
+                    "targetSerialisedNumbers of targets under " + WORKSHIFT_ISO_TARGET_NAME + " not starting at 1");
+        } else {
+            for (int i = 1;
+                 i < Integer.parseInt(targetSerialisedNumbers.get(targetSerialisedNumbers.size() - 1));
+                 i++) {
+                if (targetSerialisedNumbers.indexOf(Integer.toString(i - 1)) != i) {
+                    resultCollector.addFailure(name, "filestructure", this.getClass().getName(),
+                            "targetSerialisedNumbers of targets under " + WORKSHIFT_ISO_TARGET_NAME
+                                    + " are missing number " + i);
+                }
+            }
+        }
     }
 
     @Override
@@ -104,7 +124,6 @@ public class WorkshiftISOTargetChecker extends AbstractNodeChecker {
         } else {
             return false;
         }
-
     }
 
     private void collectTargetFolderNumber(String name) {

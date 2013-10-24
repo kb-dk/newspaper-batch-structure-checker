@@ -51,12 +51,13 @@ public class BatchNodeChecker extends AbstractNodeChecker {
             batchNumberString = m.group(1);
         }
         boolean foundWorkshopIsoTarget = false;
-        int numberOfFilmDirectories = 0; //TODO What to do with this?
-                                         //Collect file suffices at check that they are sequential?
+        int numberOfFilmDirectories = 0; //TODO This should equal number of BatchContent entries for this batch in MF-PAK
+                                         //TODO Also collect file suffices and check that they are sequential?
+
         for (String childNode: childNodes) {
             String childNodeName = Util.getLastTokenInPath(childNode);
             switch (childNodeName) {
-                case("WORKSHOP-ISO-TARGET"):
+                case("WORKSHIFT-ISO-TARGET"):
                     foundWorkshopIsoTarget = true;
                     break;
                 default:    //Should be a film directory
@@ -67,9 +68,9 @@ public class BatchNodeChecker extends AbstractNodeChecker {
                         numberOfFilmDirectories++;
                     }
             }
-            if (!foundWorkshopIsoTarget) {
-                addFailure("missingdirectory", "No WORKSHOP-ISO-TARGET directory found in " + name);
-            }
+        }
+        if (!foundWorkshopIsoTarget) {
+            addFailure("missingdirectory", "No WORKSHOP-ISO-TARGET directory found in " + name);
         }
     }
 
