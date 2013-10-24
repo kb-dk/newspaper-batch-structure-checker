@@ -14,5 +14,7 @@ public enum NodeType {
     UNMATCHED,
     EDITION,
     PAGE,
+    BRIK,
+    BRIK_IMAGE,
     PAGE_IMAGE;
 }

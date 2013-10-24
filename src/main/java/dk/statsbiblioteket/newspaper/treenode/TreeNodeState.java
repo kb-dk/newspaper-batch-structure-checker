@@ -45,7 +45,11 @@ public class TreeNodeState extends DefaultTreeEventHandler {
             }
         } else if (currentNode.getType().equals(NodeType.EDITION) ||
                 currentNode.getType().equals(NodeType.UNMATCHED)) {
-            nextNodeType = NodeType.PAGE;
+            if(event.getName().contains("brik")) {
+                nextNodeType = NodeType.BRIK;
+            } else {
+                nextNodeType = NodeType.PAGE;
+            }
         } else if (currentNode.getType().equals(NodeType.FILM_ISO_TARGET)) {
             nextNodeType = NodeType.FILM_TARGET;
         } else if (currentNode.getType().equals(NodeType.WORKSHIFT_ISO_TARGET)) {
@@ -56,6 +60,8 @@ public class TreeNodeState extends DefaultTreeEventHandler {
             nextNodeType = NodeType.TARGET_IMAGE;
         } else if (currentNode.getType().equals(NodeType.WORKSHIFT_TARGET)) {
             nextNodeType = NodeType.TARGET_IMAGE;
+        } else if(currentNode.getType().equals(NodeType.BRIK)){
+            nextNodeType = NodeType.BRIK_IMAGE;
         } else {
             throw new IllegalStateException("Unexpected event: " + event + " for current node: " + currentNode);
         }
