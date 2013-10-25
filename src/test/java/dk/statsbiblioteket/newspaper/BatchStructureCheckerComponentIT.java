@@ -5,6 +5,7 @@ import java.util.Properties;
 
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
+import dk.statsbiblioteket.newspaper.eventhandlers.Util;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertFalse;
@@ -59,5 +60,6 @@ public class BatchStructureCheckerComponentIT {
 
         batchStructureCheckerComponent.doWorkOnBatch(batch, resultCollector);
         assertFalse(resultCollector.isSuccess());
+        System.out.println("Found " + Util.countFailures(resultCollector) + " failures.");
     }
 }
