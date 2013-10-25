@@ -31,6 +31,12 @@ public class EditionNodeChecker extends AbstractNodeChecker {
     private final ResultCollector resultCollector;
     private final TreeNodeState treeNodeState;
     
+    /**
+     * Constructor for the EditionNodeChecker
+     * @param newspaperID The ID for the newspaper contained in the batch
+     * @param resultCollector The resultCollector to collect failures
+     * @param state The TreeNodeState 
+     */
     public EditionNodeChecker(String newspaperID, ResultCollector resultCollector, TreeNodeState state) {
         this.resultCollector = resultCollector;
         this.treeNodeState = state;
@@ -53,8 +59,12 @@ public class EditionNodeChecker extends AbstractNodeChecker {
         return treeNodeState;
     }
     
+    /**
+     * Check the attributes found on the node 
+     */
     private void checkAttributes() {
-        String editionAttribute = getPathPrefix() + newspaperID + "-" + name + EDITION_ATTRIBUTE_SUFFIX;
+        String localname = Util.getLastTokenInPath(name);
+        String editionAttribute = getPathPrefix() + localname + "/" + newspaperID + "-" + localname + EDITION_ATTRIBUTE_SUFFIX;
         if(attributes.contains(editionAttribute)) {
             attributes.remove(editionAttribute);
         } else {
@@ -67,9 +77,14 @@ public class EditionNodeChecker extends AbstractNodeChecker {
         }
     }
     
+    /**
+     * Check the childnodes 
+     * - Checks that all child nodes local names start with newspaperID
+     * - Delegates the rest of the checks for briks and pages
+     */
     private void checkChildNodes() {
         for(String childNode : childNodes) {
-            String node = getLocalName(childNode);
+            String node = Util.getLastTokenInPath(childNode);
             if(!node.startsWith(newspaperID)) {
                 reportFailure("badnewspaperid", "The name of the page node: '" + childNode + "' does not contain the correct newspaperID ('"
                         + newspaperID +"')");
@@ -83,8 +98,13 @@ public class EditionNodeChecker extends AbstractNodeChecker {
         }
     }
 
+    /**
+     *  Checks a brik child node. 
+     *  - Checks that the picture id has the valid form
+     *  - Checks that the child nodes local name is of the expected form.
+     */
     private void checkBrikChildNode(String node) {
-        String localNodeName = getLocalName(node);
+        String localNodeName = Util.getLastTokenInPath(node);
         String[] nameParts = localNodeName.split("-");
         String pictureID = nameParts[nameParts.length - 2];
         if(pictureID.length() != 4) {
@@ -98,16 +118,21 @@ public class EditionNodeChecker extends AbstractNodeChecker {
             }
         }
         
-        String expectedBrikNodeName = newspaperID + "-" + name + "-" + pictureID + "-" + BRIK_NODE_SUFFIX;
+        String expectedBrikNodeName = newspaperID + "-" + Util.getLastTokenInPath(name) + "-" + pictureID + "-" + BRIK_NODE_SUFFIX;
         if(!localNodeName.equals(expectedBrikNodeName)) {
             reportFailure("badbriknodename", "The brik node '" + node + "' is not of the expected format '" 
-                    + "[newspaperID]-[date]-[editionid]-[pictureid]-brik");
+                    + "[newspaperID]-[date]-[editionid]-[pictureid]-brik, expected value '" + expectedBrikNodeName + "'");
         }
         
     }
     
+    /**
+     * Checks a page child node
+     * - checks that the picture ID is of a valid form
+     * - checks that the local name is of the expected form 
+     */
     private void checkPageChildNode(String node) {
-        String localNodeName = getLocalName(node);
+        String localNodeName = Util.getLastTokenInPath(node);
         String[] nameParts = localNodeName.split("-");
         String pictureID = nameParts[nameParts.length - 1];
         try {
@@ -116,14 +141,19 @@ public class EditionNodeChecker extends AbstractNodeChecker {
             reportFailure("badpictureid", "PictureID check failed for node '" + node + "'. " + e.getReason());
         }
         
-        String expectedPageNodeName = newspaperID + "-" + name + "-" + pictureID;
+        String expectedPageNodeName = newspaperID + "-" + Util.getLastTokenInPath(name) + "-" + pictureID;
         if(!localNodeName.equals(expectedPageNodeName)) {
             reportFailure("badpagenodename", "The page node '" + node + "' is not of the expected format '" 
-                    + "[newspaperID]-[date]-[editionid]-[pictureid]");
+                    + "[newspaperID]-[date]-[editionid]-[pictureid], expected value '" + expectedPageNodeName + "'");
         }
         
     }
     
+    /**
+     * Check a pictureID is of the valid form. 
+     * @param pictureID The picture id
+     * @throws PictureIDCheckException if the id is malformed. 
+     */
     private void checkPictureID(String pictureID) throws PictureIDCheckException {
         Integer pageNumber = null;
         try {
@@ -154,11 +184,6 @@ public class EditionNodeChecker extends AbstractNodeChecker {
     
     private String getPathPrefix() {
         return treeNodeState.getCurrentNode().getName() + "/";
-    }
-    
-    private String getLocalName(String fullPath) {
-        String[] namesplit = fullPath.split("/"); 
-        return namesplit[namesplit.length - 1];
     }
 
     private class PictureIDCheckException extends Exception {

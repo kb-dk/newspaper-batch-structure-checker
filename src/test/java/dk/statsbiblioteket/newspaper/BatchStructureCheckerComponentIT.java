@@ -9,6 +9,7 @@ import dk.statsbiblioteket.newspaper.eventhandlers.Util;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 /**
  */
@@ -36,6 +37,7 @@ public class BatchStructureCheckerComponentIT {
         batch.setRoundTripNumber(1);
 
         batchStructureCheckerComponent.doWorkOnBatch(batch, resultCollector);
+        assertTrue(resultCollector.isSuccess(), "Found failure with run on good batch");
     }
 
     /**

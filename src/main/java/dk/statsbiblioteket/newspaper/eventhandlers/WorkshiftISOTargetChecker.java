@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  * - There are no files (attributes) in WORKSHIFT-ISO-TARGET
  * - There ARE Target-dddddd-dddd folder(s) with names of that format
  * - There are no folders with other names
- * - The targetSerialisedNumbers are sequential starting at 1
+ * - The serializedNumbersFromFilenames are sequential starting at 1
  *
  * @author jrg
  */
@@ -41,7 +41,7 @@ public class WorkshiftISOTargetChecker extends AbstractNodeChecker {
 
     private final ResultCollector resultCollector;
     private final TreeNodeState treeNodeState;
-    private List<String> targetSerialisedNumbers = new ArrayList<>();
+    private List<Integer> serializedNumbersFromFilenames = new ArrayList<>();
     private boolean targetFilesExist = false;
 
 
@@ -72,7 +72,8 @@ public class WorkshiftISOTargetChecker extends AbstractNodeChecker {
         // Check: There ARE Target-dddddd-dddd folder(s) with names of that format
         // and: There are no folders with other names
         boolean targetFoldersExist = false;
-        for (String nodeName : childNodes) {
+        for (String childNode : childNodes) {
+            String nodeName = Util.getLastTokenInPath(childNode);
             if (correctTargetFolderName(nodeName)) {
                 targetFoldersExist = true;
                 collectTargetFolderNumber(nodeName);
@@ -88,19 +89,21 @@ public class WorkshiftISOTargetChecker extends AbstractNodeChecker {
             return;
         }
 
-        // Check: The targetSerialisedNumbers are sequential starting at 1
-        Collections.sort(targetSerialisedNumbers);
-        if (Integer.parseInt(targetSerialisedNumbers.get(0)) != 1) {
+        // Check: The serializedNumbersFromFilenames are sequential starting at 1
+        Collections.sort(serializedNumbersFromFilenames);
+        int firstSerializedNumberFromFilenames = serializedNumbersFromFilenames.get(0);
+        int lastSerializedNumberFromFilenames = serializedNumbersFromFilenames.get(serializedNumbersFromFilenames.size() - 1);
+        if (firstSerializedNumberFromFilenames != 1) {
             resultCollector.addFailure(name, "filestructure", this.getClass().getName(),
-                    "targetSerialisedNumbers of targets under " + WORKSHIFT_ISO_TARGET_NAME + " not starting at 1");
+                    "serializedNumbersFromFilenames of targets under " + WORKSHIFT_ISO_TARGET_NAME + " not starting at 1");
         } else {
-            for (int i = 1;
-                 i < Integer.parseInt(targetSerialisedNumbers.get(targetSerialisedNumbers.size() - 1));
-                 i++) {
-                if (targetSerialisedNumbers.indexOf(Integer.toString(i - 1)) != i) {
+            for (int wantedSerializedNumber = 1;
+                 wantedSerializedNumber < lastSerializedNumberFromFilenames;
+                 wantedSerializedNumber++) {
+                if (serializedNumbersFromFilenames.indexOf(wantedSerializedNumber) == -1) {
                     resultCollector.addFailure(name, "filestructure", this.getClass().getName(),
-                            "targetSerialisedNumbers of targets under " + WORKSHIFT_ISO_TARGET_NAME
-                                    + " are missing number " + i);
+                            "serializedNumbersFromFilenames of targets under " + WORKSHIFT_ISO_TARGET_NAME
+                                    + " are missing number " + wantedSerializedNumber);
                 }
             }
         }
@@ -139,7 +142,7 @@ public class WorkshiftISOTargetChecker extends AbstractNodeChecker {
         Matcher matcher = pattern.matcher(name);
 
         if (matcher.find()) {
-            targetSerialisedNumbers.add(matcher.group(1));
+            serializedNumbersFromFilenames.add(Integer.parseInt(matcher.group(1)));
         }
     }
 }
