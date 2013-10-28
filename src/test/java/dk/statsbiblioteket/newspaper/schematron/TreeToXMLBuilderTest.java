@@ -21,18 +21,7 @@ public class TreeToXMLBuilderTest {
         String pathToTestBatch = System.getProperty("integration.test.newspaper.testdata");
         Properties properties = new Properties();
         properties.load(new FileInputStream(pathToProperties));
-        properties.setProperty("scratch", pathToTestBatch + "/" + "small-test-batch");
-
-        BatchStructureCheckerComponent batchStructureCheckerComponent =
-                new BatchStructureCheckerComponent(properties);
-
-        ResultCollector resultCollector = new ResultCollector("Batch Structure Checker", "v0.1");
-        Batch batch = new Batch();
-        batch.setBatchID("400022028241");
-        batch.setRoundTripNumber(1);
-
-
-        String groupingChar = Pattern.quote(properties.getProperty("groupingChar", "."));
+        properties.setProperty("scratch", pathToTestBatch + "/" + "small-test-batch");String groupingChar = Pattern.quote(properties.getProperty("groupingChar", "."));
         String dataFilePattern = properties.getProperty("dataFilePattern", ".*\\.jp2$");
         String checksumPostFix = properties.getProperty("checksumPostfix",".md5");
         TreeIterator iterator = new TransformingIteratorForFileSystems(new File(pathToTestBatch + "/" + "small-test-batch/B400022028241-RT1")
