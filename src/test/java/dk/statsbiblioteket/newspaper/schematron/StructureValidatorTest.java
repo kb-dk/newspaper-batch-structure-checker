@@ -52,14 +52,18 @@ public class StructureValidatorTest {
         String groupingChar = Pattern.quote(properties.getProperty("groupingChar", "."));
         String dataFilePattern = properties.getProperty("dataFilePattern", ".*\\.jp2$");
         String checksumPostFix = properties.getProperty("checksumPostfix",".md5");
-        TreeIterator iterator = new TransformingIteratorForFileSystems(new File(pathToTestBatch + "/" + "small-test-batch/B400022028241-RT1")
-                ,groupingChar,dataFilePattern,checksumPostFix);
+        String path = pathToTestBatch + "/" + "small-test-batch/B400022028241-RT1";
+        TreeIterator iterator = new TransformingIteratorForFileSystems(new File(path), groupingChar,
+                dataFilePattern, checksumPostFix);
         EventRunner eventRunner = new EventRunner(iterator);
         List<TreeEventHandler> handlers = new ArrayList<TreeEventHandler>();
         XmlBuilderEventHandler xmlBuilderEventHandler = new XmlBuilderEventHandler();
         handlers.add(xmlBuilderEventHandler);
         eventRunner.runEvents(handlers);
+
         String xml = xmlBuilderEventHandler.getXml();
+        //System.out.println(xml);
+
         StructureValidator validator = new StructureValidator("demands.sch");
         Batch batch = new Batch();
         batch.setRoundTripNumber(1);
@@ -84,13 +88,14 @@ public class StructureValidatorTest {
         String dataFilePattern = properties.getProperty("dataFilePattern", ".*\\.jp2$");
         String checksumPostFix = properties.getProperty("checksumPostfix",".md5");
         File batchRoot = new File(pathToTestBatch + "/" + "bad-bad-batch/B400022028241-RT1");
-        TreeIterator iterator = new TransformingIteratorForFileSystems(batchRoot
-                ,groupingChar,dataFilePattern,checksumPostFix);
+        TreeIterator iterator = new TransformingIteratorForFileSystems(batchRoot, groupingChar,
+                dataFilePattern,checksumPostFix);
         EventRunner eventRunner = new EventRunner(iterator);
         List<TreeEventHandler> handlers = new ArrayList<TreeEventHandler>();
         XmlBuilderEventHandler xmlBuilderEventHandler = new XmlBuilderEventHandler();
         handlers.add(xmlBuilderEventHandler);
-        eventRunner.runEvents(handlers); String xml = xmlBuilderEventHandler.getXml();
+        eventRunner.runEvents(handlers);
+        String xml = xmlBuilderEventHandler.getXml();
         StructureValidator validator = new StructureValidator("demands.sch");
         Batch batch = new Batch();
         batch.setRoundTripNumber(1);
@@ -99,7 +104,4 @@ public class StructureValidatorTest {
         assertFalse(resultCollector.isSuccess());
         assertTrue(Util.countFailures(resultCollector) > 40);
     }
-
-
-
 }
