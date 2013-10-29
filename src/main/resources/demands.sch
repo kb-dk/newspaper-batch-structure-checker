@@ -187,6 +187,7 @@
 
         <!-- FILM-ISO-target "images" -->
         <s:rule context="/node[@name=$batchID]/node[@name != concat($batchID,'/WORKSHIFT-ISO-TARGET')]/node[ends-with(@name,'FILM-ISO-target')]/node">
+
             <!-- Check: Any node in BATCH/FILM/FILM-ISO-target/ must contain a .mix.xml attribute -->
             <s:assert test="attribute/@name = concat(@name,'.mix.xml')">Mix not found in
                 <s:value-of select="@name"/>

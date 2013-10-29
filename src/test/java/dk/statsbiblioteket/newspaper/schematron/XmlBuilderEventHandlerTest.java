@@ -1,22 +1,25 @@
 package dk.statsbiblioteket.newspaper.schematron;
 
-import dk.statsbiblioteket.medieplatform.autonomous.Batch;
-import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.TreeIterator;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.EventRunner;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.TreeEventHandler;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.filesystem.transforming.TransformingIteratorForFileSystems;
-import dk.statsbiblioteket.newspaper.BatchStructureCheckerComponent;
 import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
 /**
+ *
  */
-public class TreeToXMLBuilderTest {
+public class XmlBuilderEventHandlerTest {
+
     @Test
-    public void testBuildXMLStructure() throws Exception {
+    public void testGetXml() throws Exception {
         String pathToProperties = System.getProperty("integration.test.newspaper.properties");
         String pathToTestBatch = System.getProperty("integration.test.newspaper.testdata");
         Properties properties = new Properties();
@@ -26,7 +29,11 @@ public class TreeToXMLBuilderTest {
         String checksumPostFix = properties.getProperty("checksumPostfix",".md5");
         TreeIterator iterator = new TransformingIteratorForFileSystems(new File(pathToTestBatch + "/" + "small-test-batch/B400022028241-RT1")
                 ,groupingChar,dataFilePattern,checksumPostFix);
-        String xml = (new TreeToXMLBuilder()).buildXMLStructure(iterator);
-        System.out.println(xml);
+        EventRunner eventRunner = new EventRunner(iterator);
+        List<TreeEventHandler> handlers = new ArrayList<TreeEventHandler>();
+        XmlBuilderEventHandler xmlBuilderEventHandler = new XmlBuilderEventHandler();
+        handlers.add(xmlBuilderEventHandler);
+        eventRunner.runEvents(handlers);
+        System.out.println(xmlBuilderEventHandler.getXml());
     }
 }

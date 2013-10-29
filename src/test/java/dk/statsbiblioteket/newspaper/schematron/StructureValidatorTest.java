@@ -3,6 +3,8 @@ package dk.statsbiblioteket.newspaper.schematron;
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.TreeIterator;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.EventRunner;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.TreeEventHandler;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.filesystem.transforming.TransformingIteratorForFileSystems;
 import dk.statsbiblioteket.newspaper.BatchStructureCheckerComponent;
 import dk.statsbiblioteket.newspaper.eventhandlers.Util;
@@ -11,6 +13,8 @@ import org.testng.annotations.Test;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
@@ -35,7 +39,12 @@ public class StructureValidatorTest {
         String checksumPostFix = properties.getProperty("checksumPostfix",".md5");
         TreeIterator iterator = new TransformingIteratorForFileSystems(new File(pathToTestBatch + "/" + "small-test-batch/B400022028241-RT1")
                 ,groupingChar,dataFilePattern,checksumPostFix);
-        String xml = (new TreeToXMLBuilder()).buildXMLStructure(iterator);
+        EventRunner eventRunner = new EventRunner(iterator);
+        List<TreeEventHandler> handlers = new ArrayList<TreeEventHandler>();
+        XmlBuilderEventHandler xmlBuilderEventHandler = new XmlBuilderEventHandler();
+        handlers.add(xmlBuilderEventHandler);
+        eventRunner.runEvents(handlers);
+        String xml = xmlBuilderEventHandler.getXml();
         StructureValidator validator = new StructureValidator("demands.sch");
         Batch batch = new Batch();
         batch.setRoundTripNumber(1);
@@ -57,7 +66,11 @@ public class StructureValidatorTest {
         File batchRoot = new File(pathToTestBatch + "/" + "bad-bad-batch/B400022028241-RT1");
         TreeIterator iterator = new TransformingIteratorForFileSystems(batchRoot
                 ,groupingChar,dataFilePattern,checksumPostFix);
-        String xml = (new TreeToXMLBuilder()).buildXMLStructure(iterator);
+        EventRunner eventRunner = new EventRunner(iterator);
+        List<TreeEventHandler> handlers = new ArrayList<TreeEventHandler>();
+        XmlBuilderEventHandler xmlBuilderEventHandler = new XmlBuilderEventHandler();
+        handlers.add(xmlBuilderEventHandler);
+        eventRunner.runEvents(handlers); String xml = xmlBuilderEventHandler.getXml();
         StructureValidator validator = new StructureValidator("demands.sch");
         Batch batch = new Batch();
         batch.setRoundTripNumber(1);
