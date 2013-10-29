@@ -40,6 +40,8 @@ public class BatchStructureCheckerComponentIT {
         assertTrue(resultCollector.isSuccess(), "Found failure with run on good batch");
     }
 
+
+
     /**
      * Tests that the BatchStructureChecker can parse a production like batch which should contain failures
      * for all .

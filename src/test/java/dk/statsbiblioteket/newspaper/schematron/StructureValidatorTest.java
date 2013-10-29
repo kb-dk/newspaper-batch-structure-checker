@@ -1,19 +1,30 @@
 package dk.statsbiblioteket.newspaper.schematron;
 
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
+import dk.statsbiblioteket.doms.central.connectors.EnhancedFedoraImpl;
+import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
+import dk.statsbiblioteket.medieplatform.autonomous.CommunicationException;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.TreeIterator;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.EventRunner;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.TreeEventHandler;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.fedora3.ContentModelFilter;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.fedora3.IteratorForFedora3;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.filesystem.transforming.TransformingIteratorForFileSystems;
 import dk.statsbiblioteket.newspaper.BatchStructureCheckerComponent;
 import dk.statsbiblioteket.newspaper.eventhandlers.Util;
+import dk.statsbiblioteket.newspaper.promptdomsingester.SimpleFedoraIngester;
 import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.regex.Pattern;
@@ -22,10 +33,14 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 /**
-
+ * Tests for structure-validator.
  */
 public class StructureValidatorTest {
 
+    /**
+     * Checks that running on a well-strcutured batch produces no errors.
+     * @throws Exception
+     */
     @Test
     public void testValidate() throws Exception {
         String pathToProperties = System.getProperty("integration.test.newspaper.properties");
@@ -52,6 +67,11 @@ public class StructureValidatorTest {
         validator.validate(batch, new ByteArrayInputStream(xml.getBytes("UTF-8")), resultCollector);
     }
 
+
+    /**
+     * Checks that running on a badly-structured batch produces many errors.
+     * @throws Exception
+     */
     @Test
     public void testValidateBadBadBatch() throws Exception {
         String pathToProperties = System.getProperty("integration.test.newspaper.properties");
@@ -79,5 +99,7 @@ public class StructureValidatorTest {
         assertFalse(resultCollector.isSuccess());
         assertTrue(Util.countFailures(resultCollector) > 40);
     }
+
+
 
 }
