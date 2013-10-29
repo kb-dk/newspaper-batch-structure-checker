@@ -2,6 +2,7 @@ package dk.statsbiblioteket.newspaper;
 
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
+import dk.statsbiblioteket.newspaper.eventhandlers.Util;
 import org.testng.annotations.Test;
 
 import java.io.FileInputStream;
@@ -42,6 +43,8 @@ public class BatchStructureCheckerComponentIT {
         assertTrue(resultCollector.isSuccess(), "Found failure with run on good batch");
     }
 
+
+
     /**
      * Tests that the BatchStructureChecker can parse a production like batch which should contain failures
      * for all .
@@ -64,5 +67,6 @@ public class BatchStructureCheckerComponentIT {
 
         batchStructureCheckerComponent.doWorkOnBatch(batch, resultCollector);
         assertFalse(resultCollector.isSuccess());
+        System.out.println("Found " + Util.countFailures(resultCollector) + " failures.");
     }
 }

@@ -13,6 +13,7 @@ import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.Event
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.TreeEventHandler;
 import dk.statsbiblioteket.newspaper.mfpakintegration.configuration.MfPakConfiguration;
 import dk.statsbiblioteket.newspaper.mfpakintegration.database.MfPakDAO;
+import dk.statsbiblioteket.newspaper.schematron.XmlBuilderEventHandler;
 import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
 
 /**
@@ -55,13 +56,14 @@ public class CompleteCheckFactory implements EventHandlerFactory {
         //eventHandlers.add(new ConsoleLogger());
         TreeNodeState nodeState = new TreeNodeState();
         eventHandlers.add(nodeState); // Must be the first eventhandler to ensure a update state used by the following handlers (a bit fragile).
-        eventHandlers.add(new ChecksumExistenceChecker(resultCollector));
+        //eventHandlers.add(new ChecksumExistenceChecker(resultCollector));
         eventHandlers.add(new PageImageIDSequenceChecker(resultCollector, nodeState));
-        eventHandlers.add(new BatchNodeChecker(batch, resultCollector, nodeState));
-        eventHandlers.add(new FilmNodeChecker(batch, nodeState, resultCollector));
-        eventHandlers.add(new WorkshiftISOTargetChecker(resultCollector, nodeState));
-        eventHandlers.add(new EditionNodeChecker(newspaperID, resultCollector, nodeState));
-        eventHandlers.add(new EditionPageNodeChecker(resultCollector, nodeState));
+        eventHandlers.add(new XmlBuilderEventHandler());
+        //eventHandlers.add(new BatchNodeChecker(batch, resultCollector, nodeState));
+        //eventHandlers.add(new FilmNodeChecker(batch, nodeState, resultCollector));
+        //eventHandlers.add(new WorkshiftISOTargetChecker(resultCollector, nodeState));
+        //eventHandlers.add(new EditionNodeChecker(newspaperID, resultCollector, nodeState));
+        //eventHandlers.add(new EditionPageNodeChecker(resultCollector, nodeState));
         //eventHandlers.add(new WorkshiftISOTargetSubChecker(resultCollector, nodeState));
         return eventHandlers;
     }
