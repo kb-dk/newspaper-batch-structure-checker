@@ -90,6 +90,6 @@ public class StructureValidatorTest {
         batch.setBatchID("400022028241");
         validator.validate(batch, new ByteArrayInputStream(xml.getBytes("UTF-8")), resultCollector);
         assertFalse(resultCollector.isSuccess());
-        assertTrue(Util.countFailures(resultCollector) > 40);
+        assertTrue(Util.countFailures(resultCollector) >= 40);
     }
 }
