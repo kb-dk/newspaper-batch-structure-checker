@@ -4,6 +4,7 @@ import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.AttributePar
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeBeginsParsingEvent;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeEndParsingEvent;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.TreeEventHandler;
+import dk.statsbiblioteket.newspaper.eventhandlers.Util;
 
 import java.io.IOException;
 
@@ -55,7 +56,8 @@ public class XmlBuilderEventHandler implements TreeEventHandler {
 
     @Override
     public void handleNodeBegin(NodeBeginsParsingEvent event) {
-        xmlBuilder.append(indent + "<node name=\"" + event.getName() + "\">\n");
+        String shortName = Util.getLastTokenInPath(event.getName());
+        xmlBuilder.append(indent + "<node name=\"" + event.getName() + "\" shortName=\"" + shortName + "\">\n");
         indent = indent + extra;
     }
 
@@ -67,10 +69,11 @@ public class XmlBuilderEventHandler implements TreeEventHandler {
 
     @Override
     public void handleAttribute(AttributeParsingEvent event) {
+        String shortName = Util.getLastTokenInPath(event.getName());
         if (event instanceof AttributeParsingEvent) {
             AttributeParsingEvent attributeParsingEvent = (AttributeParsingEvent) event;
             try {
-                xmlBuilder.append(indent + "<attribute name=\"" + event.getName() + "\" checksum=\"" + attributeParsingEvent
+                xmlBuilder.append(indent + "<attribute name=\"" + event.getName() + "\" shortName=\"" + shortName + "\"  checksum=\"" + attributeParsingEvent
                         .getChecksum() + "\" />\n");
             } catch (IOException e) {
                 throw new RuntimeException(e);

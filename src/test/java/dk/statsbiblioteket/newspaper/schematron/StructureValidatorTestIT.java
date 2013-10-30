@@ -38,7 +38,7 @@ public class StructureValidatorTestIT {
      * This test ingests a batch to DOMS and performs a structure validation on the ingested structure.
      * @throws Exception
      */
-    //@Test(groups = "integrationTest")
+    @Test(groups = "integrationTest")
     public void testValidateOnFedora() throws Exception {
         String pathToProperties = System.getProperty("integration.test.newspaper.properties");
         String pathToTestBatch = System.getProperty("integration.test.newspaper.testdata");
