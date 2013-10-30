@@ -46,7 +46,6 @@
     <s:pattern id="filmChecker">
         <!-- Example film: B400022028241-RT1/400022028241-14 -->
         <s:rule context="/node[@name=$batchID]/node[@name != $workshiftISOTarget]">
-            <s:let name="filmID" value="@name"/>
 
             <!-- Check: Any folder in BATCH not called WORKSHIFT-ISO-TARGET must have name of format [0-9]{12}-[0-9]+ (a FILM folder) -->
             <s:assert test="matches(@name,'/[0-9]{12}-[0-9]+$')">Invalid film name <s:value-of select="@name"/></s:assert>
@@ -57,7 +56,7 @@
 
             <!-- Check: In BATCH/FILM/ there should be a folder of the name FILM-ISO-target -->
             <!-- Example film-iso-target: B400022028241-RT1/400022028241-14/FILM-ISO-target -->
-            <s:assert test="node[@name = concat($filmID,'/FILM-ISO-target')]">FILM-ISO-target not found</s:assert>
+            <s:assert test="node[@name = concat(../@name,'/FILM-ISO-target')]">FILM-ISO-target not found</s:assert>
         </s:rule>
     </s:pattern>
 
