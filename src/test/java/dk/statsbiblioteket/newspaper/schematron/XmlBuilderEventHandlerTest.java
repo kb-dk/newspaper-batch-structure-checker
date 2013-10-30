@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
  */
 public class XmlBuilderEventHandlerTest {
 
-    @Test
+    @Test(groups = "integrationTest")
     public void testGetXml() throws Exception {
         String pathToProperties = System.getProperty("integration.test.newspaper.properties");
         String pathToTestBatch = System.getProperty("integration.test.newspaper.testdata");
