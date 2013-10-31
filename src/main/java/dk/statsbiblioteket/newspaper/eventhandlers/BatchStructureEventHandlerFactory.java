@@ -17,9 +17,9 @@ import dk.statsbiblioteket.newspaper.schematron.XmlBuilderEventHandler;
 import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
 
 /**
- * Provides the complete set of structure checkers.
+ * Provides the complete set of structure checkers for the batch structure.
  */
-public class CompleteCheckFactory implements EventHandlerFactory {
+public class BatchStructureEventHandlerFactory implements EventHandlerFactory {
     
     
     /** mf-pak Database Url property */
@@ -31,9 +31,10 @@ public class CompleteCheckFactory implements EventHandlerFactory {
     private final BatchEventClient batchEventClient;
     private final Batch batch;
 
-    public CompleteCheckFactory(Properties properties, Batch batch, ResultCollector resultCollector) {
+    public BatchStructureEventHandlerFactory(Properties properties, Batch batch, ResultCollector resultCollector) {
         this.resultCollector = resultCollector;
         this.batch = batch;
+        //TODO This mfpak initialisation is expected to be replaced by a BatchContext class elsewhere.
         mfpakConfig = new MfPakConfiguration();
         mfpakConfig.setDatabaseUrl(properties.getProperty(MFPAK_DATABASE_URL));
         mfpakConfig.setDatabaseUser(properties.getProperty(MFPAK_DATABASE_USER));
@@ -53,18 +54,10 @@ public class CompleteCheckFactory implements EventHandlerFactory {
         } catch (SQLException e) {
             throw new IllegalStateException("Failed to get newspaperID from mfpak database", e);
         }
-        //eventHandlers.add(new ConsoleLogger());
         TreeNodeState nodeState = new TreeNodeState();
         eventHandlers.add(nodeState); // Must be the first eventhandler to ensure a update state used by the following handlers (a bit fragile).
-        //eventHandlers.add(new ChecksumExistenceChecker(resultCollector));
         eventHandlers.add(new PageImageIDSequenceChecker(resultCollector, nodeState));
         eventHandlers.add(new XmlBuilderEventHandler());
-        //eventHandlers.add(new BatchNodeChecker(batch, resultCollector, nodeState));
-        //eventHandlers.add(new FilmNodeChecker(batch, nodeState, resultCollector));
-        //eventHandlers.add(new WorkshiftISOTargetChecker(resultCollector, nodeState));
-        //eventHandlers.add(new EditionNodeChecker(newspaperID, resultCollector, nodeState));
-        //eventHandlers.add(new EditionPageNodeChecker(resultCollector, nodeState));
-        //eventHandlers.add(new WorkshiftISOTargetSubChecker(resultCollector, nodeState));
         return eventHandlers;
     }
 }

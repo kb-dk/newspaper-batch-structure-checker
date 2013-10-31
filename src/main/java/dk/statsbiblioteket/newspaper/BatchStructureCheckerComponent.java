@@ -10,7 +10,7 @@ import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.EventHandlerFactory;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.EventRunner;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.TreeEventHandler;
-import dk.statsbiblioteket.newspaper.eventhandlers.CompleteCheckFactory;
+import dk.statsbiblioteket.newspaper.eventhandlers.BatchStructureEventHandlerFactory;
 import dk.statsbiblioteket.newspaper.schematron.StructureValidator;
 import dk.statsbiblioteket.newspaper.schematron.XmlBuilderEventHandler;
 
@@ -48,7 +48,7 @@ public class BatchStructureCheckerComponent extends AbstractRunnableComponent {
      * @throws IOException
      */
     public void doWorkOnBatch(Batch batch, ResultCollector resultCollector) throws Exception {
-        EventHandlerFactory eventHandlerFactory = new CompleteCheckFactory(getProperties(), batch, resultCollector);
+        EventHandlerFactory eventHandlerFactory = new BatchStructureEventHandlerFactory(getProperties(), batch, resultCollector);
         EventRunner eventRunner = new EventRunner(createIterator(batch));
         final List<TreeEventHandler> eventHandlers = eventHandlerFactory.createEventHandlers();
         eventRunner.runEvents(eventHandlers);
