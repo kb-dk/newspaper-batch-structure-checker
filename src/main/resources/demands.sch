@@ -20,7 +20,7 @@
         <s:rule context="/node">
             <!--Check: batchNodeChecker: Form: B<batchid>-RT<roundtrip number>-->
             <s:assert test="matches(@name,'^B[0-9]{12}-RT[0-9]+$')">Invalid batch folder name
-                <s:value-of select="@name"/>
+                <s:value-of select="@name"/> Expected form: B[batchid]-RT[roundtrip number]
             </s:assert>
 
             <!--Check: batchNodeChecker: Eksistens af workshift-iso-target BatchNodeChecker-->
@@ -58,8 +58,9 @@
         <s:rule context="/node/node[@name=$workshiftISOTarget]/node">
             <!-- Check:  Workshift-iso-target: Names (nodes) in WORKSHIFT-ISO-TARGET must be of the right format: Target-[0-9]{6}-[0-9]{4} -->
             <s:assert test="matches(@name,$workshiftISOTargetPattern)">
-                Unexpected folder found
-                <s:value-of select="@name"/>
+                Unexpected file or folder found
+                <s:value-of select="@name"/> Only files named like Target-[targetSerialisedNumber]-[billedID].jp2 or
+                Target-[targetSerialisedNumber]-[billedID].mix.xml are allowed.
             </s:assert>
         </s:rule>
 
@@ -101,13 +102,14 @@
         </s:rule>
 
         <s:rule context="/node/node[@name != $workshiftISOTarget]/node">
-            <!--        Check: Potentiel eksistens af FILM-ISO-target
+            <!--    Check: Potentiel eksistens af FILM-ISO-target
                     Check: Potentiel eksistens af UNMATCHED
             -->
             <s:assert test="matches(@name,concat(../@name,'/(FILM-ISO-target|UNMATCHED|[0-9]{4}(-[0-9]{2}){3})'))">
                 unexpected folder '<s:value-of select="@name"/>'
             </s:assert>
         </s:rule>
+        <!-- TODO: test existence of film.xml -->
         <s:rule context="/node/node[@name != $workshiftISOTarget]/attribute">
             <!--Check: FilmChecker: Ikke andre filer og mapper-->
             <s:let name="filmNumber" value="substring-after(../@name,'/')"/>
@@ -124,7 +126,7 @@
     </s:pattern>
 
     <s:pattern id="unmatchedChecker" is-a="inFilmChecker">
-        <!-- Check: Nodes in UNMATCHED must have same name as FILM-XML but end in -[0-9]{4}[A-Z]? instead -->
+        <!-- Check: Nodes in UNMATCHED must have format [avisID]-[filmID]-[0-9]{4}[A-Z]? where [avisID]-[filmID] is as found in the film metadata file for this film. -->
         <s:param name="inFilmPath"
                  value="/node[@name=$batchID]/node[@name != $workshiftISOTarget]/node[@name = concat(../@name,'/UNMATCHED')]"/>
         <s:param name="postPattern" value="'-[0-9]{4}[A-Z]?'"/>
@@ -157,7 +159,7 @@
            node[ @name != concat(../@name,'/FILM-ISO-target') and @name != concat(../@name,'/UNMATCHED')]">
 
 
-            <!--        Check: Edition-mappe: Form: [date]-[udgaveLbNummer]
+            <!-- Check: Edition-mappe: Form: [date]-[udgaveLbNummer]
                     Todo: Edition-mappe: [date] skal være iso8601
             -->
             <s:let name="filmID" value="../@name"/>
@@ -167,6 +169,7 @@
                 <s:value-of select="$editionID"/>
             </s:assert>
 
+            <!-- TODO: test existence of edition.xml -->
         </s:rule>
 
         <s:rule context="/node/
@@ -177,15 +180,14 @@
             <s:let name="filmID" value="../../@name"/>
             <s:let name="editionID" value="replace(../@name,'^.*/','')"/>
 
-            <!--        Check: Edition-mappe: Eksistens af edition-fil
-             Check: Edition-mappe: Ingen andre filer og mapper
-              Check: Edition-mappe: Form: [avisID]-[date]-[udgaveLbNummer].edition.xml EditionNodeChecker
-                      Check: Edition-mappe: [avisID], [date], [udgaveLbNummer] som i parent directory (avisID dog som film.xml i parent directory) EditionNodeChecker
+            <!-- Check: Edition-mappe: Eksistens af edition-fil
+                 Check: Edition-mappe: Ingen andre filer og mapper
+                 Check: Edition-mappe: Form: [avisID]-[date]-[udgaveLbNummer].edition.xml EditionNodeChecker
+                 Check: Edition-mappe: [avisID], [date], [udgaveLbNummer] som i parent directory (avisID dog som film.xml i parent directory) EditionNodeChecker
             -->
-
-            <s:let name="newspaperName"
+            <s:let name="avisID"
                    value="replace(replace(substring-before(../../attribute/@name,'.film.xml'),'^.*/',''),'[0-9]{12}-[0-9]{2}','')"/>
-            <s:assert test="matches(@name, concat(../@name,'/',$newspaperName,$editionID,'.edition.xml'))">
+            <s:assert test="matches(@name, concat(../@name,'/',$avisID,$editionID,'.edition.xml'))">
                 Unexpected file '<s:value-of select="@name"/>'
             </s:assert>
         </s:rule>
@@ -206,6 +208,8 @@
             <s:assert test="attribute/@name = concat(@name,'.alto.xml')">
                 Alto file '<s:value-of select="concat(@name,'.alto.xml')"/>' missing
             </s:assert>
+            <!-- TODO: her ville vi skulle tage flag fra mf-pak om hvorvidt vi skulle forvente alto. Flag kunne indkodes i denne
+             .sch fil before run-->
 
             <!-- Check:editionPageChecker: Any node in BATCH/FILM/EDITION/ which is not a brik must contain a .mods.xml attribute -->
             <s:assert test="attribute/@name = concat(@name,'.mods.xml')">
@@ -358,7 +362,7 @@
         </s:rule>
     </s:pattern>
 
-
+    <!-- This abstract pattern is used to check that no unexpected files are found in UNMATCHED or FILM-ISO-target -->
     <s:pattern abstract="true" id="inFilmChecker">
         <s:rule context="$inFilmPath/node">
             <s:let name="filmName" value="replace(substring-before(../../attribute/@name,'.film.xml'),'^.*/','')"/>
