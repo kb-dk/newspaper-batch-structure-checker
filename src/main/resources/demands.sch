@@ -14,7 +14,7 @@
 
     <s:let name="workshiftISOTargetPattern" value="concat('^',$workshiftISOTarget,'/Target-[0-9]{6}-[0-9]{4}$')"/>
 
-    <s:let name="datoUdgaveLbNummer" value="'^[12][0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])-[0-9]{2}$'"/>
+    <s:let name="datoUdgaveLbNummer" value="'[12][0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])-[0-9]{2}$'"/>
 
 
     <s:pattern id="batchNodeChecker">
@@ -185,12 +185,13 @@
 
             <!-- Check: test existence of edition.xml -->
             <s:let name="avisID"
-                   value="replace(replace(substring-before(../attribute[1]/@name,'.film.xml'),'^.*/',''),'[0-9]{12}-[0-9]{2}','')"/>
-            <s:assert test="attribute/@name = concat($filmID,'/',$avisID,$editionID,'.edition.xml')">
-                <s:value-of select="concat($filmID,'/',$avisID,$editionID,'.edition.xml')"/> missing
+                   value="replace(replace(substring-before(../attribute[ends-with(@name,'.film.xml')]/@name,'.film.xml'),'^.*/',''),'[0-9]{12}-[0-9]{2}','')"/>
+            <s:assert test="attribute[@name = concat($filmID,'/',$editionID,'/',$avisID,$editionID,'.edition.xml')]">
+                <s:value-of select="concat($filmID,'/',$editionID,'/',$avisID,$editionID,'.edition.xml')"/> missing
             </s:assert>
 
         </s:rule>
+
 
         <s:rule context="/node/
            node[@name != $workshiftISOTarget]/
@@ -206,9 +207,9 @@
                  Check: Edition-mappe: [avisID], [date], [udgaveLbNummer] som i parent directory (avisID dog som film.xml i parent directory) EditionNodeChecker
             -->
             <s:let name="avisID"
-                   value="replace(replace(substring-before(../../attribute[1]/@name,'.film.xml'),'^.*/',''),'[0-9]{12}-[0-9]{2}','')"/>
-            <s:assert test="matches(@name, concat(../@name,'/',$avisID,$editionID,'.edition.xml'))">
-                Unexpected file '<s:value-of select="@name"/>'
+                   value="replace(replace(substring-before(../../attribute[ends-with(@name,'.film.xml')]/@name,'.film.xml'),'^.*/',''),'[0-9]{12}-[0-9]{2}','')"/>
+            <s:assert test="@name = concat($filmID,'/',$editionID,'/',$avisID,$editionID,'.edition.xml')">
+                Unexpected file <s:value-of select="@name"/>
             </s:assert>
         </s:rule>
 
@@ -227,7 +228,7 @@
 
             <!--TODO test rules for name-->
             <s:let name="avisID"
-                   value="replace(replace(substring-before(../../attribute[1]/@name,'.film.xml'),'^.*/',''),'[0-9]{12}-[0-9]{2}','')"/>
+                   value="replace(replace(substring-before(../../attribute[ends-with(@name,'.film.xml')]/@name,'.film.xml'),'^.*/',''),'[0-9]{12}-[0-9]{2}','')"/>
 
             <s:assert test="matches(@name,concat('^',../@name,$avisID,$editionID,'-[0-9]{4}[A-Z]?$'))">
                 Invalid prefix for page '<s:value-of select="@name"/>'
@@ -393,7 +394,7 @@
     <!-- This abstract pattern is used to check that no unexpected files are found in UNMATCHED or FILM-ISO-target -->
     <s:pattern abstract="true" id="inFilmChecker">
         <s:rule context="$inFilmPath/node">
-            <s:let name="filmName" value="replace(substring-before(../../attribute[1]/@name,'.film.xml'),'^.*/','')"/>
+            <s:let name="filmName" value="replace(substring-before(../../attribute[ends-with(@name,'.film.xml')]/@name,'.film.xml'),'^.*/','')"/>
             <s:assert test="matches(@name, concat(../@name,'/',$filmName,$postPattern))">
                 Unexpected file
                 <s:value-of select="@name"/>
