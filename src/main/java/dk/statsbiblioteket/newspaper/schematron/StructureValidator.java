@@ -2,11 +2,11 @@ package dk.statsbiblioteket.newspaper.schematron;
 
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
+import dk.statsbiblioteket.util.Strings;
+import dk.statsbiblioteket.util.xml.DOM;
 import com.phloc.commons.io.resource.ClassPathResource;
 import com.phloc.schematron.SchematronException;
 import com.phloc.schematron.pure.SchematronResourcePure;
-import dk.statsbiblioteket.util.Strings;
-import dk.statsbiblioteket.util.xml.DOM;
 import org.oclc.purl.dsdl.svrl.ActivePattern;
 import org.oclc.purl.dsdl.svrl.FailedAssert;
 import org.oclc.purl.dsdl.svrl.FiredRule;
@@ -17,7 +17,8 @@ import org.w3c.dom.Document;
 import java.io.InputStream;
 
 /**
- *
+ * Class containing general-purpose functionality to validate an xml documents against a schematron document and gather
+ * the results in a ResultCollector object.
  */
 public class StructureValidator {
 
@@ -25,6 +26,11 @@ public class StructureValidator {
     private final ClassPathResource schemaResource;
     private final SchematronResourcePure schematron;
 
+    /**
+     * The constructor for this class.
+     * @param schematronPath the path to the schematron document. This must be on the classpath of the current
+     *                       ClassLoader.
+     */
     public StructureValidator(String schematronPath) {
         schemaResource = new ClassPathResource(schematronPath);
         schematron = new SchematronResourcePure(schemaResource);
@@ -34,6 +40,13 @@ public class StructureValidator {
 
     }
 
+    /**
+     * Validate an xml document against this objects schematron and collect any failures.
+     * @param batch The Batch object being validated.
+     * @param contents An input stream which returns the xml to be validated.
+     * @param resultCollector the ResultCollector in which the results are stored.
+     * @return
+     */
     public boolean validate(Batch batch, InputStream contents, ResultCollector resultCollector) {
         Document document = DOM.streamToDOM(contents);
         boolean success= true;
@@ -60,27 +73,15 @@ public class StructureValidator {
                         failedAssert.getText(),
                         "Location: '" + failedAssert.getLocation() + "'",
                         "Test: '" + failedAssert.getTest() + "'");
-            } else if (o instanceof ActivePattern) {
-                ActivePattern activePattern = (ActivePattern) o;
-                //do nothing
-            } else if (o instanceof FiredRule) {
-                FiredRule firedRule = (FiredRule) o;
-                //a rule that was run
-            } else if (o instanceof SuccessfulReport) {
-                SuccessfulReport successfulReport = (SuccessfulReport) o;
-                //ever?
-            } else {
-                //unknown type of o.
-                throw new RuntimeException("Unknown result from schematron library: " + o.getClass().getName());
             }
         }
         return success;
     }
 
     /**
-        * Get the name of this component for error reporting purposes
+        * Get the name of this component for error reporting purposes.
         *
-        * @return
+        * @return the component name.
         */
        private String getComponent() {
            return getClass().getName() + "-" + getClass().getPackage().getImplementationVersion();

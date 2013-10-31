@@ -18,6 +18,9 @@ import dk.statsbiblioteket.newspaper.schematron.XmlBuilderEventHandler;
  * Checks the directory structure of a batch. This should run both at Ninestars and at SB.
  */
 public class BatchStructureCheckerComponent extends AbstractRunnableComponent {
+
+    public static final String DEMANDS_SCH = "demands.sch";
+
     public BatchStructureCheckerComponent(Properties properties) {
         super(properties);
     }
@@ -50,6 +53,8 @@ public class BatchStructureCheckerComponent extends AbstractRunnableComponent {
         final List<TreeEventHandler> eventHandlers = eventHandlerFactory.createEventHandlers();
         eventRunner.runEvents(eventHandlers);
         String xml = null;
+        //Need to find handler in the list returned by the EventHandlerFactory was the xml builder. One could imagine refactoring
+        //EventHandlerFactory to return a map from classname to EventHandler so that one could simple look it up.
         for (TreeEventHandler handler: eventHandlers) {
             if (handler instanceof XmlBuilderEventHandler) {
                 xml = ((XmlBuilderEventHandler) handler).getXml();
@@ -58,7 +63,7 @@ public class BatchStructureCheckerComponent extends AbstractRunnableComponent {
         if (xml == null) {
             throw new RuntimeException("Did not generate xml representation of directory structure. Could not complete tests.");
         }
-        StructureValidator validator = new StructureValidator("demands.sch");
+        StructureValidator validator = new StructureValidator(DEMANDS_SCH);
         validator.validate(batch, new ByteArrayInputStream(xml.getBytes("UTF-8")), resultCollector);
     }
 }

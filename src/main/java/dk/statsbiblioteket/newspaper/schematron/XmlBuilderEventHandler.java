@@ -14,8 +14,16 @@ import java.io.IOException;
 public class XmlBuilderEventHandler implements TreeEventHandler {
 
     int indentSize;
-    String indent;
-    String extra;
+
+    /**
+     * blank-string for the current indentation.
+     */
+    String currentIndent;
+
+    /**
+     * blank string of length indentSize for augmenting/decrementing the current indent.
+     */
+    String extraIndentPerLevel;
 
     StringBuilder xmlBuilder;
     boolean finished = false;
@@ -34,10 +42,10 @@ public class XmlBuilderEventHandler implements TreeEventHandler {
     public XmlBuilderEventHandler(int indentSize) {
         this.indentSize = indentSize;
         xmlBuilder = new StringBuilder();
-        indent = "";
-        extra = "";
+        currentIndent = "";
+        extraIndentPerLevel = "";
         for (int i = 0; i < indentSize; i++) {
-            extra = extra + " ";
+            extraIndentPerLevel = extraIndentPerLevel + " ";
         }
     }
 
@@ -57,27 +65,25 @@ public class XmlBuilderEventHandler implements TreeEventHandler {
     @Override
     public void handleNodeBegin(NodeBeginsParsingEvent event) {
         String shortName = Util.getLastTokenInPath(event.getName());
-        xmlBuilder.append(indent + "<node name=\"" + event.getName() + "\" shortName=\"" + shortName + "\">\n");
-        indent = indent + extra;
+        xmlBuilder.append(currentIndent + "<node name=\"" + event.getName() + "\" shortName=\"" + shortName + "\">\n");
+        currentIndent = currentIndent + extraIndentPerLevel;
     }
 
     @Override
     public void handleNodeEnd(NodeEndParsingEvent event) {
-        indent = indent.replaceFirst(extra, "");
-        xmlBuilder.append(indent + "</node>\n");
+        currentIndent = currentIndent.replaceFirst(extraIndentPerLevel, "");
+        xmlBuilder.append(currentIndent + "</node>\n");
     }
 
     @Override
     public void handleAttribute(AttributeParsingEvent event) {
         String shortName = Util.getLastTokenInPath(event.getName());
-        if (event instanceof AttributeParsingEvent) {
-            AttributeParsingEvent attributeParsingEvent = (AttributeParsingEvent) event;
-            try {
-                xmlBuilder.append(indent + "<attribute name=\"" + event.getName() + "\" shortName=\"" + shortName + "\"  checksum=\"" + attributeParsingEvent
-                        .getChecksum() + "\" />\n");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+        AttributeParsingEvent attributeParsingEvent = (AttributeParsingEvent) event;
+        try {
+            xmlBuilder.append(currentIndent + "<attribute name=\"" + event.getName() + "\" shortName=\"" + shortName + "\"  checksum=\"" + attributeParsingEvent
+                    .getChecksum() + "\" />\n");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

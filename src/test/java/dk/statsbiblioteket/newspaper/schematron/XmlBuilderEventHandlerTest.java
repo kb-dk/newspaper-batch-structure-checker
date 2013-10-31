@@ -4,6 +4,7 @@ import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.TreeIterator
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.EventRunner;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.TreeEventHandler;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.filesystem.transforming.TransformingIteratorForFileSystems;
+import dk.statsbiblioteket.util.xml.DOM;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -12,6 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.regex.Pattern;
+
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 /**
  *
@@ -34,6 +38,10 @@ public class XmlBuilderEventHandlerTest {
         XmlBuilderEventHandler xmlBuilderEventHandler = new XmlBuilderEventHandler();
         handlers.add(xmlBuilderEventHandler);
         eventRunner.runEvents(handlers);
-        System.out.println(xmlBuilderEventHandler.getXml());
+        String xml = xmlBuilderEventHandler.getXml();
+        assertTrue(xml.split("<node").length > 10, "Should be at least 10 nodes in document.");
+        assertTrue(xml.split("<attribute").length > 10, "Should be at least 10 nodes in document.");
+        assertNotNull(DOM.stringToDOM(xml), "Should have gotten parseable xml, not " + xml);
+        System.out.println(xml);
     }
 }
