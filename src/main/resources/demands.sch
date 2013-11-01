@@ -226,7 +226,6 @@
             <s:let name="filmID" value="../../@name"/>
             <s:let name="editionID" value="replace(../@name,'^.*/','')"/>
 
-            <!--TODO test rules for name-->
             <s:let name="avisID"
                    value="replace(replace(substring-before(../../attribute[ends-with(@name,'.film.xml')]/@name,'.film.xml'),'^.*/',''),'[0-9]{12}-[0-9]{2}','')"/>
 
@@ -238,19 +237,19 @@
             <s:assert test="attribute/@name = concat(@name,'.alto.xml')">
                 Alto file '<s:value-of select="concat(@name,'.alto.xml')"/>' missing
             </s:assert>
-            <!-- TODO: her ville vi skulle tage flag fra mf-pak om hvorvidt vi skulle forvente alto. Flag kunne indkodes i denne .sch fil before run-->
+            <!-- TODO: Her ville vi skulle tage flag fra mf-pak om hvorvidt vi skulle forvente alto. Flag kunne indkodes i denne .sch fil before run-->
 
-            <!-- Check:editionPageChecker: Any node in BATCH/FILM/EDITION/ which is not a brik must contain a .mods.xml attribute -->
+            <!-- Check: editionPageChecker: Any node in BATCH/FILM/EDITION/ which is not a brik must contain a .mods.xml attribute -->
             <s:assert test="attribute/@name = concat(@name,'.mods.xml')">
                 Mods file '<s:value-of select="concat(@name,'.mods.xml')"/>' missing
             </s:assert>
 
-            <!-- Check:editionPageChecker: Any node in BATCH/FILM/EDITION/ which is not a brik must contain a .mix.xml attribute -->
+            <!-- Check: editionPageChecker: Any node in BATCH/FILM/EDITION/ which is not a brik must contain a .mix.xml attribute -->
             <s:assert test="attribute/@name = concat(@name,'.mix.xml')">
                 Mix file '<s:value-of select="concat(@name,'.mix.xml')"/>' missing
             </s:assert>
 
-            <!-- Check:editionPageChecker: Any node in BATCH/FILM/EDITION/ which is not a brik must contain a .jp2 attribute -->
+            <!-- Check: editionPageChecker: Any node in BATCH/FILM/EDITION/ which is not a brik must contain a .jp2 attribute -->
             <s:assert test="node/@name = concat(@name,'.jp2')">
                 Jp2 file '<s:value-of select="concat(@name,'.jp2')"/>' missing
             </s:assert>
@@ -259,7 +258,7 @@
         <s:rule context="/node/node[@name != $workshiftISOTarget]/
                            node[ @name != concat(../@name,'/FILM-ISO-target') and @name != concat(../@name,'/UNMATCHED')]/
                            node[ not(ends-with(@name,'-brik'))]/attribute">
-            <!--Check:editionPageChecker: Any node in BATCH/FILM/EDITION/ can only contain mix, mods, alto and jp2 files -->
+            <!--Check: editionPageChecker: Any node in BATCH/FILM/EDITION/ can only contain mix, mods, alto and jp2 files -->
             <s:assert test="@name = concat(../@name,'.mix.xml') or @name = concat(../@name,'.mods.xml') or @name = concat(../@name,'.alto.xml')">
                 Unexpected file '<s:value-of select="@name"/>' found
             </s:assert>
@@ -269,7 +268,7 @@
         <s:rule context="/node/node[@name != $workshiftISOTarget]/
                            node[ @name != concat(../@name,'/FILM-ISO-target') and @name != concat(../@name,'/UNMATCHED')]/
                            node[ not(ends-with(@name,'-brik'))]/node">
-            <!--Check:editionPageChecker: Any node in BATCH/FILM/EDITION/ can only contain mix, mods, alto and jp2 files -->
+            <!--Check: editionPageChecker: Any node in BATCH/FILM/EDITION/ can only contain mix, mods, alto and jp2 files -->
             <s:assert test="@name = concat(../@name,'.jp2')">
                 Unexpected folder '<s:value-of select="@name"/>' found
             </s:assert>
@@ -289,12 +288,12 @@
                         node">
             <s:let name="editionID" value="../@name"/>
 
-            <!-- Check:unmatchedPageChecker: Any node in BATCH/FILM/UNMATCHED/ must contain a .mix.xml attribute -->
+            <!-- Check: unmatchedPageChecker: Any node in BATCH/FILM/UNMATCHED/ must contain a .mix.xml attribute -->
             <s:assert test="attribute/@name = concat(@name,'.mix.xml')">
                 Mix file '<s:value-of select="concat(@name,'.mix.xml')"/>' missing
             </s:assert>
 
-            <!-- Check:unmatchedPageChecker: Any node in BATCH/FILM/UNMATCHED/ must contain a .jp2 attribute -->
+            <!-- Check: unmatchedPageChecker: Any node in BATCH/FILM/UNMATCHED/ must contain a .jp2 attribute -->
             <s:assert test="node/@name = concat(@name,'.jp2')">
                 Jp2 file '<s:value-of select="concat(@name,'.jp2')"/>' missing
             </s:assert>
@@ -304,7 +303,7 @@
                         node[@name != $workshiftISOTarget]/
                         node[@name = concat(../@name,'/UNMATCHED')]/
                         node/attribute">
-            <!--Check:unmatchedPageChecker: Any node in BATCH/FILM/UNMATCHED/ can only contain mix, mods, alto and jp2 files -->
+            <!--Check: unmatchedPageChecker: Any node in BATCH/FILM/UNMATCHED/ can only contain mix, mods, alto and jp2 files -->
             <s:assert test="@name = concat(../@name,'.mix.xml') or @name = concat(../@name,'.mods.xml') or @name = concat(../@name,'.alto.xml')">
                 Unexpected file '<s:value-of select="@name"/>' found
             </s:assert>
@@ -315,7 +314,7 @@
                         node[@name != $workshiftISOTarget]/
                         node[@name = concat(../@name,'/UNMATCHED')]/
                         node/node">
-            <!--Check:unmatchedPageChecker: Any node in BATCH/FILM/UNMATCHED/ can only contain mix, mods, alto and jp2 files -->
+            <!--Check: unmatchedPageChecker: Any node in BATCH/FILM/UNMATCHED/ can only contain mix, mods, alto and jp2 files -->
             <s:assert test="@name = concat(../@name,'.jp2')">
                 Unexpected folder '<s:value-of select="@name"/>' found
             </s:assert>
@@ -328,8 +327,8 @@
 
     <s:pattern id="brikChecker" is-a="scanChecker">
         <!--Check: Edition-mappe: Potentiel eksistens af brik-mapper-->
-        <!-- Check:brikChecker: Any node in BATCH/FILM/EDITION/ which is a brik must contain a .mix.xml attribute -->
-        <!-- Check:brikChecker: Any node in BATCH/FILM/EDITION/ which is a brik must contain a .jp2 attribute -->
+        <!-- Check: brikChecker: Any node in BATCH/FILM/EDITION/ which is a brik must contain a .mix.xml attribute -->
+        <!-- Check: brikChecker: Any node in BATCH/FILM/EDITION/ which is a brik must contain a .jp2 attribute -->
 
         <s:param name="scan"
                  value="/node/node[@name != $workshiftISOTarget]/
@@ -339,8 +338,8 @@
 
 
     <s:pattern id="filmIsoTargetChecker" is-a="scanChecker">
-        <!-- Check:brikChecker: Any node in BATCH/FILM/FILM-ISO-target/ must contain a .mix.xml attribute -->
-        <!-- Check:brikChecker: Any node in BATCH/FILM/FILM-ISO-target/ must contain a .jp2 attribute -->
+        <!-- Check: brikChecker: Any node in BATCH/FILM/FILM-ISO-target/ must contain a .mix.xml attribute -->
+        <!-- Check: brikChecker: Any node in BATCH/FILM/FILM-ISO-target/ must contain a .jp2 attribute -->
 
         <s:param name="scan"
                  value="/node/node[@name != $workshiftISOTarget]/
