@@ -1,17 +1,14 @@
 package dk.statsbiblioteket.newspaper.schematron;
 
+import com.phloc.commons.io.resource.ClassPathResource;
+import com.phloc.schematron.SchematronException;
+import com.phloc.schematron.pure.SchematronResourcePure;
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.util.Strings;
 import dk.statsbiblioteket.util.xml.DOM;
-import com.phloc.commons.io.resource.ClassPathResource;
-import com.phloc.schematron.SchematronException;
-import com.phloc.schematron.pure.SchematronResourcePure;
-import org.oclc.purl.dsdl.svrl.ActivePattern;
 import org.oclc.purl.dsdl.svrl.FailedAssert;
-import org.oclc.purl.dsdl.svrl.FiredRule;
 import org.oclc.purl.dsdl.svrl.SchematronOutputType;
-import org.oclc.purl.dsdl.svrl.SuccessfulReport;
 import org.w3c.dom.Document;
 
 import java.io.InputStream;
@@ -67,12 +64,15 @@ public class StructureValidator {
             if (o instanceof FailedAssert) {
                 success = false;
                 FailedAssert failedAssert = (FailedAssert) o;
+                String message = failedAssert.getText();
+                if (message == null){
+                    message = "";
+                }
+                message = message.trim().replaceAll("\\s+"," ");
                 resultCollector.addFailure(batch.getFullID(),
                         TYPE,
                         getComponent(),
-                        failedAssert.getText(),
-                        "Location: '" + failedAssert.getLocation() + "'",
-                        "Test: '" + failedAssert.getTest() + "'");
+                        message);
             }
         }
         return success;
