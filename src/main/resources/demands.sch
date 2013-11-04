@@ -151,14 +151,11 @@
 
 
     <s:pattern id="editionChecker">
-
         <s:rule context="/node/
            node[@shortName != $workshiftISOTarget]/
            node[ @shortName != 'FILM-ISO-target' and @shortName != 'UNMATCHED']">
 
-
-            <!-- Check: Edition-mappe: Form: [date]-[udgaveLbNummer]
-                    Check: Edition-mappe: [date] skal være iso8601
+            <!-- Check: editionChecker: folder name has form: [dato]-[udgaveLbNummer] i.e. [12][0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])-[0-9]{2}
             -->
             <s:let name="filmID" value="../@shortName"/>
             <s:let name="editionID" value="@shortName"/>
@@ -167,13 +164,13 @@
                 <s:value-of select="$editionID"/>
             </s:assert>
 
-            <!--Check: Edition-mappe: Eksistens af side-mapper-->
+            <!--Check: editionChecker: atleast one node (i.e. newspaper page scan) must exist in edition folder -->
             <s:assert test="count(node) > 0">
                 No pages in edition
                 <s:value-of select="@name"/>
             </s:assert>
 
-            <!-- Check: test existence of edition.xml -->
+            <!-- Check: editionChecker: a file exists with name [avisID]-[editionID].edition.xml where avisID is as in the film-xml and editionID is as in our parent folder name -->
             <s:let name="avisID"
                    value="replace(
                                 substring-before(
@@ -183,22 +180,17 @@
                 <s:value-of select="concat(@name,'/',$avisID,$editionID,'.edition.xml')"/>
                 missing
             </s:assert>
-
         </s:rule>
 
 
         <s:rule context="/node/
                    node[@shortName != $workshiftISOTarget]/
-                   node[ @shortName != 'FILM-ISO-target' and @shortName != 'UNMATCHED']/attribute">
-
+                   node[@shortName != 'FILM-ISO-target' and @shortName != 'UNMATCHED']/attribute">
 
             <s:let name="filmID" value="../../@shortName"/>
             <s:let name="editionID" value="../@shortName"/>
 
-            <!-- Check: Edition-mappe: Eksistens af edition-fil
-                 Check: Edition-mappe: Ingen andre filer og mapper
-                 Check: Edition-mappe: Form: [avisID]-[date]-[udgaveLbNummer].edition.xml EditionNodeChecker
-                 Check: Edition-mappe: [avisID], [date], [udgaveLbNummer] som i parent directory (avisID dog som film.xml i parent directory) EditionNodeChecker
+            <!-- Check: editionChecker: If there is an attribute (file) in the edition directory, it must have name [avisID]-[editionID].edition.xml where avisID is as in the film-xml and editionID is as in our parent folder name
             -->
             <s:let name="avisID"
                    value="replace(
@@ -209,7 +201,6 @@
                 <s:value-of select="@name"/>
             </s:assert>
         </s:rule>
-
     </s:pattern>
 
 
