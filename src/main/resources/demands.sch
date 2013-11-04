@@ -8,7 +8,6 @@
     <!-- Example: B400022028241-RT1/WORKSHIFT-ISO-TARGET -->
     <s:let name="workshiftISOTarget" value="'WORKSHIFT-ISO-TARGET'"/>
 
-
     <!-- Example: B400022028241-RT1/400022028241-14 -->
     <s:let name="filmIdPattern" value="concat('^',$batchNumber,'-[0-9]{2}$')"/>
 
@@ -18,22 +17,20 @@
 
 
     <s:pattern id="batchNodeChecker">
-
         <s:rule context="/node">
-            <!--Check: batchNodeChecker: Form: B<batchid>-RT<roundtrip number>-->
+            <!--Check: batchNodeChecker: Form of name: B<batchID>-RT<Roundtrip> -->
             <s:assert test="matches(@name,'^B[0-9]{12}-RT[0-9]+$')">Invalid batch folder name
                 <s:value-of select="@name"/>
-                Expected form: B[batchid]-RT[roundtrip number]
+                Expected form: B[batchID]-RT[Roundtrip]
             </s:assert>
 
-            <!--Check: batchNodeChecker: Eksistens af workshift-iso-target BatchNodeChecker-->
+            <!--Check: batchNodeChecker: Existence of WORKSHIFT-ISO-TARGET -->
             <s:assert test="node[@shortName = $workshiftISOTarget]">WORKSHIFT-ISO-TARGET not found in batch folder
             </s:assert>
-
         </s:rule>
+
         <s:rule context="/node/node[@shortName != $workshiftISOTarget]">
-            <!-- Check: batchNodeChecker: Eksistens af en mappe per filmid
-                 Check: batchNodeChecker: Ikke andre filer og mapper BatchNodeChecker-->
+            <!-- Check: batchNodeChecker: All folders except WORKSHIFT-ISO-TARGET have form <batchID>-[0-9]{2} No other files/folders -->
             <s:assert test="matches(@shortName,$filmIdPattern)">
                 Unexpected folder '
                 <s:value-of select="@name"/>
@@ -45,14 +42,12 @@
                 Unexpected file '<s:value-of select="@name"/>'
             </s:report>
         </s:rule>
-
-
     </s:pattern>
 
 
     <s:pattern id="workshiftIsoTargetChecker">
         <s:rule context="/node/node[@shortName=$workshiftISOTarget]">
-            <!-- Check: Workshift-iso-target: Eksistens af Target-filer -->
+            <!-- Check: workshiftIsoTargetChecker: Existence of nodes in WORKSHIFT-ISO-TARGET, i.e. Target-files -->
             <s:assert test="count(node) != 0">
                 No files in
                 <s:value-of select="@name"/>
@@ -60,7 +55,7 @@
         </s:rule>
 
         <s:rule context="/node/node[@shortName=$workshiftISOTarget]/node">
-            <!-- Check:  Workshift-iso-target: Names (nodes) in WORKSHIFT-ISO-TARGET must be of the right format: Target-[0-9]{6}-[0-9]{4} -->
+            <!-- Check: workshiftIsoTargetChecker: Names (nodes) in WORKSHIFT-ISO-TARGET must be of the right format: Target-[0-9]{6}-[0-9]{4} -->
             <s:assert test="matches(@shortName,$workshiftISOTargetPattern)">
                 Unexpected file or folder found
                 <s:value-of select="@name"/>
@@ -70,23 +65,22 @@
         </s:rule>
 
         <s:rule context="/node/node[@shortName=$workshiftISOTarget]/attribute">
-            <!-- Check: Workshift-iso-target: Ikke andre filer og mapper -->
+            <!-- Check: workshiftIsoTargetChecker: No other files or folders -->
             <s:report test="true()">
                 Unexpected file '<s:value-of select="@name"/>'
             </s:report>
         </s:rule>
-
     </s:pattern>
 
 
     <s:pattern id="workshiftImageChecker" is-a="scanChecker">
         <!--Target-filer:
-                Check: Form: Target-[targetSerialisedNumber]-[billedID].(jp2|mix)
-                Check: Én mix-fil pr. jp2-fil
-                Check: 6-digit targetSerialisedNumber
-                Check: 4-digit billedId-->
-        <!-- Check: There must exist a file in each WORKSHIFT-ISO-TARGET/Target-[0-9]{6}-[0-9]{4} called Target-[0-9]{6}-[0-9]{4}.mix.xml -->
-        <!-- Check: There must exist a jp2-node in each WORKSHIFT-ISO-TARGET/Target-[0-9]{6}-[0-9]{4} called Target-[0-9]{6}-[0-9]{4}.jp2 containing a contents attribute -->
+             Check: workshiftImageChecker: Form of names: Target-<targetSerialisedNumber>-<billedID>.(jp2|mix)
+             Check: workshiftImageChecker: One mix-file per jp2-file
+             Check: workshiftImageChecker: 6-digit targetSerialisedNumber
+             Check: workshiftImageChecker: 4-digit billedID
+             Check: workshiftImageChecker: There must exist a file in each WORKSHIFT-ISO-TARGET/Target-[0-9]{6}-[0-9]{4} called Target-[0-9]{6}-[0-9]{4}.mix.xml
+             Check: workshiftImageChecker: There must exist a jp2-node in each WORKSHIFT-ISO-TARGET/Target-[0-9]{6}-[0-9]{4} called Target-[0-9]{6}-[0-9]{4}.jp2 containing a contents attribute -->
         <s:param name="scan" value="/node/
           node[@shortName = $workshiftISOTarget]/
           node[matches(@shortName,$workshiftISOTargetPattern)]"/>
@@ -99,19 +93,19 @@
         -->
 
         <s:rule context="/node/node[@shortName != $workshiftISOTarget]">
-            <!-- Check: Film-directories: Any folder in BATCH not called WORKSHIFT-ISO-TARGET must have name of format [0-9]{12}-[0-9]+ (a FILM folder) -->
+            <!-- Check: filmChecker: Any folder in BATCH not called WORKSHIFT-ISO-TARGET must have name of format <batchID>-[0-9]+ (a FILM folder) -->
             <s:assert test="matches(@shortName,$filmIdPattern)">
                 unexpected folder '<s:value-of select="@name"/>'
             </s:assert>
 
-            <!-- Check: Existence of film.xml -->
+            <!-- Check: filmChecker: Existence of film.xml -->
             <s:let name="filmNumber" value="@shortName"/>
             <s:assert test="count(attribute) = 1">
                 Cannot find film metadata file in
                 <s:value-of select="@name"/>
             </s:assert>
 
-            <!--Check: XXX Edition-mappe: Eksistens af side-mapper-->
+            <!-- Check: filmChecker: Edition-folder: Existence of page-folders -->
             <s:assert test="count(node[matches(@shortName,$datoUdgaveLbNummer)]) > 0">
                 No editions in film
                 <s:value-of select="@name"/>
@@ -119,22 +113,16 @@
         </s:rule>
 
         <s:rule context="/node/node[@shortName != $workshiftISOTarget]/node">
-            <!--    Check: Potentiel eksistens af FILM-ISO-target
-                    Check: Potentiel eksistens af UNMATCHED
+            <!-- Check: filmChecker: Only existence of FILM-ISO-target, UNMATCHED, or [12][0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])-[0-9]{2} are allowed
             -->
             <s:assert test="matches(@shortName,concat('(^FILM-ISO-target$|^UNMATCHED$|',$datoUdgaveLbNummer,')'))">
                 unexpected folder '<s:value-of select="@name"/>'
             </s:assert>
-
         </s:rule>
 
         <s:rule context="/node/node[@shortName != $workshiftISOTarget]/attribute">
-            <!--Check: FilmChecker: Ikke andre filer og mapper-->
             <s:let name="filmNumber" value="../@shortName"/>
-            <!--Check: film.xml-fil
-                    Check: Form: [avisID]-[batchID]-[filmSuffix].film.xml FilmNodeChecker
-                    Check: batchID er som i parent dir FilmNodeChecker
-                    Check: filmSuffix er som i parent dir FilmNodeChecker
+            <!-- Check: filmChecker: Existence of file with name: [avisID]-[batchID]-[filmSuffix].film.xml (batchID as in parent dir FilmNodeChecker, filmSuffix as in parent dir FilmNodeChecker) No other files/folders.
                     -->
             <s:assert test="matches(@shortName,concat('^','.*-',$filmNumber,'[.]film[.]xml$'))">
                 Unexpected file '<s:value-of select="@name"/>'
@@ -143,7 +131,7 @@
     </s:pattern>
 
     <s:pattern id="unmatchedChecker" is-a="inFilmChecker">
-        <!-- Check: Nodes in UNMATCHED must have format [avisID]-[filmID]-[0-9]{4}[A-Z]? where [avisID]-[filmID] is as found in the film metadata file for this film. -->
+        <!-- Check: unmatchedChecker: Nodes in UNMATCHED must have format [avisID]-[filmID]-[0-9]{4}[A-Z]? where [avisID]-[filmID] is as found in the film metadata file for this film. -->
         <s:param name="inFilmPath"
                  value="/node/node[@shortName != $workshiftISOTarget]/node[@shortName = 'UNMATCHED']"/>
         <s:param name="postPattern" value="'-[0-9]{4}[A-Z]?'"/>
@@ -152,13 +140,9 @@
 
     <s:pattern id="filmIsoTargetChecker" is-a="inFilmChecker">
         <!--
-        Check: FILM-ISO-target: Præcist dette navn
         TODO: FILM-ISO-target: Eksistens af iso-filer? If FILM-ISO-target is not required to exist, do we demand contents when it does?
-        Check: FILM-ISO-target: Ikke andre filer og mapper
 
-        Check: FILM-ISO-target-filer: Form: [filmID]-[batchID]-[filmSuffix]-ISO-[1-9].(jp2|mix)
-        Check: FILM-ISO-target-filer: Én mix-fil pr. jp2-fil
-        Check: FILM-ISO-target-filer: filmID, [batchID], <filmSuffix> som i parent directory (filmID dog som film.xml i parent directory)
+        Check: filmIsoTargetChecker: nodes have form: [avisID]-[filmID]-ISO-[1-9] where [avisID]-[filmID] is as in film-xml of parent directory
         -->
         <s:param name="inFilmPath"
                  value="/node/node[@shortName != $workshiftISOTarget]/node[@shortName = 'FILM-ISO-target']"/>
