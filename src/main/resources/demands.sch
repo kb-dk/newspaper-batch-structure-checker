@@ -136,7 +136,7 @@
 
     <s:pattern id="filmIsoTargetChecker" is-a="inFilmChecker">
         <!--
-        TODO: FILM-ISO-target: Eksistens af iso-filer? If FILM-ISO-target is not required to exist, do we demand contents when it does?
+        TODO: FILM-ISO-target: Eksistens af iso-filer? If FILM-ISO-target is not required to exist, do we demand contents when it does? Yes!
 
         Check: filmIsoTargetChecker: nodes have form: [avisID]-[filmID]-ISO-[1-9] where [avisID]-[filmID] is as in film-xml of parent directory
         -->
@@ -235,7 +235,7 @@
                 Mix file '<s:value-of select="concat(@name,'.mix.xml')"/>' missing
             </s:assert>
 
-            <!-- Check: editionPageChecker: Any node not ending in .brik must contain a .jp2 attribute with name prefix as that of parent node -->
+            <!-- Check: editionPageChecker: Any node not ending in .brik must contain a .jp2 node with name prefix as that of parent node -->
             <s:assert test="node/@shortName = concat(@shortName,'.jp2')">
                 Jp2 file '<s:value-of select="concat(@name,'.jp2')"/>' missing
             </s:assert>
@@ -387,6 +387,7 @@
     </s:pattern>
 
     <!-- This abstract pattern is used to check that no unexpected files are found in UNMATCHED or FILM-ISO-target -->
+    <!-- TODO: also reject unexpected nodes -->
     <s:pattern abstract="true" id="inFilmChecker">
         <s:rule context="$inFilmPath/node">
             <s:let name="filmName"
