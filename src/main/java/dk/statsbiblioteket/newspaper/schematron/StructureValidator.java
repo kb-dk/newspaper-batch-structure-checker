@@ -5,6 +5,7 @@ import com.phloc.schematron.SchematronException;
 import com.phloc.schematron.pure.SchematronResourcePure;
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
+import dk.statsbiblioteket.newspaper.Validator;
 import dk.statsbiblioteket.util.Strings;
 import dk.statsbiblioteket.util.xml.DOM;
 import org.oclc.purl.dsdl.svrl.FailedAssert;
@@ -17,7 +18,7 @@ import java.io.InputStream;
  * Class containing general-purpose functionality to validate an xml documents against a schematron document and gather
  * the results in a ResultCollector object.
  */
-public class StructureValidator {
+public class StructureValidator implements Validator {
 
     public static final String TYPE = "BatchDirectoryStructure";
     private final ClassPathResource schemaResource;
@@ -44,7 +45,10 @@ public class StructureValidator {
      * @param resultCollector the ResultCollector in which the results are stored.
      * @return
      */
-    public boolean validate(Batch batch, InputStream contents, ResultCollector resultCollector) {
+    @Override
+    public boolean validate(Batch batch,
+                            InputStream contents,
+                            ResultCollector resultCollector) {
         Document document = DOM.streamToDOM(contents);
         boolean success= true;
         SchematronOutputType result = null;
