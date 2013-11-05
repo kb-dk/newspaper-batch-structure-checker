@@ -15,7 +15,7 @@ import java.util.Arrays;
 
 public class TreeNodesStructurePrint {
 
-    @Test(groups = "integrationTest")
+    @Test(groups = "integrationTest", enabled = false)
     public void printStructure()
             throws
             IOException {
