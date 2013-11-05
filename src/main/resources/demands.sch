@@ -88,12 +88,8 @@
 
 
     <s:pattern id="filmChecker">
-        <!--Film-directories:
-        TODO: Eksistens af edition-mapper (mindst en)
-        -->
-
         <s:rule context="/node/node[@shortName != $workshiftISOTarget]">
-            <!-- Check: filmChecker: Any folder in BATCH not called WORKSHIFT-ISO-TARGET must have name of format <batchID>-[0-9]+ (a FILM folder) -->
+            <!-- Check: filmChecker: Any folder in BATCH not called WORKSHIFT-ISO-TARGET must have name of format <batchID>-[0-9]{2} (a FILM folder) with batchID as in BATCH folder -->
             <s:assert test="matches(@shortName,$filmIdPattern)">
                 unexpected folder '<s:value-of select="@name"/>'
             </s:assert>
@@ -105,7 +101,7 @@
                 <s:value-of select="@name"/>
             </s:assert>
 
-            <!-- Check: filmChecker: Edition-folder: Existence of page-folders -->
+            <!-- Check: filmChecker: Existence of edition-folder(s) with name of form [12][0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])-[0-9]{2} -->
             <s:assert test="count(node[matches(@shortName,$datoUdgaveLbNummer)]) > 0">
                 No editions in film
                 <s:value-of select="@name"/>
