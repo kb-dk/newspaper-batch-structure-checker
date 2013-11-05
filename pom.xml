@@ -21,6 +21,10 @@
         <tag>HEAD</tag>
     </scm>
 
+    <properties>
+        <autonomous.framework.version>0.2-SNAPSHOT</autonomous.framework.version>
+    </properties>
+
     <repositories>
         <repository>
             <id>sbforge-nexus</id>
@@ -54,17 +58,17 @@
         <dependency>
             <groupId>dk.statsbiblioteket.newspaper</groupId>
             <artifactId>autonomous-component</artifactId>
-            <version>0.1</version>
+            <version>${autonomous.framework.version}</version>
         </dependency>
         <dependency>
             <groupId>dk.statsbiblioteket.newspaper</groupId>
             <artifactId>tree-processor</artifactId>
-            <version>0.1</version>
+            <version>${autonomous.framework.version}</version>
         </dependency>
         <dependency>
             <groupId>dk.statsbiblioteket.newspaper</groupId>
             <artifactId>newspaper-mfpak-integration</artifactId>
-            <version>0.1</version>
+            <version>0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
@@ -72,12 +76,7 @@
             <version>1.9.5</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>dk.statsbiblioteket.newspaper</groupId>
-            <artifactId>newspaper-prompt-doms-ingester</artifactId>
-            <version>0.1-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
+
     </dependencies>
 
     <build>
@@ -88,6 +87,8 @@
                     <archive>
                         <manifest>
                             <mainClass>dk.statsbiblioteket.newspaper.BatchStructureCheckerExecutable</mainClass>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
                     </archive>
                 </configuration>
