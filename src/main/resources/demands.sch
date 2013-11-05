@@ -350,7 +350,7 @@
 
     <s:pattern id="checksumExistenceChecker">
         <s:rule context="attribute">
-            <!-- Check: checksumExistenceChecker: Every file must have a checksum -->
+            <!-- Check: checksumExistenceChecker: Every attribute (file) must have a checksum -->
             <s:report test="@checksum = 'null'">
                 Checksum not found for
                 <s:value-of select="@name"/>
