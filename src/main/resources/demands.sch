@@ -319,14 +319,17 @@
 
 
     <s:pattern id="brikChecker" is-a="scanChecker">
-        <!--Check: Edition-mappe: Potentiel eksistens af brik-mapper-->
-        <!-- Check: brikChecker: Any node in BATCH/FILM/EDITION/ which is a brik must contain a .mix.xml attribute -->
-        <!-- Check: brikChecker: Any node in BATCH/FILM/EDITION/ which is a brik must contain a .jp2 attribute -->
-
+        <!--
+        Check: brikChecker: Any node in an edition, with a name X ending in -brik must contain an attribute with name X.mix.xml
+        Check: brikChecker: Any node in an edition, with a name X ending in -brik must contain a node with name X.jp2
+        Check: brikChecker: For any node in an edition, with a name X ending in -brik, any contained attribute must have name X.mix.xml
+        Check: brikChecker: For any node in an edition, with a name X ending in -brik, any contained node must have name X.jp2
+        Check: brikChecker: For any node in an edition, with a name X ending in -brik, any contained node must contain an attribute called "contents"
+        -->
         <s:param name="scan"
                  value="/node/node[@shortName != $workshiftISOTarget]/
-                                            node[ @shortName != 'FILM-ISO-target' and @shortName != 'UNMATCHED']/
-                                            node[ ends-with(@shortName,'-brik')]"/>
+                                            node[@shortName != 'FILM-ISO-target' and @shortName != 'UNMATCHED']/
+                                            node[ends-with(@shortName,'-brik')]"/>
     </s:pattern>
 
 
