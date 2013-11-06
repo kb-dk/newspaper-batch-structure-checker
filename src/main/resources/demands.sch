@@ -139,8 +139,6 @@
 
     <s:pattern id="filmIsoTargetChecker" is-a="inFilmChecker">
         <!--
-        TODO: FILM-ISO-target: Eksistens af iso-filer? If FILM-ISO-target is not required to exist, do we demand contents when it does? Yes!
-
         Check: filmIsoTargetChecker: nodes have form: [avisID]-[filmID]-ISO-[1-9] where [avisID]-[filmID] is as in film-xml of parent directory
         -->
         <s:param name="inFilmPath"
@@ -149,10 +147,23 @@
     </s:pattern>
 
 
+    <s:pattern id="filmIsoTargetFileChecker">
+        <!-- Check: filmIsoTargetFileChecker: If there is a FILM-ISO-target folder, it must contain atleast one file (node) -->
+        <s:rule context="/node/node[@shortName != $workshiftISOTarget]/node[@shortName = 'FILM-ISO-target']">
+            <s:let name="isoName" value="@shortName/node"/>
+            <s:let name="isoEnding" value="'-ISO-[1-9]$'"/>
+
+            <s:assert test="count(matches(node/@shortName, concat($isoName, $isoEnding))) > 0">
+                No files found in <s:value-of select="@name"/>
+            </s:assert>
+        </s:rule>
+    </s:pattern>
+
+
     <s:pattern id="editionChecker">
         <s:rule context="/node/
            node[@shortName != $workshiftISOTarget]/
-           node[ @shortName != 'FILM-ISO-target' and @shortName != 'UNMATCHED']">
+           node[@shortName != 'FILM-ISO-target' and @shortName != 'UNMATCHED']">
 
             <!-- Check: editionChecker: folder name has form: [dato]-[udgaveLbNummer] i.e. [12][0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])-[0-9]{2}
             -->
@@ -401,7 +412,7 @@
                    value="
                    substring-before(
                    ../../attribute[ends-with(@shortName,'.film.xml')]/@shortName,'.film.xml')"/>
-            <s:assert test="matches(@name, concat($filmName,$postPattern))">
+            <s:assert test="matches(@name, concat('^',$filmName,$postPattern))">
                 Unexpected file
                 <s:value-of select="@name"/>
             </s:assert>
