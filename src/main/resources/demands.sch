@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <s:schema xmlns:s="http://purl.oclc.org/dsdl/schematron">
 
-    <!-- TODO: Her ville vi skulle tage flag fra mf-pak om hvorvidt vi skulle forvente alto. Flag kunne indkodes i denne .sch fil before run-->
+
     <s:let name="altoFlag" value="true()"/>
 
     <s:let name="batchID" value="/node/@name"/>

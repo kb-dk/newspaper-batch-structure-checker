@@ -51,6 +51,7 @@ public class StructureValidator implements Validator {
                             ResultCollector resultCollector) {
         Document document = DOM.streamToDOM(contents);
         boolean success= true;
+        //<!-- TODO: Her ville vi skulle tage flag fra mf-pak om hvorvidt vi skulle forvente alto. Flag kunne indkodes i denne .sch fil before run-->
         SchematronOutputType result = null;
         try {
             result = schematron.applySchematronValidation(document);
