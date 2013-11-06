@@ -145,7 +145,7 @@
         -->
         <s:param name="inFilmPath"
                  value="/node/node[@shortName != $workshiftISOTarget]/node[@shortName = 'FILM-ISO-target']"/>
-        <s:param name="postPattern" value="'-ISO-[1-9]'"/>
+        <s:param name="postPattern" value="'-ISO-[1-9]$'"/>
     </s:pattern>
 
 
