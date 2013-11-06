@@ -336,13 +336,13 @@
     </s:pattern>
 
 
-    <s:pattern id="filmIsoTargetChecker" is-a="scanChecker">
+    <s:pattern id="filmIsoTargetScanChecker" is-a="scanChecker">
         <!--
-        Check: filmIsoTargetChecker: Any node in FILM-ISO-target with a name X must contain an attribute with name X.mix.xml
-        Check: filmIsoTargetChecker: Any node in FILM-ISO-target with a name X must contain a node with name X.jp2
-        Check: filmIsoTargetChecker: For any node in FILM-ISO-target with a name X, any contained attribute must have name X.mix.xml
-        Check: filmIsoTargetChecker: For any node in FILM-ISO-target with a name X, any contained node must have name X.jp2
-        Check: filmIsoTargetChecker: For any node in FILM-ISO-target with a name X, any contained node must contain an attribute called "contents"
+        Check: filmIsoTargetScanChecker: Any node in FILM-ISO-target with a name X must contain an attribute with name X.mix.xml
+        Check: filmIsoTargetScanChecker: Any node in FILM-ISO-target with a name X must contain a node with name X.jp2
+        Check: filmIsoTargetScanChecker: For any node in FILM-ISO-target with a name X, any contained attribute must have name X.mix.xml
+        Check: filmIsoTargetScanChecker: For any node in FILM-ISO-target with a name X, any contained node must have name X.jp2
+        Check: filmIsoTargetScanChecker: For any node in FILM-ISO-target with a name X, any contained node must contain an attribute called "contents"
         -->
         <s:param name="scan"
                  value="/node/node[@shortName != $workshiftISOTarget]/
