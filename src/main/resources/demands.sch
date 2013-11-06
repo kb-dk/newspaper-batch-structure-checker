@@ -88,12 +88,8 @@
 
 
     <s:pattern id="filmChecker">
-        <!--Film-directories:
-        TODO: Eksistens af edition-mapper (mindst en)
-        -->
-
         <s:rule context="/node/node[@shortName != $workshiftISOTarget]">
-            <!-- Check: filmChecker: Any folder in BATCH not called WORKSHIFT-ISO-TARGET must have name of format <batchID>-[0-9]+ (a FILM folder) -->
+            <!-- Check: filmChecker: Any folder in BATCH not called WORKSHIFT-ISO-TARGET must have name of format <batchID>-[0-9]{2} (a FILM folder) with batchID as in BATCH folder -->
             <s:assert test="matches(@shortName,$filmIdPattern)">
                 unexpected folder '<s:value-of select="@name"/>'
             </s:assert>
@@ -105,7 +101,7 @@
                 <s:value-of select="@name"/>
             </s:assert>
 
-            <!-- Check: filmChecker: Edition-folder: Existence of page-folders -->
+            <!-- Check: filmChecker: Existence of edition-folder(s) with name of form [12][0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])-[0-9]{2} -->
             <s:assert test="count(node[matches(@shortName,$datoUdgaveLbNummer)]) > 0">
                 No editions in film
                 <s:value-of select="@name"/>
@@ -140,7 +136,7 @@
 
     <s:pattern id="filmIsoTargetChecker" is-a="inFilmChecker">
         <!--
-        TODO: FILM-ISO-target: Eksistens af iso-filer? If FILM-ISO-target is not required to exist, do we demand contents when it does?
+        TODO: FILM-ISO-target: Eksistens af iso-filer? If FILM-ISO-target is not required to exist, do we demand contents when it does? Yes!
 
         Check: filmIsoTargetChecker: nodes have form: [avisID]-[filmID]-ISO-[1-9] where [avisID]-[filmID] is as in film-xml of parent directory
         -->
@@ -239,7 +235,7 @@
                 Mix file '<s:value-of select="concat(@name,'.mix.xml')"/>' missing
             </s:assert>
 
-            <!-- Check: editionPageChecker: Any node not ending in .brik must contain a .jp2 attribute with name prefix as that of parent node -->
+            <!-- Check: editionPageChecker: Any node not ending in .brik must contain a .jp2 node with name prefix as that of parent node -->
             <s:assert test="node/@shortName = concat(@shortName,'.jp2')">
                 Jp2 file '<s:value-of select="concat(@name,'.jp2')"/>' missing
             </s:assert>
@@ -334,9 +330,13 @@
 
 
     <s:pattern id="filmIsoTargetChecker" is-a="scanChecker">
-        <!-- Check: brikChecker: Any node in BATCH/FILM/FILM-ISO-target/ must contain a .mix.xml attribute -->
-        <!-- Check: brikChecker: Any node in BATCH/FILM/FILM-ISO-target/ must contain a .jp2 attribute -->
-
+        <!--
+        Check: filmIsoTargetChecker: Any node in FILM-ISO-target with a name X must contain an attribute with name X.mix.xml
+        Check: filmIsoTargetChecker: Any node in FILM-ISO-target with a name X must contain a node with name X.jp2
+        Check: filmIsoTargetChecker: For any node in FILM-ISO-target with a name X, any contained attribute must have name X.mix.xml
+        Check: filmIsoTargetChecker: For any node in FILM-ISO-target with a name X, any contained node must have name X.jp2
+        Check: filmIsoTargetChecker: For any node in FILM-ISO-target with a name X, any contained node must contain an attribute called "contents"
+        -->
         <s:param name="scan"
                  value="/node/node[@shortName != $workshiftISOTarget]/
                                                              node[ @shortName = 'FILM-ISO-target']/
@@ -346,7 +346,7 @@
 
     <s:pattern id="checksumExistenceChecker">
         <s:rule context="attribute">
-            <!-- Check: checksumExistenceChecker: Every file must have a checksum -->
+            <!-- Check: checksumExistenceChecker: Every attribute (file) must have a checksum -->
             <s:report test="@checksum = 'null'">
                 Checksum not found for
                 <s:value-of select="@name"/>
@@ -387,6 +387,7 @@
     </s:pattern>
 
     <!-- This abstract pattern is used to check that no unexpected files are found in UNMATCHED or FILM-ISO-target -->
+    <!-- TODO: also reject unexpected nodes -->
     <s:pattern abstract="true" id="inFilmChecker">
         <s:rule context="$inFilmPath/node">
             <s:let name="filmName"
