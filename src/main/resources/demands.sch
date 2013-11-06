@@ -1,6 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <s:schema xmlns:s="http://purl.oclc.org/dsdl/schematron">
 
+    <!-- TODO: Her ville vi skulle tage flag fra mf-pak om hvorvidt vi skulle forvente alto. Flag kunne indkodes i denne .sch fil before run-->
+    <s:let name="altoFlag" value="true()"/>
+
     <s:let name="batchID" value="/node/@name"/>
 
     <s:let name="batchNumber" value="substring-after(substring-before($batchID,'-'),'B')"/>
@@ -219,11 +222,15 @@
                 Invalid prefix for page '<s:value-of select="@name"/>'
             </s:assert>
 
-            <!-- Check: editionPageChecker: Any node not ending in .brik must contain a .alto.xml attribute with name prefix as that of parent node -->
-            <s:assert test="attribute/@shortName = concat(@shortName,'.alto.xml')">
+            <!-- Check: editionPageChecker: Any node not ending in .brik must contain a .alto.xml attribute with name prefix as that of parent node (if the altoFlag is set)-->
+            <s:report test="$altoFlag and not(exists(attribute/@shortName = concat(@shortName,'.alto.xml')))">
                 Alto file '<s:value-of select="concat(@name,'.alto.xml')"/>' missing
-            </s:assert>
-            <!-- TODO: Her ville vi skulle tage flag fra mf-pak om hvorvidt vi skulle forvente alto. Flag kunne indkodes i denne .sch fil before run-->
+            </s:report>
+
+            <!-- Check: editionPageChecker: Any node not ending in .brik must not contain a .alto.xml attribute with name prefix as that of parent node (if the altoFlag is not set)-->
+            <s:report test="exists(attribute/@shortName = concat(@shortName,'.alto.xml')) and not($altoFlag)">
+                Alto file '<s:value-of select="concat(@name,'.alto.xml')"/>' found but not allowed
+            </s:report>
 
             <!-- Check: editionPageChecker: Any node not ending in .brik must contain a .mods.xml attribute with name prefix as that of parent node -->
             <s:assert test="attribute/@shortName = concat(@shortName,'.mods.xml')">
