@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <s:schema xmlns:s="http://purl.oclc.org/dsdl/schematron">
 
-
+    <!-- The following flag can be replaced with a placeholder, for replacing with true/false as needed for certain batches -->
     <s:let name="altoFlag" value="true()"/>
 
     <s:let name="batchID" value="/node/@name"/>
