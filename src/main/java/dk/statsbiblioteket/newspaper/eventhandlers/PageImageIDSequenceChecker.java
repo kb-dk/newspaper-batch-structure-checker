@@ -17,11 +17,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Checks the the scanned pages are named in sequence. The image files for the scanned pages are used for the sequence
- * number check. The sequence covers a full film, eg. the UNMATCH dir and all the edition dir. The rules are: <ol>
- *     <li>sequence numbers are in the format NNNN or NNNNA/NNNNB NNNNA/NNNNB/NNNNC...., the later in case of two or
- *     four pages on a single film image.</li>.
- *     <li>The film image numbers are in sequence.</li>
+ * Checks the the scanned pages are named in sequence without holes and starting with 1. The sequence covers a full film, eg. the UNMATCH dir and all the edition dir for a single film. The rules are: <ol>
+ *     <li>Sequence numbers are in the format NNNN or NNNNA/NNNNB NNNNA/NNNNB/NNNNC...., the later in case of two or
+ *     more pages on a single film image.</li>
+ *     <li>The film image NNNN numbers are in sequence without holes or duplicates.</li>
+ *     <li>For a single NNNN film image number, the letter postfix are in sequence without holes, eg. NNNNA, NNNNB....
+ *     Further more the at least to.</li>
  * </ol>
  * Nodes not adhering to the naming standard are just ignored, eg. not considered relevant for the sequence numbering.
  * The format check is considered to be the responsibility of another checker.
@@ -97,11 +98,11 @@ public class PageImageIDSequenceChecker extends DefaultTreeEventHandler {
     private void verifySequence() {
         FilmImage previousFilmImage = null;
         for (FilmImage currentFilmImage : FilmImages.values()) {
-            if(previousFilmImage == null) {
+            if(previousFilmImage == null) { // First page image
                 if (currentFilmImage.number != 1) {
                     registerFailure(currentFilmImage.name, "The first ImageID must start with 1");
                 }
-            } else {
+            } else { //Following page images
                 if (currentFilmImage.number != previousFilmImage.number + 1) {
                     registerFailure(currentFilmImage.name, "Missing film image, the previous image was " +
                             previousFilmImage.name);
