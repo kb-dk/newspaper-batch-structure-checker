@@ -42,6 +42,6 @@ public class XmlBuilderEventHandlerTest {
         assertTrue(xml.split("<node").length > 10, "Should be at least 10 nodes in document.");
         assertTrue(xml.split("<attribute").length > 10, "Should be at least 10 nodes in document.");
         assertNotNull(DOM.stringToDOM(xml), "Should have gotten parseable xml, not " + xml);
-        System.out.println(xml);
+        //System.out.println(xml);
     }
 }
