@@ -411,7 +411,7 @@
                    value="
                    substring-before(
                    ../../attribute[ends-with(@shortName,'.film.xml')]/@shortName,'.film.xml')"/>
-            <s:assert test="matches(@name, concat('^',$filmName,$postPattern))">
+            <s:assert test="matches(@shortName, concat('^',$filmName,$postPattern))">
                 Unexpected file
                 <s:value-of select="@name"/>
             </s:assert>
