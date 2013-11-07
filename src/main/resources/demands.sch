@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <s:schema xmlns:s="http://purl.oclc.org/dsdl/schematron">
 
-
+    <!-- The following flag can be replaced with a placeholder, for replacing with true/false as needed for certain batches -->
     <s:let name="altoFlag" value="true()"/>
 
     <s:let name="batchID" value="/node/@name"/>
@@ -150,10 +150,10 @@
     <s:pattern id="filmIsoTargetFileChecker">
         <!-- Check: filmIsoTargetFileChecker: If there is a FILM-ISO-target folder, it must contain atleast one file (node) -->
         <s:rule context="/node/node[@shortName != $workshiftISOTarget]/node[@shortName = 'FILM-ISO-target']">
-            <s:let name="isoName" value="@shortName/node"/>
+            <s:let name="isoName" value="substring-before(../attribute[ends-with(@shortName,'.film.xml')]/@shortName,'.film.xml')"/>
             <s:let name="isoEnding" value="'-ISO-[1-9]$'"/>
 
-            <s:assert test="count(matches(node/@shortName, concat($isoName, $isoEnding))) > 0">
+            <s:assert test="count(matches(node/@shortName, concat('^', $isoName, $isoEnding))) > 0">
                 No files found in <s:value-of select="@name"/>
             </s:assert>
         </s:rule>
@@ -405,7 +405,6 @@
     </s:pattern>
 
     <!-- This abstract pattern is used to check that no unexpected files are found in UNMATCHED or FILM-ISO-target -->
-    <!-- TODO: also reject unexpected nodes -->
     <s:pattern abstract="true" id="inFilmChecker">
         <s:rule context="$inFilmPath/node">
             <s:let name="filmName"
