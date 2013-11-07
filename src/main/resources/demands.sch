@@ -39,6 +39,12 @@
                 <s:value-of select="@name"/>
             </s:assert>
         </s:rule>
+
+        <s:rule context="/node/attribute">
+            <s:report test="true()">
+                Unexpected file '<s:value-of select="@name"/>'
+            </s:report>
+        </s:rule>
     </s:pattern>
 
 
