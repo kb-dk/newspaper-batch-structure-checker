@@ -405,7 +405,6 @@
     </s:pattern>
 
     <!-- This abstract pattern is used to check that no unexpected files are found in UNMATCHED or FILM-ISO-target -->
-    <!-- TODO: also reject unexpected nodes -->
     <s:pattern abstract="true" id="inFilmChecker">
         <s:rule context="$inFilmPath/node">
             <s:let name="filmName"
