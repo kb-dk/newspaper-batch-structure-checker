@@ -3,6 +3,9 @@ package dk.statsbiblioteket.newspaper;
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.newspaper.eventhandlers.Util;
+import dk.statsbiblioteket.newspaper.mfpakintegration.configuration.ConfigurationProperties;
+import dk.statsbiblioteket.newspaper.mfpakintegration.configuration.MfPakConfiguration;
+import dk.statsbiblioteket.newspaper.mfpakintegration.database.MfPakDAO;
 import org.testng.annotations.Test;
 
 import java.io.FileInputStream;
@@ -28,8 +31,14 @@ public class BatchStructureCheckerComponentIT {
         properties.load(new FileInputStream(pathToProperties));
         properties.setProperty("scratch", pathToTestBatch + "/" + "small-test-batch");
 
+        MfPakConfiguration mfPakConfiguration = new MfPakConfiguration();
+        mfPakConfiguration.setDatabaseUrl(properties.getProperty(ConfigurationProperties.DATABASE_URL));
+        mfPakConfiguration.setDatabaseUser(properties.getProperty(ConfigurationProperties.DATABASE_USER));
+        mfPakConfiguration.setDatabasePassword(properties.getProperty(ConfigurationProperties.DATABASE_PASSWORD));
+
+
         BatchStructureCheckerComponent batchStructureCheckerComponent =
-                new BatchStructureCheckerComponent(properties);
+                new BatchStructureCheckerComponent(properties, new MfPakDAO(mfPakConfiguration));
 
         ResultCollector resultCollector = new ResultCollector("Batch Structure Checker", "v0.1");
         Batch batch = new Batch();
@@ -57,8 +66,14 @@ public class BatchStructureCheckerComponentIT {
         properties.load(new FileInputStream(pathToProperties));
         properties.setProperty("scratch", pathToTestBatch + "/" + "bad-bad-batch");
 
+        MfPakConfiguration mfPakConfiguration = new MfPakConfiguration();
+        mfPakConfiguration.setDatabaseUrl(properties.getProperty(ConfigurationProperties.DATABASE_URL));
+        mfPakConfiguration.setDatabaseUser(properties.getProperty(ConfigurationProperties.DATABASE_USER));
+        mfPakConfiguration.setDatabasePassword(properties.getProperty(ConfigurationProperties.DATABASE_PASSWORD));
+
+
         BatchStructureCheckerComponent batchStructureCheckerComponent =
-                new BatchStructureCheckerComponent(properties);
+                new BatchStructureCheckerComponent(properties, new MfPakDAO(mfPakConfiguration));
 
         ResultCollector resultCollector = new ResultCollector("Batch Structure Checker", "v0.1");
         Batch batch = new Batch();

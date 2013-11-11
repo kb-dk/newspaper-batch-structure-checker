@@ -7,6 +7,7 @@ import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.Event
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.EventRunner;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.TreeEventHandler;
 import dk.statsbiblioteket.newspaper.eventhandlers.BatchStructureEventHandlerFactory;
+import dk.statsbiblioteket.newspaper.mfpakintegration.database.MfPakDAO;
 import dk.statsbiblioteket.newspaper.schematron.StructureValidator;
 import dk.statsbiblioteket.newspaper.schematron.XmlBuilderEventHandler;
 import dk.statsbiblioteket.newspaper.xpath.ExternalStructureChecks;
@@ -19,9 +20,12 @@ import java.util.Properties;
 public class BatchStructureCheckerComponent extends AbstractRunnableComponent {
 
     public static final String DEMANDS_SCH = "demands.sch";
+    private MfPakDAO mfPakDao;
 
-    public BatchStructureCheckerComponent(Properties properties) {
+    public BatchStructureCheckerComponent(Properties properties,
+                                          MfPakDAO mfPakDao) {
         super(properties);
+        this.mfPakDao = mfPakDao;
     }
 
     @Override
@@ -69,7 +73,7 @@ public class BatchStructureCheckerComponent extends AbstractRunnableComponent {
         Validator validator1 = new StructureValidator(DEMANDS_SCH);
         validator1.validate(batch, new ByteArrayInputStream(xml.getBytes("UTF-8")), resultCollector);
 
-        Validator validator2 = new ExternalStructureChecks();
+        Validator validator2 = new ExternalStructureChecks(mfPakDao);
         validator2.validate(batch, new ByteArrayInputStream(xml.getBytes("UTF-8")), resultCollector);
 
 
