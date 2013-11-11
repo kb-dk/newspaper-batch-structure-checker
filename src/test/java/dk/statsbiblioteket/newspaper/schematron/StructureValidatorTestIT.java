@@ -44,7 +44,7 @@ public class StructureValidatorTestIT {
                 new EnhancedFedoraImpl(creds, fedoraLocation, properties.getProperty("pidgenerator.location"), null);
 
 
-        String pid = eFedora.findObjectFromDCIdentifier("path:B400022028246-RT1").get(0);
+        String pid = eFedora.findObjectFromDCIdentifier("path:B400022028241-RT1").get(0);
 
         ResultCollector resultCollector = new ResultCollector("Batch Structure Checker", "v0.1");
         TreeIterator iterator;
