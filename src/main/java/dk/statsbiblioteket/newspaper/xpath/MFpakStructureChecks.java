@@ -99,7 +99,7 @@ public class MFpakStructureChecks implements Validator {
                     String editionShortName = editionNode.getAttributes().getNamedItem("shortName").getNodeValue();
 
                     String editionPath = editionNode.getAttributes().getNamedItem("name").getNodeValue();
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd");
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                     try {
                         Date editionDate = dateFormat.parse(editionShortName);
                         if (selectedDateRange == null) {
@@ -114,6 +114,7 @@ public class MFpakStructureChecks implements Validator {
                                                            getClass().getName(),
                                                            "This edition is not valid according to the date ranges "
                                                            + "from mfpak");
+                                success = false;
 
                             }
                         } else {
@@ -123,6 +124,7 @@ public class MFpakStructureChecks implements Validator {
                                                            getClass().getName(),
                                                            "This edition is not valid according to the date ranges "
                                                            + "from mfpak");
+                                success = false;
                             }
                         }
 
@@ -136,6 +138,18 @@ public class MFpakStructureChecks implements Validator {
 
                 }
                 dateRanges.remove(selectedDateRange);
+            }
+            if (dateRanges.size() > 0) {
+                for (NewspaperDateRange dateRange : dateRanges) {
+                    resultCollector.addFailure(batch.getFullID(),
+                                               FILESTRUCTURE,
+                                               getClass().getName(),
+                                               "There should have been a film covering the dateranges "
+                                               + dateRange.getFromDate() + " to " + dateRange.getToDate());
+
+                }
+                success = false;
+
             }
 
 
