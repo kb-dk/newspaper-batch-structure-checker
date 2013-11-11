@@ -10,7 +10,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import javax.xml.transform.TransformerException;
 import java.io.InputStream;
 import java.sql.SQLException;
 
@@ -40,12 +39,6 @@ public class MFpakStructureChecks implements Validator {
                                        getClass().getName(),
                                        "Could not parse data structure of " + batch.getFullID());
             return false;
-        }
-
-        try {
-            System.out.println(DOM.domToString(doc));
-        } catch (TransformerException e) {
-            throw new RuntimeException(e);
         }
 
 
