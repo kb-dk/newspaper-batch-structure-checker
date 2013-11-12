@@ -83,20 +83,16 @@ public class MFpakStructureChecks implements Validator {
             List<NewspaperDateRange> dateRanges = mfPakDAO.getBatchDateRanges(batch.getBatchID());
 
             if (dateRanges == null) {
-                resultCollector.addFailure(batch.getFullID(),
-                                           FILESTRUCTURE,
-                                           getClass().getName(),
-                                           "Failed to find batch in MFPak");
+                addFailure(resultCollector,batch.getFullID(),"Failed to find batch in MFPak");
                 return false;
-
             }
-
 
             NodeList filmNodes = xpath.selectNodeList(doc, xpathFilmNode);
 
             if (filmNodes.getLength() != dateRanges.size()) {
-                success = addFailure(resultCollector,batch.getFullID(),"Wrong number of films. File structure contains '" + filmNodes.getLength()
+                addFailure(resultCollector,batch.getFullID(),"Wrong number of films. File structure contains '" + filmNodes.getLength()
                                                            + "' but mfpak contains '" + dateRanges.size() + "'");
+                success = false;
             }
 
             NewspaperDateRange selectedDateRange = null;
@@ -121,30 +117,30 @@ public class MFpakStructureChecks implements Validator {
                                 }
                             }
                             if (selectedDateRange == null) {
-                                success = addFailure(resultCollector, editionPath,
+                                 addFailure(resultCollector, editionPath,
                                                      "This edition is not valid according to the date ranges " + "from mfpak");
-
+                                success = false;
                             }
                         } else {
                             if (!selectedDateRange.isIncluded(editionDate)) {
-                                success = addFailure(resultCollector, editionPath,
+                                addFailure(resultCollector, editionPath,
                                                      "This edition is not valid according to the date ranges " + "from mfpak");
+                                success = false;
                             }
                         }
 
                     } catch (ParseException e) {
-                        success = addFailure(resultCollector, editionPath,
+                        addFailure(resultCollector, editionPath,
                                              "Failed to parse date from edition folder");
+                        success = false;
                     }
-
                 }
                 dateRanges.remove(selectedDateRange);
             }
             if (dateRanges.size() > 0) {
                 for (NewspaperDateRange dateRange : dateRanges) {
-                    success = addFailure(resultCollector, batch.getFullID(),"There should have been a film covering the dateranges "
+                    addFailure(resultCollector, batch.getFullID(),"There should have been a film covering the dateranges "
                                                                    + dateRange.getFromDate() + " to " + dateRange.getToDate());
-
                 }
                 success = false;
 
@@ -152,8 +148,10 @@ public class MFpakStructureChecks implements Validator {
 
 
         } catch (SQLException e) {
-            success = addFailure(resultCollector,batch.getFullID(),"Couldn't read avisId from mfpak.",
+            addFailure(resultCollector,batch.getFullID(),"Couldn't read avisId from mfpak.",
                                                    e.getMessage());
+            success = false;
+
         }
         return success;
     }
@@ -207,8 +205,9 @@ public class MFpakStructureChecks implements Validator {
                 String avisIdFromFilmXml = filmXmlName.replaceFirst("-.*$", "");
 
                 if (avisIdFromFilmXml == null || avisId == null || !avisIdFromFilmXml.equals(avisId)) {
-                    success = addFailure(resultCollector,filmXmlPath,"avisId mismatch. Name gives " + avisIdFromFilmXml + " but mfpak gives "
+                    addFailure(resultCollector,filmXmlPath,"avisId mismatch. Name gives " + avisIdFromFilmXml + " but mfpak gives "
                                                                    + avisId);
+                    success = false;
                 }
 
 
@@ -218,6 +217,7 @@ public class MFpakStructureChecks implements Validator {
         } catch (SQLException e) {
             addFailure(resultCollector,batch.getFullID(),"Couldn't read avisId from mfpak.",
                                                    e.getMessage());
+            success = false;
         }
         return success;
     }
