@@ -59,11 +59,12 @@ public class MFpakStructureChecks implements Validator {
         boolean success = true;
 
 
-        String xpathFilmNode =
+        final String xpathFilmNode =
                 "/node[@shortName='" + batch.getFullID() + "']/node[starts-with(@shortName,'" + batch.getBatchID()
                 + "')]";
 
         final String xpathEditionNode = "node[@shortName != 'UNMATCHED' and @shortName != 'FILM-ISO-target']";
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
             List<NewspaperDateRange> dateRanges = mfPakDAO.getBatchDateRanges(batch.getBatchID());
 
@@ -80,11 +81,8 @@ public class MFpakStructureChecks implements Validator {
             NodeList filmNodes = xpath.selectNodeList(doc, xpathFilmNode);
 
             if (filmNodes.getLength() != dateRanges.size()) {
-                resultCollector.addFailure(batch.getFullID(),
-                                           FILESTRUCTURE,
-                                           getClass().getName(),
-                                           "Wrong number of films. File structure contains '" + filmNodes.getLength()
-                                           + "' but mfpak contains '" + dateRanges.size() + "'");
+                success = addFailure(resultCollector,batch.getFullID(),"Wrong number of films. File structure contains '" + filmNodes.getLength()
+                                                           + "' but mfpak contains '" + dateRanges.size() + "'");
             }
 
             NewspaperDateRange selectedDateRange = null;
@@ -99,7 +97,7 @@ public class MFpakStructureChecks implements Validator {
                     String editionShortName = editionNode.getAttributes().getNamedItem("shortName").getNodeValue();
 
                     String editionPath = editionNode.getAttributes().getNamedItem("name").getNodeValue();
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
                     try {
                         Date editionDate = dateFormat.parse(editionShortName);
                         if (selectedDateRange == null) {
@@ -109,31 +107,20 @@ public class MFpakStructureChecks implements Validator {
                                 }
                             }
                             if (selectedDateRange == null) {
-                                resultCollector.addFailure(editionPath,
-                                                           FILESTRUCTURE,
-                                                           getClass().getName(),
-                                                           "This edition is not valid according to the date ranges "
-                                                           + "from mfpak");
-                                success = false;
+                                success = addFailure(resultCollector, editionPath,
+                                                     "This edition is not valid according to the date ranges " + "from mfpak");
 
                             }
                         } else {
                             if (!selectedDateRange.isIncluded(editionDate)) {
-                                resultCollector.addFailure(editionPath,
-                                                           FILESTRUCTURE,
-                                                           getClass().getName(),
-                                                           "This edition is not valid according to the date ranges "
-                                                           + "from mfpak");
-                                success = false;
+                                success = addFailure(resultCollector, editionPath,
+                                                     "This edition is not valid according to the date ranges " + "from mfpak");
                             }
                         }
 
                     } catch (ParseException e) {
-                        resultCollector.addFailure(editionPath,
-                                                   FILESTRUCTURE,
-                                                   getClass().getName(),
-                                                   "Failed to parse date from edition folder");
-                        success = false;
+                        success = addFailure(resultCollector, editionPath,
+                                             "Failed to parse date from edition folder");
                     }
 
                 }
@@ -141,11 +128,8 @@ public class MFpakStructureChecks implements Validator {
             }
             if (dateRanges.size() > 0) {
                 for (NewspaperDateRange dateRange : dateRanges) {
-                    resultCollector.addFailure(batch.getFullID(),
-                                               FILESTRUCTURE,
-                                               getClass().getName(),
-                                               "There should have been a film covering the dateranges "
-                                               + dateRange.getFromDate() + " to " + dateRange.getToDate());
+                    success = addFailure(resultCollector, batch.getFullID(),"There should have been a film covering the dateranges "
+                                                                   + dateRange.getFromDate() + " to " + dateRange.getToDate());
 
                 }
                 success = false;
@@ -154,14 +138,20 @@ public class MFpakStructureChecks implements Validator {
 
 
         } catch (SQLException e) {
-            resultCollector.addFailure(batch.getFullID(),
-                                       FILESTRUCTURE,
-                                       getClass().getName(),
-                                       "Couldn't read avisId from mfpak.",
-                                       e.getMessage());
-            return false;
+            success = addFailure(resultCollector,batch.getFullID(),"Couldn't read avisId from mfpak.",
+                                                   e.getMessage());
         }
         return success;
+    }
+
+    private boolean addFailure(ResultCollector resultCollector,
+                               String refToFailedThing,
+                               String description,
+                               String... details) {
+        resultCollector.addFailure(refToFailedThing,
+                                   FILESTRUCTURE,
+                                   getClass().getName(), description,details);
+        return false;
     }
 
     private boolean validateAvisId(Batch batch,
@@ -187,12 +177,8 @@ public class MFpakStructureChecks implements Validator {
                 String avisIdFromFilmXml = filmXmlName.replaceFirst("-.*$", "");
 
                 if (avisIdFromFilmXml == null || avisId == null || !avisIdFromFilmXml.equals(avisId)) {
-                    resultCollector.addFailure(filmXmlPath,
-                                               FILESTRUCTURE,
-                                               getClass().getName(),
-                                               "avisId mismatch. Name gives " + avisIdFromFilmXml + " but mfpak gives "
-                                               + avisId);
-                    success = false;
+                    success = addFailure(resultCollector,filmXmlPath,"avisId mismatch. Name gives " + avisIdFromFilmXml + " but mfpak gives "
+                                                                   + avisId);
                 }
 
 
@@ -200,12 +186,8 @@ public class MFpakStructureChecks implements Validator {
 
 
         } catch (SQLException e) {
-            resultCollector.addFailure(batch.getFullID(),
-                                       FILESTRUCTURE,
-                                       getClass().getName(),
-                                       "Couldn't read avisId from mfpak.",
-                                       e.getMessage());
-            return false;
+            addFailure(resultCollector,batch.getFullID(),"Couldn't read avisId from mfpak.",
+                                                   e.getMessage());
         }
         return success;
     }
