@@ -18,6 +18,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+/**
+ *  This class performs the structure checks that require information from MFpak.
+ *
+ */
 public class MFpakStructureChecks implements Validator {
 
     private static final String FILESTRUCTURE = "filestructure";
@@ -52,6 +56,16 @@ public class MFpakStructureChecks implements Validator {
         return success;
     }
 
+    /**
+     * Validate that
+     * 1. The batch contains the correct number of films
+     * 2. Each film only contains editions from dates that are expected from MFpak
+     * @param batch the batch to work on
+     * @param resultCollector the result collector
+     * @param xpath the xpathSelector
+     * @param doc the structure document
+     * @return true if these tests are valid
+     */
     private boolean validateDateRanges(Batch batch,
                                        ResultCollector resultCollector,
                                        XPathSelector xpath,
@@ -144,6 +158,14 @@ public class MFpakStructureChecks implements Validator {
         return success;
     }
 
+    /**
+     * Utility method to add failure
+     * @param resultCollector the result collector to add to
+     * @param refToFailedThing the ref to the thing that failed
+     * @param description the description of the failure
+     * @param details the details of the failure
+     * @return false
+     */
     private boolean addFailure(ResultCollector resultCollector,
                                String refToFailedThing,
                                String description,
@@ -154,6 +176,14 @@ public class MFpakStructureChecks implements Validator {
         return false;
     }
 
+    /**
+     * Validate that all films are about avisIDs that is correct according the MFpak database
+     * @param batch the batch we work on
+     * @param resultCollector the result collector
+     * @param xpath the xpath selector
+     * @param doc the structure document
+     * @return false if any film contains a avisID not expected in MFpak.
+     */
     private boolean validateAvisId(Batch batch,
                                    ResultCollector resultCollector,
                                    XPathSelector xpath,

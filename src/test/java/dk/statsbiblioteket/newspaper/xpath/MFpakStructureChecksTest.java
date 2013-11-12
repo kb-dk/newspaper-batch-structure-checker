@@ -33,7 +33,7 @@ public class MFpakStructureChecksTest {
 
 
         ResultCollector resultCollector = new ResultCollector("tool", "version");
-        mFpakStructureChecks.validate(new Batch("400022028241"),Thread.currentThread().getContextClassLoader().getResourceAsStream("structure.xml"),resultCollector);
+        mFpakStructureChecks.validate(new Batch("400022028241"),Thread.currentThread().getContextClassLoader().getResourceAsStream("assumed-valid-structure.xml"),resultCollector);
 
     }
 }
