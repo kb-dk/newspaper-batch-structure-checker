@@ -1,5 +1,9 @@
 package dk.statsbiblioteket.newspaper;
 
+import java.io.ByteArrayInputStream;
+import java.util.List;
+import java.util.Properties;
+
 import dk.statsbiblioteket.medieplatform.autonomous.AbstractRunnableComponent;
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
@@ -11,10 +15,6 @@ import dk.statsbiblioteket.newspaper.mfpakintegration.database.MfPakDAO;
 import dk.statsbiblioteket.newspaper.schematron.StructureValidator;
 import dk.statsbiblioteket.newspaper.schematron.XmlBuilderEventHandler;
 import dk.statsbiblioteket.newspaper.xpath.MFpakStructureChecks;
-
-import java.io.ByteArrayInputStream;
-import java.util.List;
-import java.util.Properties;
 
 /** Checks the directory structure of a batch. This should run both at Ninestars and at SB. */
 public class BatchStructureCheckerComponent extends AbstractRunnableComponent {
@@ -53,7 +53,7 @@ public class BatchStructureCheckerComponent extends AbstractRunnableComponent {
     public void doWorkOnBatch(Batch batch,
                               ResultCollector resultCollector) throws Exception {
         EventHandlerFactory eventHandlerFactory =
-                new BatchStructureEventHandlerFactory(getProperties(), batch, resultCollector);
+                new BatchStructureEventHandlerFactory(getProperties(), resultCollector);
         EventRunner eventRunner = new EventRunner(createIterator(batch));
         final List<TreeEventHandler> eventHandlers = eventHandlerFactory.createEventHandlers();
         eventRunner.runEvents(eventHandlers);
