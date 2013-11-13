@@ -8,7 +8,9 @@ import dk.statsbiblioteket.newspaper.mfpakintegration.configuration.MfPakConfigu
 import dk.statsbiblioteket.newspaper.mfpakintegration.database.MfPakDAO;
 import org.testng.annotations.Test;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Properties;
 
 import static org.testng.Assert.assertFalse;
@@ -20,9 +22,7 @@ public class BatchStructureCheckerComponentIT {
 
     private final static String TEST_BATCH_ID = "400022028241";
 
-    /**
-     * Tests that the BatchStructureChecker can parse a production like batch which should contain failures.
-     */
+    /** Tests that the BatchStructureChecker can parse a production like batch which should contain failures. */
     @Test(groups = "integrationTest")
     public void testGoodBatchStructureCheck() throws Exception {
         String pathToProperties = System.getProperty("integration.test.newspaper.properties");
@@ -30,6 +30,7 @@ public class BatchStructureCheckerComponentIT {
         Properties properties = new Properties();
         properties.load(new FileInputStream(pathToProperties));
         properties.setProperty("scratch", pathToTestBatch + "/" + "small-test-batch");
+        properties.setProperty("batchStructure.storageDir", createTempDir().getAbsolutePath());
 
         MfPakConfiguration mfPakConfiguration = new MfPakConfiguration();
         mfPakConfiguration.setDatabaseUrl(properties.getProperty(ConfigurationProperties.DATABASE_URL));
@@ -46,13 +47,11 @@ public class BatchStructureCheckerComponentIT {
         batch.setRoundTripNumber(1);
 
         batchStructureCheckerComponent.doWorkOnBatch(batch, resultCollector);
-        if (! resultCollector.isSuccess()){
+        if (!resultCollector.isSuccess()) {
             System.out.println(resultCollector.toReport());
         }
         assertTrue(resultCollector.isSuccess(), "Found failure with run on good batch");
     }
-
-
 
     /**
      * Tests that the BatchStructureChecker can parse a production like batch which should contain failures
@@ -65,6 +64,7 @@ public class BatchStructureCheckerComponentIT {
         Properties properties = new Properties();
         properties.load(new FileInputStream(pathToProperties));
         properties.setProperty("scratch", pathToTestBatch + "/" + "bad-bad-batch");
+        properties.setProperty("batchStructure.storageDir", createTempDir().getAbsolutePath());
 
         MfPakConfiguration mfPakConfiguration = new MfPakConfiguration();
         mfPakConfiguration.setDatabaseUrl(properties.getProperty(ConfigurationProperties.DATABASE_URL));
@@ -84,4 +84,13 @@ public class BatchStructureCheckerComponentIT {
         assertFalse(resultCollector.isSuccess());
         System.out.println("Found " + Util.countFailures(resultCollector) + " failures.");
     }
+
+    private File createTempDir() throws IOException {
+        File temp = File.createTempFile("folder-name", "");
+        temp.delete();
+        temp.mkdir();
+        temp.deleteOnExit();
+        return temp;
+    }
+
 }
