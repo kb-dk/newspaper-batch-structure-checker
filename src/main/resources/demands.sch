@@ -15,7 +15,7 @@
     <s:let name="workshiftISOTarget" value="'WORKSHIFT-ISO-TARGET'"/>
 
     <!-- Example: B400022028241-RT1/400022028241-14 -->
-    <s:let name="filmIdPattern" value="concat('^',$batchNumber,'-[0-9]{2}$')"/>
+    <s:let name="filmIdPattern" value="concat('^',$batchNumber,'-[0-9]+$')"/>
 
     <s:let name="workshiftISOTargetPattern" value="concat('^','Target-[0-9]{6}-[0-9]{4}$')"/>
 
