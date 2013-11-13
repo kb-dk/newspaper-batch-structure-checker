@@ -1,13 +1,16 @@
 package dk.statsbiblioteket.newspaper.eventhandlers;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.List;
+
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.AttributeParsingEvent;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeBeginsParsingEvent;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeEndParsingEvent;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.DefaultTreeEventHandler;
 import dk.statsbiblioteket.newspaper.treenode.NodeType;
 import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
-
-import java.util.*;
 
 /**
  * A generic checker for a given node-level in the tree structure. This class just gathers up the names of all
@@ -80,10 +83,5 @@ public abstract class AbstractNodeChecker extends DefaultTreeEventHandler {
         if (nodeStack != null &&  nodeStack.size() == 1) {
             attributes.add(event.getName());
         }
-    }
-
-    @Override
-    public void handleFinish() {
-        super.handleFinish();    //To change body of overridden methods use File | Settings | File Templates.
     }
 }

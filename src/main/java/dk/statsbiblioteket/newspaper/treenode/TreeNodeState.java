@@ -9,9 +9,17 @@ import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.Defau
  */
 public class TreeNodeState extends DefaultTreeEventHandler {
     private TreeNode currentNode = null;
+    private TreeNode previousNode = null;
 
     public TreeNode getCurrentNode() {
         return currentNode;
+    }
+
+    /**
+     * Useful on NodeEnds event where we're really interested in knowing the node we left.
+     */
+    public TreeNode getPreviousNode() {
+        return previousNode;
     }
 
     @Override
@@ -66,6 +74,7 @@ public class TreeNodeState extends DefaultTreeEventHandler {
             throw new IllegalStateException("Unexpected event: " + event + " for current node: " + currentNode);
         }
         assert (nextNodeType != null);
+        previousNode = currentNode;
         currentNode = new TreeNode(event.getName(), nextNodeType, currentNode);
     }
 }

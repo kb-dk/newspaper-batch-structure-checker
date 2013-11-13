@@ -7,6 +7,11 @@ import java.util.Properties;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.EventHandlerFactory;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.TreeEventHandler;
+import dk.statsbiblioteket.newspaper.eventhandlers.sequencechecker.EditionSequenceChecker;
+import dk.statsbiblioteket.newspaper.eventhandlers.sequencechecker.FilmIsoTargetSequenceChecker;
+import dk.statsbiblioteket.newspaper.eventhandlers.sequencechecker.FilmSuffixSequenceChecker;
+import dk.statsbiblioteket.newspaper.eventhandlers.sequencechecker.PageImageIDSequenceChecker;
+import dk.statsbiblioteket.newspaper.eventhandlers.sequencechecker.WorkshiftIsoTargetSequenceChecker;
 import dk.statsbiblioteket.newspaper.mfpakintegration.configuration.MfPakConfiguration;
 import dk.statsbiblioteket.newspaper.schematron.XmlBuilderEventHandler;
 import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
@@ -39,6 +44,10 @@ public class BatchStructureEventHandlerFactory implements EventHandlerFactory {
         TreeNodeState nodeState = new TreeNodeState();
         eventHandlers.add(nodeState); // Must be the first eventhandler to ensure a update state used by the following handlers (a bit fragile).
         eventHandlers.add(new PageImageIDSequenceChecker(resultCollector, nodeState));
+        eventHandlers.add(new WorkshiftIsoTargetSequenceChecker(resultCollector, nodeState));
+        eventHandlers.add(new FilmIsoTargetSequenceChecker(resultCollector, nodeState));
+        eventHandlers.add(new EditionSequenceChecker(resultCollector, nodeState));
+        eventHandlers.add(new FilmSuffixSequenceChecker(resultCollector, nodeState));
         eventHandlers.add(new XmlBuilderEventHandler());
         return eventHandlers;
     }
