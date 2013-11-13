@@ -18,6 +18,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+/**
+ *  This class performs the structure checks that require information from MFpak.
+ *
+ */
 public class MFpakStructureChecks implements Validator {
 
     private static final String FILESTRUCTURE = "filestructure";
@@ -52,6 +56,16 @@ public class MFpakStructureChecks implements Validator {
         return success;
     }
 
+    /**
+     * Validate that
+     * 1. The batch contains the correct number of films
+     * 2. Each film only contains editions from dates that are expected from MFpak
+     * @param batch the batch to work on
+     * @param resultCollector the result collector
+     * @param xpath the xpathSelector
+     * @param doc the structure document
+     * @return true if these tests are valid
+     */
     private boolean validateDateRanges(Batch batch,
                                        ResultCollector resultCollector,
                                        XPathSelector xpath,
@@ -59,32 +73,26 @@ public class MFpakStructureChecks implements Validator {
         boolean success = true;
 
 
-        String xpathFilmNode =
+        final String xpathFilmNode =
                 "/node[@shortName='" + batch.getFullID() + "']/node[starts-with(@shortName,'" + batch.getBatchID()
                 + "')]";
 
         final String xpathEditionNode = "node[@shortName != 'UNMATCHED' and @shortName != 'FILM-ISO-target']";
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
             List<NewspaperDateRange> dateRanges = mfPakDAO.getBatchDateRanges(batch.getBatchID());
 
             if (dateRanges == null) {
-                resultCollector.addFailure(batch.getFullID(),
-                                           FILESTRUCTURE,
-                                           getClass().getName(),
-                                           "Failed to find batch in MFPak");
+                addFailure(resultCollector,batch.getFullID(),"Failed to find batch in MFPak");
                 return false;
-
             }
-
 
             NodeList filmNodes = xpath.selectNodeList(doc, xpathFilmNode);
 
             if (filmNodes.getLength() != dateRanges.size()) {
-                resultCollector.addFailure(batch.getFullID(),
-                                           FILESTRUCTURE,
-                                           getClass().getName(),
-                                           "Wrong number of films. File structure contains '" + filmNodes.getLength()
-                                           + "' but mfpak contains '" + dateRanges.size() + "'");
+                addFailure(resultCollector,batch.getFullID(),"Wrong number of films. File structure contains '" + filmNodes.getLength()
+                                                           + "' but mfpak contains '" + dateRanges.size() + "'");
+                success = false;
             }
 
             NewspaperDateRange selectedDateRange = null;
@@ -99,7 +107,7 @@ public class MFpakStructureChecks implements Validator {
                     String editionShortName = editionNode.getAttributes().getNamedItem("shortName").getNodeValue();
 
                     String editionPath = editionNode.getAttributes().getNamedItem("name").getNodeValue();
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
                     try {
                         Date editionDate = dateFormat.parse(editionShortName);
                         if (selectedDateRange == null) {
@@ -109,44 +117,30 @@ public class MFpakStructureChecks implements Validator {
                                 }
                             }
                             if (selectedDateRange == null) {
-                                resultCollector.addFailure(editionPath,
-                                                           FILESTRUCTURE,
-                                                           getClass().getName(),
-                                                           "This edition is not valid according to the date ranges "
-                                                           + "from mfpak");
+                                 addFailure(resultCollector, editionPath,
+                                                     "This edition is not valid according to the date ranges " + "from mfpak");
                                 success = false;
-
                             }
                         } else {
                             if (!selectedDateRange.isIncluded(editionDate)) {
-                                resultCollector.addFailure(editionPath,
-                                                           FILESTRUCTURE,
-                                                           getClass().getName(),
-                                                           "This edition is not valid according to the date ranges "
-                                                           + "from mfpak");
+                                addFailure(resultCollector, editionPath,
+                                                     "This edition is not valid according to the date ranges " + "from mfpak");
                                 success = false;
                             }
                         }
 
                     } catch (ParseException e) {
-                        resultCollector.addFailure(editionPath,
-                                                   FILESTRUCTURE,
-                                                   getClass().getName(),
-                                                   "Failed to parse date from edition folder");
+                        addFailure(resultCollector, editionPath,
+                                             "Failed to parse date from edition folder");
                         success = false;
                     }
-
                 }
                 dateRanges.remove(selectedDateRange);
             }
             if (dateRanges.size() > 0) {
                 for (NewspaperDateRange dateRange : dateRanges) {
-                    resultCollector.addFailure(batch.getFullID(),
-                                               FILESTRUCTURE,
-                                               getClass().getName(),
-                                               "There should have been a film covering the dateranges "
-                                               + dateRange.getFromDate() + " to " + dateRange.getToDate());
-
+                    addFailure(resultCollector, batch.getFullID(),"There should have been a film covering the dateranges "
+                                                                   + dateRange.getFromDate() + " to " + dateRange.getToDate());
                 }
                 success = false;
 
@@ -154,16 +148,40 @@ public class MFpakStructureChecks implements Validator {
 
 
         } catch (SQLException e) {
-            resultCollector.addFailure(batch.getFullID(),
-                                       FILESTRUCTURE,
-                                       getClass().getName(),
-                                       "Couldn't read avisId from mfpak.",
-                                       e.getMessage());
-            return false;
+            addFailure(resultCollector,batch.getFullID(),"Couldn't read avisId from mfpak.",
+                                                   e.getMessage());
+            success = false;
+
         }
         return success;
     }
 
+    /**
+     * Utility method to add failure
+     * @param resultCollector the result collector to add to
+     * @param refToFailedThing the ref to the thing that failed
+     * @param description the description of the failure
+     * @param details the details of the failure
+     * @return false
+     */
+    private boolean addFailure(ResultCollector resultCollector,
+                               String refToFailedThing,
+                               String description,
+                               String... details) {
+        resultCollector.addFailure(refToFailedThing,
+                                   FILESTRUCTURE,
+                                   getClass().getName(), description,details);
+        return false;
+    }
+
+    /**
+     * Validate that all films are about avisIDs that is correct according the MFpak database
+     * @param batch the batch we work on
+     * @param resultCollector the result collector
+     * @param xpath the xpath selector
+     * @param doc the structure document
+     * @return false if any film contains a avisID not expected in MFpak.
+     */
     private boolean validateAvisId(Batch batch,
                                    ResultCollector resultCollector,
                                    XPathSelector xpath,
@@ -187,11 +205,8 @@ public class MFpakStructureChecks implements Validator {
                 String avisIdFromFilmXml = filmXmlName.replaceFirst("-.*$", "");
 
                 if (avisIdFromFilmXml == null || avisId == null || !avisIdFromFilmXml.equals(avisId)) {
-                    resultCollector.addFailure(filmXmlPath,
-                                               FILESTRUCTURE,
-                                               getClass().getName(),
-                                               "avisId mismatch. Name gives " + avisIdFromFilmXml + " but mfpak gives "
-                                               + avisId);
+                    addFailure(resultCollector,filmXmlPath,"avisId mismatch. Name gives " + avisIdFromFilmXml + " but mfpak gives "
+                                                                   + avisId);
                     success = false;
                 }
 
@@ -200,12 +215,9 @@ public class MFpakStructureChecks implements Validator {
 
 
         } catch (SQLException e) {
-            resultCollector.addFailure(batch.getFullID(),
-                                       FILESTRUCTURE,
-                                       getClass().getName(),
-                                       "Couldn't read avisId from mfpak.",
-                                       e.getMessage());
-            return false;
+            addFailure(resultCollector,batch.getFullID(),"Couldn't read avisId from mfpak.",
+                                                   e.getMessage());
+            success = false;
         }
         return success;
     }
