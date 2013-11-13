@@ -22,7 +22,7 @@
     </scm>
 
     <properties>
-        <autonomous.framework.version>0.2</autonomous.framework.version>
+        <autonomous.framework.version>0.3-SNAPSHOT</autonomous.framework.version>
         <mfpak.integration.version>0.2</mfpak.integration.version>
     </properties>
 
@@ -69,7 +69,7 @@
         <dependency>
             <groupId>dk.statsbiblioteket.newspaper</groupId>
             <artifactId>newspaper-mfpak-integration</artifactId>
-            <version>${mfpak.integration.version}</version>
+            <version>0.2</version>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
