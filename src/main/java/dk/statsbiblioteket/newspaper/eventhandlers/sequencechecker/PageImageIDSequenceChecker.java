@@ -1,4 +1,4 @@
-package dk.statsbiblioteket.newspaper.eventhandlers;
+package dk.statsbiblioteket.newspaper.eventhandlers.sequencechecker;
 
 import java.util.ArrayList;
 import java.util.Collections;

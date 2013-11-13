@@ -29,16 +29,6 @@ public class BatchStructureCheckerComponent extends AbstractRunnableComponent {
     }
 
     @Override
-    public String getComponentName() {
-        return "BatchStructureCheckerExecutable";
-    }
-
-    @Override
-    public String getComponentVersion() {
-        return getClass().getPackage().getImplementationVersion();
-    }
-
-    @Override
     public String getEventID() {
         return "Structure_Checked";
     }
