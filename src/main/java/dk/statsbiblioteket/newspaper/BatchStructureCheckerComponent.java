@@ -1,9 +1,5 @@
 package dk.statsbiblioteket.newspaper;
 
-import java.io.ByteArrayInputStream;
-import java.util.List;
-import java.util.Properties;
-
 import dk.statsbiblioteket.medieplatform.autonomous.AbstractRunnableComponent;
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
@@ -15,6 +11,10 @@ import dk.statsbiblioteket.newspaper.mfpakintegration.database.MfPakDAO;
 import dk.statsbiblioteket.newspaper.schematron.StructureValidator;
 import dk.statsbiblioteket.newspaper.schematron.XmlBuilderEventHandler;
 import dk.statsbiblioteket.newspaper.xpath.MFpakStructureChecks;
+
+import java.io.ByteArrayInputStream;
+import java.util.List;
+import java.util.Properties;
 
 /** Checks the directory structure of a batch. This should run both at Ninestars and at SB. */
 public class BatchStructureCheckerComponent extends AbstractRunnableComponent {
@@ -70,6 +70,7 @@ public class BatchStructureCheckerComponent extends AbstractRunnableComponent {
             throw new RuntimeException(
                     "Did not generate xml representation of directory structure. Could not complete tests.");
         }
+        storeBatchStructure(new ByteArrayInputStream(xml.getBytes("UTF-8")));
         Validator validator1 = new StructureValidator(DEMANDS_SCH);
         validator1.validate(batch, new ByteArrayInputStream(xml.getBytes("UTF-8")), resultCollector);
 
