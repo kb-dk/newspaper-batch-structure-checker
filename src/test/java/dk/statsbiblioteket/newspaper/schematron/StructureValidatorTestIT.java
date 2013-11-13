@@ -62,7 +62,8 @@ public class StructureValidatorTestIT {
                                                                                    "ALTO",
                                                                                    "MIX"),
                                                                      Arrays.asList(
-                                                                             "info:fedora/fedora-system:def/relations-external#hasPart")));
+                                                                             "info:fedora/fedora-system:def/relations-external#hasPart")),
+                                              ".*\\.jp2$");
         } catch (Exception e) {
             throw new IOException(e);
         }
