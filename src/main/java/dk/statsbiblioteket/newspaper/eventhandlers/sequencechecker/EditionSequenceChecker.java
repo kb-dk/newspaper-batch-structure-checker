@@ -19,4 +19,14 @@ public class EditionSequenceChecker extends AbstractSequenceChecker {
     protected NodeType getNumberingNodeType() {
         return NodeType.EDITION;
     }
+
+    /**
+     * Defines numbering subsets for individual dates.
+     * @param eventname
+     * @return
+     */
+    @Override
+    protected String getSubsetID(String eventname) {
+        return eventname.substring(0, eventname.lastIndexOf('-'));
+    }
 }

@@ -19,4 +19,12 @@ public class WorkshiftIsoTargetSequenceChecker extends AbstractSequenceChecker {
     protected NodeType getNumberingNodeType() {
         return NodeType.WORKSHIFT_TARGET;
     }
+
+    /**
+     * Defines numbering subsets for individual worksifts.
+     */
+    @Override
+    protected String getSubsetID(String eventname) {
+        return eventname.substring(0, eventname.lastIndexOf('-'));
+    }
 }
