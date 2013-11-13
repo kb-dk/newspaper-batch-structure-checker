@@ -7,11 +7,11 @@ import java.util.List;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.DefaultTreeEventHandler;
 
-public class SequenceNumberChecker extends DefaultTreeEventHandler {
+public class SequenceNumberingModel extends DefaultTreeEventHandler {
     private final ResultCollector resultCollector;
     private final List<SequenceMember> members = new ArrayList<>();
 
-    public SequenceNumberChecker(ResultCollector resultCollector) {
+    public SequenceNumberingModel(ResultCollector resultCollector) {
         this.resultCollector = resultCollector;
     }
 
@@ -26,10 +26,13 @@ public class SequenceNumberChecker extends DefaultTreeEventHandler {
             if (previousMember == null) {
                 if (shouldStartWithOne() && currentMember.number != 1) {
                     addFailure(currentMember.name, "Numbering didn't start with 1 as required");
-                } else if (currentMember.number == previousMember.number) {
-                    addFailure(currentMember.name, "Duplicate number in sequence, previous elements was " +
-                            previousMember.name);
                 }
+            } else if (currentMember.number == previousMember.number) {
+                addFailure(currentMember.name, "Duplicate number in sequence, previous elements was " +
+                        previousMember.name);
+            } else if (currentMember.number > previousMember.number +1) {
+                addFailure(currentMember.name, "Missing number in sequence, previous elements was " +
+                        previousMember.name);
             }
             previousMember = currentMember;
         }

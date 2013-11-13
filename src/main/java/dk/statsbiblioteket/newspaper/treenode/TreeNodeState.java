@@ -29,6 +29,7 @@ public class TreeNodeState extends DefaultTreeEventHandler {
 
     @Override
     public void handleNodeEnd(NodeEndParsingEvent event) {
+        previousNode = currentNode;
         currentNode = currentNode.getParent();
     }
 

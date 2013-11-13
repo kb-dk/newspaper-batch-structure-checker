@@ -1,5 +1,8 @@
 package dk.statsbiblioteket.newspaper.eventhandlers.sequencechecker;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeBeginsParsingEvent;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeEndParsingEvent;
@@ -13,7 +16,7 @@ import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
  * node.
  */
 public abstract class AbstractSequenceChecker extends DefaultTreeEventHandler {
-    private SequenceNumberChecker sequenceChecker;
+    private Map<String,SequenceNumberingModel> sequenceCheckerMap;
     private final TreeNodeState treeNodeState;
     private final ResultCollector resultCollector;
 
@@ -25,7 +28,7 @@ public abstract class AbstractSequenceChecker extends DefaultTreeEventHandler {
     @Override
     public void handleNodeBegin(NodeBeginsParsingEvent event) {
         if (treeNodeState.getCurrentNode().getType().equals(getCollectionNodeType())) {
-            sequenceChecker = createSequenceNumberChecker(resultCollector);
+            sequenceCheckerMap = new HashMap<>();
         } else if (treeNodeState.getCurrentNode().getType().equals(getNumberingNodeType())) {
             addNumber(treeNodeState.getCurrentNode().getName());
         }
@@ -34,7 +37,9 @@ public abstract class AbstractSequenceChecker extends DefaultTreeEventHandler {
     @Override
     public void handleNodeEnd(NodeEndParsingEvent event) {
         if (treeNodeState.getPreviousNode().getType().equals(getCollectionNodeType())) {
-            sequenceChecker.verifySequence();
+            for (SequenceNumberingModel sequenceNumberingModel : sequenceCheckerMap.values()) {
+                sequenceNumberingModel.verifySequence();
+            }
         }
     }
 
@@ -45,19 +50,34 @@ public abstract class AbstractSequenceChecker extends DefaultTreeEventHandler {
      */
     protected void addNumber(String eventName) {
         int numberBeginIndex = eventName.lastIndexOf('-')+1;
-        sequenceChecker.addNumber(
+        String subsetID = getSubsetID(eventName);
+        if (!sequenceCheckerMap.containsKey(subsetID)) {
+            sequenceCheckerMap.put(subsetID, createSequenceNumberChecker(resultCollector));
+        }
+        SequenceNumberingModel sequenceNumberingModel = sequenceCheckerMap.get(subsetID);
+        sequenceNumberingModel.addNumber(
                 Integer.parseInt(eventName.substring(numberBeginIndex)),
                 eventName);
     }
 
     /**
-     * Creates the <code>SequenceNumberChecker</code> to use. May be overridden with more specialized
+     * Creates the <code>SequenceNumberingModel</code> to use. May be overridden with more specialized
      * checkers
      * @param resultCollector
      * @return
      */
-    protected SequenceNumberChecker createSequenceNumberChecker(ResultCollector resultCollector) {
-        return new SequenceNumberChecker(resultCollector);
+    protected SequenceNumberingModel createSequenceNumberChecker(ResultCollector resultCollector) {
+        return new SequenceNumberingModel(resultCollector);
+    }
+
+    /**
+     * May be used by subclasses to differentiate between sequences in subsets of the node. The default implementation
+     * is to put all numers in the same set
+     * @param eventname
+     * @return
+     */
+    protected String getSubsetID(String eventname) {
+        return "Default set";
     }
 
     /**
