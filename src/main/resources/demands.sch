@@ -14,8 +14,12 @@
     <!-- Example: B400022028241-RT1/WORKSHIFT-ISO-TARGET -->
     <s:let name="workshiftISOTarget" value="'WORKSHIFT-ISO-TARGET'"/>
 
+
+    <s:let name="filmIdPartPattern" value="concat($batchNumber,'-[0-9]+')"/>
+
     <!-- Example: B400022028241-RT1/400022028241-14 -->
-    <s:let name="filmIdPattern" value="concat('^',$batchNumber,'-[0-9]+$')"/>
+    <s:let name="filmIdPattern" value="concat('^',$filmIdPartPattern,'$')"/>
+
 
     <s:let name="workshiftISOTargetPattern" value="concat('^','Target-[0-9]{6}-[0-9]{4}$')"/>
 
@@ -36,7 +40,7 @@
         </s:rule>
 
         <s:rule context="/node/node[@shortName != $workshiftISOTarget]">
-            <!-- Check: batchNodeChecker: All folders except WORKSHIFT-ISO-TARGET have form <batchID>-[0-9]{2} No other files/folders -->
+            <!-- Check: batchNodeChecker: All folders except WORKSHIFT-ISO-TARGET have form <batchID>-[0-9]+ No other files/folders -->
             <s:assert test="matches(@shortName,$filmIdPattern)">
                 Unexpected folder '
                 <s:value-of select="@name"/>
@@ -95,7 +99,7 @@
 
     <s:pattern id="filmChecker">
         <s:rule context="/node/node[@shortName != $workshiftISOTarget]">
-            <!-- Check: filmChecker: Any folder in BATCH not called WORKSHIFT-ISO-TARGET must have name of format <batchID>-[0-9]{2} (a FILM folder) with batchID as in BATCH folder -->
+            <!-- Check: filmChecker: Any folder in BATCH not called WORKSHIFT-ISO-TARGET must have name of format <batchID>-[0-9]+ (a FILM folder) with batchID as in BATCH folder -->
             <s:assert test="matches(@shortName,$filmIdPattern)">
                 unexpected folder '<s:value-of select="@name"/>'
             </s:assert>
@@ -187,7 +191,7 @@
             <s:let name="avisID"
                    value="replace(
                                 substring-before(
-                                    ../attribute[ends-with(@shortName,'.film.xml')]/@shortName,'.film.xml'),'[0-9]{12}-[0-9]{2}','')"/>
+                                    ../attribute[ends-with(@shortName,'.film.xml')]/@shortName,'.film.xml'),$filmIdPartPattern,'')"/>
             <s:let name="editionXml" value="concat($avisID,$editionID,'.edition.xml')"/>
             <s:assert test="count(attribute[@shortName = $editionXml])=0">
                 <s:value-of select="concat(@name,'/',$avisID,$editionID,'.edition.xml')"/>
@@ -208,7 +212,7 @@
             <s:let name="avisID"
                    value="replace(
                                 substring-before(
-                                    ../../attribute[ends-with(@shortName,'.film.xml')]/@shortName,'.film.xml'),'[0-9]{12}-[0-9]{2}','')"/>
+                                    ../../attribute[ends-with(@shortName,'.film.xml')]/@shortName,'.film.xml'),$filmIdPartPattern,'')"/>
             <s:assert test="@shortName = concat($avisID,$editionID,'.edition.xml')">
                 Unexpected file
                 <s:value-of select="@name"/>
@@ -229,7 +233,7 @@
             <s:let name="avisID"
                    value="replace(
                                 substring-before(
-                                    ../../attribute[ends-with(@shortName,'.film.xml')]/@shortName,'.film.xml'),'[0-9]{12}-[0-9]{2}','')"/>
+                                    ../../attribute[ends-with(@shortName,'.film.xml')]/@shortName,'.film.xml'),$filmIdPartPattern,'')"/>
 
             <!-- Check: editionPageChecker: Any node not ending in .brik must have name of the form [avisID]-[editionID]-[0-9]{4}[A-Z]? where avisID is as in film-xml and editionID is as parent directory name -->
             <s:assert test="matches(@shortName,concat('^',$avisID,$editionID,'-[0-9]{4}[A-Z]?$'))">
