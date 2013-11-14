@@ -13,7 +13,7 @@ import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
 /**
  * Implements the generic functionality for checking sequence numbers by collecting sequence numbers for a relevant
  * node and checking the sequence is complete without holes after all numbers have been collected for a
- * node. The numbering model and verification is delegates to a <code>SequenceNumberingModel</code>.<p>
+ * node. The numbering model and verification is delegated to a <code>SequenceNumberingModel</code>.<p>
  * The default behaviour may be customised by overriding the protedted methods.
  * </p>
  *
@@ -76,7 +76,7 @@ public abstract class AbstractSequenceChecker extends DefaultTreeEventHandler {
 
     /**
      * May be used by subclasses to differentiate between sequences in subsets of the node. The default implementation
-     * is to put all numers in the same set
+     * is to put all numbers in the same set.
      * @param eventname
      * @return
      */
@@ -85,12 +85,12 @@ public abstract class AbstractSequenceChecker extends DefaultTreeEventHandler {
     }
 
     /**
-     * Enables the concrete class to defined the type of node to check sequence numbers for.
+     * Enables the concrete class to define the type of node to check sequence numbers for.
      */
     protected abstract NodeType getCollectionNodeType();
 
     /**
-     * Enables the concrete class to defined the type of node to collect a sequence numbers.
+     * Enables the concrete class to define the type of node to collect a sequence numbers.
      */
     protected abstract NodeType getNumberingNodeType();
 }

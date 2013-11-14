@@ -4,7 +4,8 @@ import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.newspaper.treenode.NodeType;
 import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
 /**
- * Takes care of checking the Workshift iso target for a given workshift is in sequence without any holes. See
+ * Takes care of checking the Workshift iso target for a given workshift is in sequence without any holes
+ * and starting with 1  . See
  * https://sbforge.org/display/NEWSPAPER/Structure+checks+done 2F-Q3.
  */
 public class WorkshiftIsoTargetSequenceChecker extends AbstractSequenceChecker {
