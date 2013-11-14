@@ -4,6 +4,10 @@ import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.newspaper.treenode.NodeType;
 import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
 
+/**
+ * Takes care of checking the film iso numbering is in sequence. See
+ * https://sbforge.org/display/NEWSPAPER/Structure+checks+done 2F-Q5
+ */
 public class FilmIsoTargetSequenceChecker extends AbstractSequenceChecker {
 
     public FilmIsoTargetSequenceChecker(ResultCollector resultCollector, TreeNodeState treeNodeState) {

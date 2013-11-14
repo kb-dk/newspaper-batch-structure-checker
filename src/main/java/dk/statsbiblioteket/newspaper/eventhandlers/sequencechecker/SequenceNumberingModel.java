@@ -6,7 +6,14 @@ import java.util.List;
 
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.DefaultTreeEventHandler;
-
+/**
+ * Used for building a set of number-name pars, which can later be verified for completeness. This means:
+ *     The numbers are in sequence, without holes and starts with 1. The constraint on the start with 1 can
+ *     be overrules by overriding the #shouldStartWithOne() method.
+ *     <p>
+ *     Note that the number-name pairs doesn't need to be added in order, as they will be sorted on verify.
+ *     </p>
+ */
 public class SequenceNumberingModel extends DefaultTreeEventHandler {
     private final ResultCollector resultCollector;
     private final List<SequenceMember> members = new ArrayList<>();
@@ -19,6 +26,11 @@ public class SequenceNumberingModel extends DefaultTreeEventHandler {
         members.add(new SequenceMember(number, name));
     }
 
+    /**
+     * Verifies the numbers in the added number-name pairs start with 1 and are in sequence without holes or duplicates.
+     *
+     * The number-name pairs are sorted according to numbers before the check.
+     */
     public void verifySequence() {
         Collections.sort(members);
         SequenceMember previousMember = null;
@@ -58,6 +70,9 @@ public class SequenceNumberingModel extends DefaultTreeEventHandler {
                 reference, "SequenceProblem", getClass().getSimpleName(), description);
     }
 
+    /**
+     * Defines that the sequence must start with one. May be overridden by subclasses.
+     */
     protected boolean shouldStartWithOne() {
         return true;
     }
