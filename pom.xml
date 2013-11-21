@@ -6,8 +6,8 @@
 
     <parent>
         <groupId>dk.statsbiblioteket.newspaper</groupId>
-        <artifactId>newspaper-parent</artifactId>
-        <version>0.2</version>
+        <artifactId>newspaper-bundle</artifactId>
+        <version>0.3</version>
     </parent>
 
     <artifactId>newspaper-batch-structure-checker</artifactId>
