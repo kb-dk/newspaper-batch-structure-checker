@@ -71,7 +71,7 @@ public class StructureValidatorTestIT {
         List<TreeEventHandler> handlers = new ArrayList<>();
         XmlBuilderEventHandler xmlBuilderEventHandler = new XmlBuilderEventHandler();
         handlers.add(xmlBuilderEventHandler);
-        eventRunner.runEvents(handlers);
+        eventRunner.runEvents(handlers, resultCollector);
         String xml = xmlBuilderEventHandler.getXml();
         StructureValidator validator = new StructureValidator("demands.sch");
         Batch batch = new Batch();

@@ -37,7 +37,7 @@ public class XmlBuilderEventHandlerTest {
         List<TreeEventHandler> handlers = new ArrayList<TreeEventHandler>();
         XmlBuilderEventHandler xmlBuilderEventHandler = new XmlBuilderEventHandler();
         handlers.add(xmlBuilderEventHandler);
-        eventRunner.runEvents(handlers);
+        eventRunner.runEvents(handlers, null);
         String xml = xmlBuilderEventHandler.getXml();
         assertTrue(xml.split("<node").length > 10, "Should be at least 10 nodes in document.");
         assertTrue(xml.split("<attribute").length > 10, "Should be at least 10 nodes in document.");
