@@ -23,10 +23,13 @@ public abstract class AbstractSequenceChecker extends DefaultTreeEventHandler {
     private Map<String,SequenceNumberingModel> sequenceCheckerMap;
     private final TreeNodeState treeNodeState;
     private final ResultCollector resultCollector;
+    private final String descriptionPrefix;
 
-    public AbstractSequenceChecker(ResultCollector resultCollector, TreeNodeState treeNodeState) {
+    public AbstractSequenceChecker(ResultCollector resultCollector, TreeNodeState treeNodeState,
+                                   String descriptionPrefix) {
         this.resultCollector = resultCollector;
         this.treeNodeState = treeNodeState;
+        this.descriptionPrefix = descriptionPrefix;
     }
 
     @Override
@@ -56,7 +59,7 @@ public abstract class AbstractSequenceChecker extends DefaultTreeEventHandler {
         int numberBeginIndex = eventName.lastIndexOf('-')+1;
         String subsetID = getSubsetID(eventName);
         if (!sequenceCheckerMap.containsKey(subsetID)) {
-            sequenceCheckerMap.put(subsetID, createSequenceNumberChecker(resultCollector));
+            sequenceCheckerMap.put(subsetID, createSequenceNumberChecker(resultCollector, descriptionPrefix));
         }
         SequenceNumberingModel sequenceNumberingModel = sequenceCheckerMap.get(subsetID);
         sequenceNumberingModel.addNumber(
@@ -67,11 +70,14 @@ public abstract class AbstractSequenceChecker extends DefaultTreeEventHandler {
     /**
      * Creates the <code>SequenceNumberingModel</code> to use. May be overridden with more specialized
      * checkers
+     *
      * @param resultCollector
+     * @param descriptionPrefix
      * @return
      */
-    protected SequenceNumberingModel createSequenceNumberChecker(ResultCollector resultCollector) {
-        return new SequenceNumberingModel(resultCollector);
+    protected SequenceNumberingModel createSequenceNumberChecker(ResultCollector resultCollector,
+                                                                 String descriptionPrefix) {
+        return new SequenceNumberingModel(resultCollector, descriptionPrefix);
     }
 
     /**

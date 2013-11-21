@@ -11,7 +11,7 @@ import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
 public class WorkshiftIsoTargetSequenceChecker extends AbstractSequenceChecker {
 
     public WorkshiftIsoTargetSequenceChecker(ResultCollector resultCollector, TreeNodeState treeNodeState) {
-        super(resultCollector,treeNodeState);
+        super(resultCollector,treeNodeState, "2F-Q3: ");
     }
 
     @Override

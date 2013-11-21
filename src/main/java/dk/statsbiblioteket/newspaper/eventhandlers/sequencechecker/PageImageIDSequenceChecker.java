@@ -10,6 +10,7 @@ import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeBeginsParsingEvent;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeEndParsingEvent;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.DefaultTreeEventHandler;
+import dk.statsbiblioteket.newspaper.BatchStructureCheckerComponent;
 import dk.statsbiblioteket.newspaper.treenode.NodeType;
 import dk.statsbiblioteket.newspaper.treenode.TreeNode;
 import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
@@ -101,11 +102,11 @@ public class PageImageIDSequenceChecker extends DefaultTreeEventHandler {
         for (FilmImage currentFilmImage : FilmImages.values()) {
             if(previousFilmImage == null) { // First page image
                 if (currentFilmImage.number != 1) {
-                    registerFailure(currentFilmImage.name, "The first ImageID must start with 1");
+                    registerFailure(currentFilmImage.name, "2F-Q1: The first ImageID must start with 1");
                 }
             } else { //Following page images
                 if (currentFilmImage.number != previousFilmImage.number + 1) {
-                    registerFailure(currentFilmImage.name, "Missing film image, the previous image was " +
+                    registerFailure(currentFilmImage.name, "2F-Q1: Missing film image, the previous image was " +
                             previousFilmImage.name);
 
                 }
@@ -116,7 +117,8 @@ public class PageImageIDSequenceChecker extends DefaultTreeEventHandler {
     }
 
     private void registerFailure(String imageID, String description) {
-        resultCollector.addFailure(imageID, "PageSequenceCheck", getClass().getSimpleName(), description);
+        resultCollector.addFailure(imageID, BatchStructureCheckerComponent.TYPE, getClass().getSimpleName(),
+                                   description);
     }
 
     public class FilmImage {
@@ -140,7 +142,7 @@ public class PageImageIDSequenceChecker extends DefaultTreeEventHandler {
                 if (singlePage.length() == 4) {
                     // One page with NNNN number -> OK.
                 } else {
-                    registerFailure(name, "Only one page: " + singlePage + " named as composite film image found.");
+                    registerFailure(name, "2F-Q2: Only one page: " + singlePage + " named as composite film image found.");
                 }
             } else {
                 Collections.sort(pageImageIDs);
@@ -148,12 +150,12 @@ public class PageImageIDSequenceChecker extends DefaultTreeEventHandler {
                 for (String pageImage : pageImageIDs) {
                     if (previousPage == null) {
                        if (!pageImage.endsWith("A")) {
-                        registerFailure(name, "Composed film image without a A page. Pages are " + pageImageIDs);
+                        registerFailure(name, "2F-Q2: Composed film image without an A page. Pages are " + pageImageIDs);
                         }
                     } else if (previousPage.equals(pageImage)) {
-                        registerFailure(name, "Duplicate page image: " + pageImage);
+                        registerFailure(name, "2F-Q1: Duplicate page image: " + pageImage);
                     } else if (!isLetterPartPagesInSequence(previousPage, pageImage))  {
-                        registerFailure(name, "Missing page image in film image. Page images are: " + pageImageIDs);
+                        registerFailure(name, "2F-Q1: Missing page image in film image. Page images are: " + pageImageIDs);
                     }
                     previousPage = pageImage;
                 }

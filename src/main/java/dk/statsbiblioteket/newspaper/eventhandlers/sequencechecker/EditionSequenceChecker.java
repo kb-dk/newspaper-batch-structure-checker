@@ -11,7 +11,7 @@ import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
 public class EditionSequenceChecker extends AbstractSequenceChecker {
 
     public EditionSequenceChecker(ResultCollector resultCollector, TreeNodeState treeNodeState) {
-        super(resultCollector, treeNodeState);
+        super(resultCollector, treeNodeState, "2F-Q5: ");
     }
 
     @Override

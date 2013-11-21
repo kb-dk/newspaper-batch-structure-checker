@@ -10,7 +10,7 @@ import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
 public class FilmSuffixSequenceChecker extends AbstractSequenceChecker {
 
     public FilmSuffixSequenceChecker(ResultCollector resultCollector, TreeNodeState treeNodeState) {
-        super(resultCollector, treeNodeState);
+        super(resultCollector, treeNodeState, "2F-Q4: ");
     }
 
     @Override

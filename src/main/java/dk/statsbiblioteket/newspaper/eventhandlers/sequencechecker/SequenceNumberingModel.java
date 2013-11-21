@@ -6,6 +6,8 @@ import java.util.List;
 
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.DefaultTreeEventHandler;
+import dk.statsbiblioteket.newspaper.BatchStructureCheckerComponent;
+
 /**
  * Used for building a set of number-name pairs, which can later be verified for completeness. This means:
  *     The numbers are in sequence, without holes and starts with 1. The constraint on the start with 1 can
@@ -17,9 +19,11 @@ import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.Defau
 public class SequenceNumberingModel extends DefaultTreeEventHandler {
     private final ResultCollector resultCollector;
     private final List<SequenceMember> members = new ArrayList<>();
+    private final String descriptionPrefix;
 
-    public SequenceNumberingModel(ResultCollector resultCollector) {
+    public SequenceNumberingModel(ResultCollector resultCollector, String descriptionPrefix) {
         this.resultCollector = resultCollector;
+        this.descriptionPrefix = descriptionPrefix;
     }
 
     public void addNumber(int number, String name) {
@@ -67,7 +71,8 @@ public class SequenceNumberingModel extends DefaultTreeEventHandler {
 
     private void addFailure(String reference, String description) {
         resultCollector.addFailure(
-                reference, "SequenceProblem", getClass().getSimpleName(), description);
+                reference, BatchStructureCheckerComponent.TYPE, getClass().getSimpleName(),
+                descriptionPrefix + description);
     }
 
     /**

@@ -5,6 +5,7 @@ import com.phloc.schematron.SchematronException;
 import com.phloc.schematron.pure.SchematronResourcePure;
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
+import dk.statsbiblioteket.newspaper.BatchStructureCheckerComponent;
 import dk.statsbiblioteket.newspaper.Validator;
 import dk.statsbiblioteket.util.Strings;
 import dk.statsbiblioteket.util.xml.DOM;
@@ -20,7 +21,6 @@ import java.io.InputStream;
  */
 public class StructureValidator implements Validator {
 
-    public static final String TYPE = "BatchDirectoryStructure";
     private final ClassPathResource schemaResource;
     private final SchematronResourcePure schematron;
 
@@ -56,12 +56,9 @@ public class StructureValidator implements Validator {
         try {
             result = schematron.applySchematronValidation(document);
         } catch (SchematronException e) {
-            resultCollector.addFailure(batch.getFullID(),
-                    TYPE,
-                    getComponent(),
-                    "Schematron Exception. Error was " + e
-                            .toString(),
-                    Strings.getStackTrace(e));
+            resultCollector.addFailure(
+                    batch.getFullID(), "exception", getClass().getSimpleName(),
+                    "Schematron Exception. Error was " + e.toString(), Strings.getStackTrace(e));
             success = false;
             return success;
         }
@@ -74,23 +71,17 @@ public class StructureValidator implements Validator {
                     message = "";
                 }
                 message = message.trim().replaceAll("\\s+"," ");
-                resultCollector.addFailure(batch.getFullID(),
-                        TYPE,
-                        getComponent(),
-                        message);
+                if (message.contains(":")) {
+                    resultCollector.addFailure(message.substring(0, message.indexOf(':')),
+                                               BatchStructureCheckerComponent.TYPE, getClass().getSimpleName(),
+                                               message.substring(message.indexOf(':') + 1).trim());
+                } else {
+                    resultCollector.addFailure(batch.getFullID(),
+                                               BatchStructureCheckerComponent.TYPE, getClass().getSimpleName(),
+                                               message);
+                }
             }
         }
         return success;
     }
-
-    /**
-        * Get the name of this component for error reporting purposes.
-        *
-        * @return the component name.
-        */
-       private String getComponent() {
-           return getClass().getName() + "-" + getClass().getPackage().getImplementationVersion();
-       }
-
-
 }
