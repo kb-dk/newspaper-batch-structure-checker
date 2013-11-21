@@ -66,7 +66,7 @@ public class TreeNodeState extends DefaultTreeEventHandler {
         } else if (currentNode.getType().equals(NodeType.PAGE)) {
             nextNodeType = NodeType.PAGE_IMAGE;
         } else if (currentNode.getType().equals(NodeType.FILM_TARGET)) {
-            nextNodeType = NodeType.TARGET_IMAGE;
+            nextNodeType = NodeType.ISO_TARGET_IMAGE;
         } else if (currentNode.getType().equals(NodeType.WORKSHIFT_TARGET)) {
             nextNodeType = NodeType.TARGET_IMAGE;
         } else if(currentNode.getType().equals(NodeType.BRIK)){

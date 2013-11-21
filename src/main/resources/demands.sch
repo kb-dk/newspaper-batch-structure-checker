@@ -146,11 +146,11 @@
 
     <s:pattern id="filmIsoTargetChecker" is-a="inFilmChecker">
         <!--
-        Check: filmIsoTargetChecker: nodes have form: [avisID]-[filmID]-ISO-[1-9] where [avisID]-[filmID] is as in film-xml of parent directory
+        Check: filmIsoTargetChecker: nodes have form: [avisID]-[filmID]-ISO-[0-9]{4} where [avisID]-[filmID] is as in film-xml of parent directory
         -->
         <s:param name="inFilmPath"
                  value="/node/node[@shortName != $workshiftISOTarget]/node[@shortName = 'FILM-ISO-target']"/>
-        <s:param name="postPattern" value="'-ISO-[1-9]$'"/>
+        <s:param name="postPattern" value="'-ISO-[0-9]{4}$'"/>
     </s:pattern>
 
 
@@ -158,7 +158,7 @@
         <!-- Check: filmIsoTargetFileChecker: If there is a FILM-ISO-target folder, it must contain atleast one file (node) -->
         <s:rule context="/node/node[@shortName != $workshiftISOTarget]/node[@shortName = 'FILM-ISO-target']">
             <s:let name="isoName" value="substring-before(../attribute[ends-with(@shortName,'.film.xml')]/@shortName,'.film.xml')"/>
-            <s:let name="isoEnding" value="'-ISO-[1-9]$'"/>
+            <s:let name="isoEnding" value="'-ISO-[0-9]{4}$'"/>
 
             <s:assert test="count(matches(node/@shortName, concat('^', $isoName, $isoEnding))) > 0">
                 No files found in <s:value-of select="@name"/>
