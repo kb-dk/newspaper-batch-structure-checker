@@ -46,7 +46,7 @@ public class BatchStructureCheckerComponent extends AbstractRunnableComponent {
                 new BatchStructureEventHandlerFactory(getProperties(), resultCollector);
         EventRunner eventRunner = new EventRunner(createIterator(batch));
         final List<TreeEventHandler> eventHandlers = eventHandlerFactory.createEventHandlers();
-        eventRunner.runEvents(eventHandlers);
+        eventRunner.runEvents(eventHandlers, resultCollector);
         String xml = null;
         //Need to find handler in the list returned by the EventHandlerFactory was the xml builder. One could imagine
         // refactoring
