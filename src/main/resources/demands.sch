@@ -192,9 +192,9 @@
                    value="replace(
                                 substring-before(
                                     ../attribute[ends-with(@shortName,'.film.xml')]/@shortName,'.film.xml'),$filmIdPartPattern,'')"/>
-            <s:let name="editionXml" value="concat($avisID,'-',$editionID,'.edition.xml')"/>
-            <s:assert test="count(attribute[@shortName = $editionXml])=1">
-                <s:value-of select="concat(@name,'/',$avisID,$editionID,'.edition.xml')"/>
+            <s:let name="editionXml" value="concat($avisID,$editionID,'.edition.xml')"/>
+            <s:assert test="attribute[@shortName = ../$editionXml]">
+                '<s:value-of select="concat(@name,'/',$editionXml)"/>'
                 missing
             </s:assert>
         </s:rule>
