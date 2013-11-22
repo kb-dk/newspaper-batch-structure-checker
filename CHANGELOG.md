@@ -9,3 +9,5 @@ All checks do, except:
 
 0.3 - SNAPSHOT
 - MFPak database related checks
+- File names are now referred correctly in the QA report
+- All checks refer to specifications
