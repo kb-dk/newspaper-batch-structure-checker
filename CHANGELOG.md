@@ -13,3 +13,4 @@ All checks do, except:
 - All checks refer to specifications
 - Batch structure xml stored in DOMS or in file
 - Film Id can be any length of numbers
+- All sequence numbers are now checked
