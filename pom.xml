@@ -9,14 +9,14 @@
     </parent>
 
     <artifactId>newspaper-batch-structure-checker</artifactId>
-    <version>1.0</version>
+    <version>1.1-SNAPSHOT</version>
 
     <scm>
         <url>https://github.com/statsbiblioteket/newspaper-batch-structure-checker</url>
         <connection>scm:git:https://github.com/statsbiblioteket/newspaper-batch-structure-checker.git</connection>
         <developerConnection>scm:git:git@github.com:statsbiblioteket/newspaper-batch-structure-checker.git
         </developerConnection>
-        <tag>newspaper-batch-structure-checker-1.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <properties>
