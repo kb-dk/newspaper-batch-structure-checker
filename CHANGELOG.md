@@ -9,3 +9,5 @@ All checks do, except:
 
 0.3 - SNAPSHOT
 - MFPak database related checks
+- Batch structure xml stored in DOMS or in file
+- Film Id can be any length of numbers
