@@ -109,7 +109,8 @@
             </s:assert>
 
             <!-- Check: filmChecker: Existence of edition-folder(s) with name of form [12][0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])-[0-9]{2} -->
-            <s:assert test="count(node[matches(@shortName,$datoUdgaveLbNummer)]) > 0"><s:value-of select="@name"/>: 2F-S15:
+            <s:assert test="count(node[matches(@shortName,$datoUdgaveLbNummer)]) > 0"><s:value-of select="@name"/>:
+                2F-S15:
                 No editions in film
             </s:assert>
         </s:rule>
@@ -117,7 +118,8 @@
         <s:rule context="/node/node[@shortName != $workshiftISOTarget]/node">
             <!-- Check: filmChecker: Only existence of FILM-ISO-target, UNMATCHED, or [12][0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])-[0-9]{2} are allowed
             -->
-            <s:assert test="matches(@shortName,concat('(^FILM-ISO-target$|^UNMATCHED$|',$datoUdgaveLbNummer,')'))"><s:value-of select="@name"/>: 2F-S16:
+            <s:assert test="matches(@shortName,concat('(^FILM-ISO-target$|^UNMATCHED$|',$datoUdgaveLbNummer,')'))">
+                <s:value-of select="@name"/>: 2F-S16:
                 unexpected folder
             </s:assert>
         </s:rule>
@@ -126,7 +128,8 @@
             <s:let name="filmNumber" value="../@shortName"/>
             <!-- Check: filmChecker: Existence of file with name: [avisID]-[batchID]-[filmSuffix].film.xml (batchID as in parent dir FilmNodeChecker, filmSuffix as in parent dir FilmNodeChecker) No other files/folders.
                     -->
-            <s:assert test="matches(@shortName,concat('^','.*-',$filmNumber,'[.]film[.]xml$'))"><s:value-of select="@name"/>: 2F-S17:
+            <s:assert test="matches(@shortName,concat('^','.*-',$filmNumber,'[.]film[.]xml$'))">
+                <s:value-of select="@name"/>: 2F-S17:
                 Unexpected file
             </s:assert>
         </s:rule>
@@ -155,10 +158,12 @@
     <s:pattern id="filmIsoTargetFileChecker">
         <!-- Check: filmIsoTargetFileChecker: If there is a FILM-ISO-target folder, it must contain atleast one file (node) -->
         <s:rule context="/node/node[@shortName != $workshiftISOTarget]/node[@shortName = 'FILM-ISO-target']">
-            <s:let name="isoName" value="substring-before(../attribute[ends-with(@shortName,'.film.xml')]/@shortName,'.film.xml')"/>
+            <s:let name="isoName"
+                   value="substring-before(../attribute[ends-with(@shortName,'.film.xml')]/@shortName,'.film.xml')"/>
             <s:let name="isoEnding" value="'-ISO-[0-9]{4}$'"/>
 
-            <s:assert test="count(matches(node/@shortName, concat('^', $isoName, $isoEnding))) > 0"><s:value-of select="@name"/>: 2F-S20:
+            <s:assert test="count(matches(node/@shortName, concat('^', $isoName, $isoEnding))) > 0">
+                <s:value-of select="@name"/>: 2F-S20:
                 No files found
             </s:assert>
         </s:rule>
@@ -209,7 +214,8 @@
                    value="replace(
                                 substring-before(
                                     ../../attribute[ends-with(@shortName,'.film.xml')]/@shortName,'.film.xml'),$filmIdPartPattern,'')"/>
-            <s:assert test="@shortName = concat($avisID,$editionID,'.edition.xml')"><s:value-of select="@name"/>: 2F-S24:
+            <s:assert test="@shortName = concat($avisID,$editionID,'.edition.xml')"><s:value-of select="@name"/>:
+                2F-S24:
                 Unexpected file
             </s:assert>
         </s:rule>
@@ -231,17 +237,20 @@
                                     ../../attribute[ends-with(@shortName,'.film.xml')]/@shortName,'.film.xml'),$filmIdPartPattern,'')"/>
 
             <!-- Check: editionPageChecker: Any node not ending in .brik must have name of the form [avisID]-[editionID]-[0-9]{4}[A-Z]? where avisID is as in film-xml and editionID is as parent directory name -->
-            <s:assert test="matches(@shortName,concat('^',$avisID,$editionID,'-[0-9]{4}[A-Z]?$'))"><s:value-of select="@name"/>: 2F-S25:
+            <s:assert test="matches(@shortName,concat('^',$avisID,$editionID,'-[0-9]{4}[A-Z]?$'))">
+                <s:value-of select="@name"/>: 2F-S25:
                 Invalid prefix for page
             </s:assert>
 
+            <s:let name="altoAttribute" value="attribute[@shortName = concat(../@shortName,'.alto.xml')]"/>
+
             <!-- Check: editionPageChecker: Any node not ending in .brik must contain a .alto.xml attribute with name prefix as that of parent node (if the altoFlag is set)-->
-            <s:report test="$altoFlag and not(exists(attribute/@shortName = concat(@shortName,'.alto.xml')))"><s:value-of select="@name"/>: 2F-S26:
+            <s:report test="not($altoAttribute) and $altoFlag"><s:value-of select="@name"/>: 2F-S26:
                 Alto file '<s:value-of select="concat(@name,'.alto.xml')"/>' missing
             </s:report>
 
             <!-- Check: editionPageChecker: Any node not ending in .brik must not contain a .alto.xml attribute with name prefix as that of parent node (if the altoFlag is not set)-->
-            <s:report test="exists(attribute/@shortName = concat(@shortName,'.alto.xml')) and not($altoFlag)"><s:value-of select="@name"/>: 2F-S27:
+            <s:report test="$altoAttribute and not($altoFlag)"><s:value-of select="@name"/>: 2F-S27:
                 Alto file '<s:value-of select="concat(@name,'.alto.xml')"/>' found but not expected
             </s:report>
 
@@ -265,7 +274,8 @@
                            node[@name != 'FILM-ISO-target' and @name != 'UNMATCHED']/
                            node[not(ends-with(@shortName,'-brik'))]/attribute">
             <!--Check: editionPageChecker: Any node not ending in .brik can only contain attibutes ending in .mix.xml, .mods.xml, or .alto.xml -->
-            <s:assert test="@shortName = concat(../@shortName,'.mix.xml') or @shortName = concat(../@shortName,'.mods.xml') or @shortName = concat(../@shortName,'.alto.xml')"><s:value-of select="@name"/>: 2F-S31:
+            <s:assert test="@shortName = concat(../@shortName,'.mix.xml') or @shortName = concat(../@shortName,'.mods.xml') or @shortName = concat(../@shortName,'.alto.xml')">
+                <s:value-of select="@name"/>: 2F-S31:
                 Unexpected file
             </s:assert>
         </s:rule>
@@ -311,7 +321,8 @@
                         node[@shortName = 'UNMATCHED']/
                         node/attribute">
             <!--Check: unmatchedPageChecker: Any node in UNMATCHED can only contain attributes with names ending in .mix.xml, .mods.xml, or .alto.xml -->
-            <s:assert test="@name = concat(../@name,'.mix.xml') or @name = concat(../@name,'.mods.xml') or @name = concat(../@name,'.alto.xml')"><s:value-of select="@name"/>: 2F-S36:
+            <s:assert test="@name = concat(../@name,'.mix.xml') or @name = concat(../@name,'.mods.xml') or @name = concat(../@name,'.alto.xml')">
+                <s:value-of select="@name"/>: 2F-S36:
                 Unexpected file
             </s:assert>
         </s:rule>
@@ -381,27 +392,32 @@
     <!-- This abstract pattern checks a "scan" i.e. a jp2 node, its contents attribute, and corresponding mix file -->
     <s:pattern abstract="true" id="scanChecker">
         <s:rule context="$scan">
-            <s:assert test="attribute/@name = concat(@name,'.mix.xml')"><s:value-of select="@name"/>: <s:value-of select="$messagePrefix"/>
+            <s:assert test="attribute/@name = concat(@name,'.mix.xml')"><s:value-of select="@name"/>:
+                <s:value-of select="$messagePrefix"/>
                 Mix not found
             </s:assert>
 
-            <s:assert test="node/@name = concat(@name,'.jp2')"><s:value-of select="@name"/>: <s:value-of select="$messagePrefix"/>
+            <s:assert test="node/@name = concat(@name,'.jp2')"><s:value-of select="@name"/>:
+                <s:value-of select="$messagePrefix"/>
                 jp2 not found
             </s:assert>
         </s:rule>
 
         <s:rule context="$scan/attribute">
-            <s:assert test="@name = concat(../@name,'.mix.xml')"><s:value-of select="@name"/>: <s:value-of select="$messagePrefix"/>
+            <s:assert test="@name = concat(../@name,'.mix.xml')"><s:value-of select="@name"/>:
+                <s:value-of select="$messagePrefix"/>
                 Unexpected file
             </s:assert>
         </s:rule>
 
         <s:rule context="$scan/node">
-            <s:assert test="@name = concat(../@name,'.jp2')"><s:value-of select="@name"/>: <s:value-of select="$messagePrefix"/>
+            <s:assert test="@name = concat(../@name,'.jp2')"><s:value-of select="@name"/>:
+                <s:value-of select="$messagePrefix"/>
                 Unexpected folder
             </s:assert>
 
-            <s:assert test="attribute[@name=concat(../@name,'/contents')]"><s:value-of select="@name"/>: <s:value-of select="$messagePrefix"/>
+            <s:assert test="attribute[@name=concat(../@name,'/contents')]"><s:value-of select="@name"/>:
+                <s:value-of select="$messagePrefix"/>
                 Contents not found for jp2file
             </s:assert>
         </s:rule>
@@ -414,7 +430,8 @@
                    value="
                    substring-before(
                    ../../attribute[ends-with(@shortName,'.film.xml')]/@shortName,'.film.xml')"/>
-            <s:assert test="matches(@shortName, concat('^',$filmName,$postPattern))"><s:value-of select="@name"/>: <s:value-of select="$messagePrefix"/>
+            <s:assert test="matches(@shortName, concat('^',$filmName,$postPattern))"><s:value-of select="@name"/>:
+                <s:value-of select="$messagePrefix"/>
                 Unexpected file
             </s:assert>
         </s:rule>
