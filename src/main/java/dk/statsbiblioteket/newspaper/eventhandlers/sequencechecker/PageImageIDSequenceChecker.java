@@ -150,7 +150,7 @@ public class PageImageIDSequenceChecker extends DefaultTreeEventHandler {
                 for (String pageImage : pageImageIDs) {
                     if (previousPage == null) {
                        if (!pageImage.endsWith("A")) {
-                        registerFailure(name, "2F-Q2: Composed film image without an A page. Pages are " + pageImageIDs);
+                        registerFailure(name, "2F-Q2: Found composed film image without an A page. Pages are " + pageImageIDs);
                         }
                     } else if (previousPage.equals(pageImage)) {
                         registerFailure(name, "2F-Q1: Duplicate page image: " + pageImage);
