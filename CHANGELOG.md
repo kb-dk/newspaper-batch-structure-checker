@@ -11,3 +11,5 @@ All checks do, except:
 - MFPak database related checks
 - File names are now referred correctly in the QA report
 - All checks refer to specifications
+- Batch structure xml stored in DOMS or in file
+- Film Id can be any length of numbers
