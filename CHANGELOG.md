@@ -3,7 +3,7 @@ Initial release
 
 0.2
 Simple file structure checks converted to Schematron.
-All checks do, except:
+All checks done, except:
   MFPak database related checks
   Numbering sequence checks (page image numbering checks are implemented though).
 
