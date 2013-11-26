@@ -14,3 +14,7 @@ All checks done, except:
 - Batch structure xml stored in DOMS or in file
 - Film Id can be any length of numbers
 - All sequence numbers are now checked
+
+1.1
+- Batch event framework to version 1.1 as 1.0 used invalid DOMS dependencies
+- Rework of the config files to remove redundancy, among other things
