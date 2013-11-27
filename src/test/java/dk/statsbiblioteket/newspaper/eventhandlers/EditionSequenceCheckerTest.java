@@ -18,7 +18,7 @@ public class EditionSequenceCheckerTest {
     private ResultCollector resultCollector;
 
     @BeforeMethod
-    public void setupBilledIDSequenceChecker () {
+    public void setupEditionSequenceChecker () {
         resultCollector = mock(ResultCollector.class);
         treeNodeState = mock(TreeNodeState.class);
         checker = new EditionSequenceChecker(resultCollector, treeNodeState);
@@ -37,7 +37,7 @@ public class EditionSequenceCheckerTest {
     }
 
     @Test
-    public void pageHighStartFailureTest() {
+    public void highStartFailureTest() {
         registerFilmBegin();
 
         registerEdition("1860-10-18-02");

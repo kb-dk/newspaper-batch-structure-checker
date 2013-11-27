@@ -1,5 +1,10 @@
 package dk.statsbiblioteket.newspaper;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.newspaper.eventhandlers.Util;
@@ -7,11 +12,6 @@ import dk.statsbiblioteket.newspaper.mfpakintegration.configuration.Configuratio
 import dk.statsbiblioteket.newspaper.mfpakintegration.configuration.MfPakConfiguration;
 import dk.statsbiblioteket.newspaper.mfpakintegration.database.MfPakDAO;
 import org.testng.annotations.Test;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
 
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
@@ -92,5 +92,4 @@ public class BatchStructureCheckerComponentIT {
         temp.deleteOnExit();
         return temp;
     }
-
 }
