@@ -6,6 +6,7 @@ import dk.statsbiblioteket.doms.central.connectors.EnhancedFedora;
 import dk.statsbiblioteket.doms.central.connectors.EnhancedFedoraImpl;
 import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
+import dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.TreeIterator;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.EventRunner;
@@ -37,11 +38,11 @@ public class StructureValidatorTestIT {
         String pathToProperties = System.getProperty("integration.test.newspaper.properties");
         Properties properties = new Properties();
         properties.load(new FileInputStream(pathToProperties));
-        Credentials creds = new Credentials(properties.getProperty("fedora.admin.username"),
-                                            properties.getProperty("fedora.admin.password"));
-        String fedoraLocation = properties.getProperty("doms.server");
+        Credentials creds = new Credentials(properties.getProperty(ConfigConstants.DOMS_USERNAME),
+                                            properties.getProperty(ConfigConstants.DOMS_PASSWORD));
+        String fedoraLocation = properties.getProperty(ConfigConstants.DOMS_URL);
         EnhancedFedora eFedora =
-                new EnhancedFedoraImpl(creds, fedoraLocation, properties.getProperty("pidgenerator.location"), null);
+                new EnhancedFedoraImpl(creds, fedoraLocation, properties.getProperty(ConfigConstants.DOMS_PIDGENERATOR_URL), null);
 
 
         String pid = eFedora.findObjectFromDCIdentifier("path:B400022028241-RT1").get(0);
@@ -50,12 +51,12 @@ public class StructureValidatorTestIT {
         TreeIterator iterator;
 
         Client client = Client.create();
-        client.addFilter(new HTTPBasicAuthFilter(properties.getProperty("fedora.admin.username"),
-                                                 properties.getProperty("fedora.admin.password")));
+        client.addFilter(new HTTPBasicAuthFilter(properties.getProperty(ConfigConstants.DOMS_USERNAME),
+                                                 properties.getProperty(ConfigConstants.DOMS_PASSWORD)));
         try {
             iterator = new IteratorForFedora3(pid,
                                               client,
-                                              properties.getProperty("fedora.server"),
+                                              properties.getProperty(ConfigConstants.DOMS_URL),
                                               new ConfigurableFilter(Arrays.asList("MODS",
                                                                                    "FILM",
                                                                                    "EDITION",
@@ -63,7 +64,7 @@ public class StructureValidatorTestIT {
                                                                                    "MIX"),
                                                                      Arrays.asList(
                                                                              "info:fedora/fedora-system:def/relations-external#hasPart")),
-                                              ".*\\.jp2$");
+                                              ConfigConstants.ITERATOR_DATAFILEPATTERN);
         } catch (Exception e) {
             throw new IOException(e);
         }

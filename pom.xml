@@ -20,8 +20,8 @@
     </scm>
 
     <properties>
-        <autonomous.framework.version>1.0</autonomous.framework.version>
-        <mfpak.integration.version>1.0</mfpak.integration.version>
+        <autonomous.framework.version>1.1-SNAPSHOT</autonomous.framework.version>
+        <mfpak.integration.version>1.1-SNAPSHOT</mfpak.integration.version>
     </properties>
 
     <repositories>
