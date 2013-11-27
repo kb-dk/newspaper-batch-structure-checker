@@ -6,11 +6,13 @@ import java.io.IOException;
 import java.util.Properties;
 
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
+import dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.newspaper.eventhandlers.Util;
 import dk.statsbiblioteket.newspaper.mfpakintegration.configuration.ConfigurationProperties;
 import dk.statsbiblioteket.newspaper.mfpakintegration.configuration.MfPakConfiguration;
 import dk.statsbiblioteket.newspaper.mfpakintegration.database.MfPakDAO;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertFalse;
@@ -19,24 +21,22 @@ import static org.testng.Assert.assertTrue;
 /**
  */
 public class BatchStructureCheckerComponentIT {
-
     private final static String TEST_BATCH_ID = "400022028241";
+    private String pathToTestBatch;
+    private final Properties properties = new Properties();
+
 
     /** Tests that the BatchStructureChecker can parse a production like batch which should contain failures. */
     @Test(groups = "integrationTest")
     public void testGoodBatchStructureCheck() throws Exception {
-        String pathToProperties = System.getProperty("integration.test.newspaper.properties");
-        String pathToTestBatch = System.getProperty("integration.test.newspaper.testdata");
-        Properties properties = new Properties();
-        properties.load(new FileInputStream(pathToProperties));
-        properties.setProperty("scratch", pathToTestBatch + "/" + "small-test-batch");
+        properties.setProperty(ConfigConstants.ITERATOR_FILESYSTEM_BATCHES_FOLDER, pathToTestBatch + "/" + "small-test-batch");
+        properties.setProperty(ConfigConstants.AUTONOMOUS_BATCH_STRUCTURE_STORAGE_DIR, pathToTestBatch + "/" + "small-test-batch");
         properties.setProperty("batchStructure.storageDir", createTempDir().getAbsolutePath());
 
         MfPakConfiguration mfPakConfiguration = new MfPakConfiguration();
         mfPakConfiguration.setDatabaseUrl(properties.getProperty(ConfigurationProperties.DATABASE_URL));
         mfPakConfiguration.setDatabaseUser(properties.getProperty(ConfigurationProperties.DATABASE_USER));
         mfPakConfiguration.setDatabasePassword(properties.getProperty(ConfigurationProperties.DATABASE_PASSWORD));
-
 
         BatchStructureCheckerComponent batchStructureCheckerComponent =
                 new BatchStructureCheckerComponent(properties, new MfPakDAO(mfPakConfiguration));
@@ -59,11 +59,8 @@ public class BatchStructureCheckerComponentIT {
      */
     @Test(groups = "integrationTest")
     public void testBadBatchStructureCheck() throws Exception {
-        String pathToProperties = System.getProperty("integration.test.newspaper.properties");
-        String pathToTestBatch = System.getProperty("integration.test.newspaper.testdata");
-        Properties properties = new Properties();
-        properties.load(new FileInputStream(pathToProperties));
-        properties.setProperty("scratch", pathToTestBatch + "/" + "bad-bad-batch");
+        properties.setProperty(ConfigConstants.ITERATOR_FILESYSTEM_BATCHES_FOLDER, pathToTestBatch + "/" + "bad-bad-batch");
+        properties.setProperty(ConfigConstants.AUTONOMOUS_BATCH_STRUCTURE_STORAGE_DIR, pathToTestBatch + "/" + "bad-bad-batch");
         properties.setProperty("batchStructure.storageDir", createTempDir().getAbsolutePath());
 
         MfPakConfiguration mfPakConfiguration = new MfPakConfiguration();
@@ -91,5 +88,11 @@ public class BatchStructureCheckerComponentIT {
         temp.mkdir();
         temp.deleteOnExit();
         return temp;
+    }
+
+    @BeforeMethod(alwaysRun = true)
+    private void loadConfiguration() throws Exception {
+        pathToTestBatch = System.getProperty("integration.test.newspaper.testdata");
+        properties.load(new FileInputStream(System.getProperty("integration.test.newspaper.properties")));
     }
 }
