@@ -16,7 +16,7 @@ import org.w3c.dom.Document;
 import java.io.InputStream;
 
 /**
- * Class containing general-purpose functionality to validate an xml documents against a schematron document and gather
+ * Class containing general-purpose functionality to validate an xml document against a schematron document and gather
  * the results in a ResultCollector object.
  */
 public class StructureValidator implements Validator {
@@ -33,7 +33,7 @@ public class StructureValidator implements Validator {
         schemaResource = new ClassPathResource(schematronPath);
         schematron = new SchematronResourcePure(schemaResource);
         if (!schematron.isValidSchematron()) {
-            throw new RuntimeException("Failed to validate schematron resource as '"+schematronPath+"'");
+            throw new RuntimeException("Failed to validate schematron resource as '" + schematronPath + "'");
         }
 
     }
@@ -51,7 +51,8 @@ public class StructureValidator implements Validator {
                             ResultCollector resultCollector) {
         Document document = DOM.streamToDOM(contents);
         boolean success= true;
-        //<!-- TODO: Her ville vi skulle tage flag fra mf-pak om hvorvidt vi skulle forvente alto. Flag kunne indkodes i denne .sch fil before run-->
+        // TODO: Her ville vi skulle tage flag fra mf-pak om hvorvidt vi skulle forvente alto. Flag kunne indkodes i denne .sch
+        // fil before run
         SchematronOutputType result = null;
         try {
             result = schematron.applySchematronValidation(document);
