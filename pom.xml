@@ -19,11 +19,6 @@
         <tag>HEAD</tag>
     </scm>
 
-    <properties>
-        <autonomous.framework.version>1.2-SNAPSHOT</autonomous.framework.version>
-        <mfpak.integration.version>1.1-SNAPSHOT</mfpak.integration.version>
-    </properties>
-
     <repositories>
         <repository>
             <id>sbforge-nexus</id>
@@ -57,17 +52,12 @@
         <dependency>
             <groupId>dk.statsbiblioteket.newspaper</groupId>
             <artifactId>autonomous-component</artifactId>
-            <version>${autonomous.framework.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>dk.statsbiblioteket.newspaper</groupId>
-            <artifactId>tree-processor</artifactId>
-            <version>${autonomous.framework.version}</version>
+            <version>1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>dk.statsbiblioteket.newspaper</groupId>
             <artifactId>newspaper-mfpak-integration</artifactId>
-            <version>0.2</version>
+            <version>1.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
