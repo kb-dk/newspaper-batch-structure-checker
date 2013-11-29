@@ -78,9 +78,9 @@ public class XmlBuilderEventHandler implements TreeEventHandler {
     @Override
     public void handleAttribute(AttributeParsingEvent event) {
         String shortName = Util.getLastTokenInPath(event.getName());
-        AttributeParsingEvent attributeParsingEvent = (AttributeParsingEvent) event;
+
         try {
-            xmlBuilder.append(currentIndent + "<attribute name=\"" + event.getName() + "\" shortName=\"" + shortName + "\"  checksum=\"" + attributeParsingEvent
+            xmlBuilder.append(currentIndent + "<attribute name=\"" + event.getName() + "\" shortName=\"" + shortName + "\"  checksum=\"" + event
                     .getChecksum() + "\" />\n");
         } catch (IOException e) {
             throw new RuntimeException(e);
