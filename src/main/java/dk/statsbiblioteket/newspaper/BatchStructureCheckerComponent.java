@@ -62,12 +62,11 @@ public class BatchStructureCheckerComponent extends AbstractRunnableComponent {
                     "Did not generate xml representation of directory structure. Could not complete tests.");
         }
         storeBatchStructure(batch, new ByteArrayInputStream(xml.getBytes("UTF-8")));
-        Validator validator1 = new StructureValidator(DEMANDS_SCH);
+
+        Validator validator1 = new StructureValidator(DEMANDS_SCH, mfPakDao);
         validator1.validate(batch, new ByteArrayInputStream(xml.getBytes("UTF-8")), resultCollector);
 
         Validator validator2 = new MFpakStructureChecks(mfPakDao);
         validator2.validate(batch, new ByteArrayInputStream(xml.getBytes("UTF-8")), resultCollector);
-
-
     }
 }
