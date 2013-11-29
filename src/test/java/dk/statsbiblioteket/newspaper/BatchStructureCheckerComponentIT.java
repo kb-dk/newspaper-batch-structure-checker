@@ -1,10 +1,5 @@
 package dk.statsbiblioteket.newspaper;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
-
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
@@ -14,6 +9,11 @@ import dk.statsbiblioteket.newspaper.mfpakintegration.configuration.MfPakConfigu
 import dk.statsbiblioteket.newspaper.mfpakintegration.database.MfPakDAO;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
 
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
@@ -30,7 +30,9 @@ public class BatchStructureCheckerComponentIT {
     @Test(groups = "integrationTest")
     public void testGoodBatchStructureCheck() throws Exception {
         properties.setProperty(ConfigConstants.ITERATOR_FILESYSTEM_BATCHES_FOLDER, pathToTestBatch + "/" + "small-test-batch");
-        properties.setProperty(ConfigConstants.AUTONOMOUS_BATCH_STRUCTURE_STORAGE_DIR, pathToTestBatch + "/" + "small-test-batch");
+        properties.setProperty(
+                ConfigConstants.AUTONOMOUS_BATCH_STRUCTURE_STORAGE_DIR,
+                pathToTestBatch + "/" + "small-test-batch");
         properties.setProperty("batchStructure.storageDir", createTempDir().getAbsolutePath());
 
         MfPakConfiguration mfPakConfiguration = new MfPakConfiguration();
@@ -52,6 +54,33 @@ public class BatchStructureCheckerComponentIT {
         }
         assertTrue(resultCollector.isSuccess(), "Found failure with run on good batch");
     }
+
+    /** Tests that the BatchStructureChecker can parse a production like batch which should contain failures. */
+      @Test(groups = "integrationTest")
+      public void testGoodBatchStructureCheckFedora() throws Exception {
+
+          MfPakConfiguration mfPakConfiguration = new MfPakConfiguration();
+          mfPakConfiguration.setDatabaseUrl(properties.getProperty(ConfigurationProperties.DATABASE_URL));
+          mfPakConfiguration.setDatabaseUser(properties.getProperty(ConfigurationProperties.DATABASE_USER));
+          mfPakConfiguration.setDatabasePassword(properties.getProperty(ConfigurationProperties.DATABASE_PASSWORD));
+
+
+          properties.setProperty(ConfigConstants.ITERATOR_USE_FILESYSTEM,"false");
+          BatchStructureCheckerComponent batchStructureCheckerComponent =
+                  new BatchStructureCheckerComponent(properties, new MfPakDAO(mfPakConfiguration));
+
+          ResultCollector resultCollector = new ResultCollector("Batch Structure Checker", "v0.1");
+          Batch batch = new Batch();
+          batch.setBatchID(TEST_BATCH_ID);
+          batch.setRoundTripNumber(1);
+
+          batchStructureCheckerComponent.doWorkOnBatch(batch, resultCollector);
+          if (!resultCollector.isSuccess()) {
+              System.out.println(resultCollector.toReport());
+          }
+          assertTrue(resultCollector.isSuccess(), "Found failure with run on good batch");
+      }
+
 
     /**
      * Tests that the BatchStructureChecker can parse a production like batch which should contain failures
