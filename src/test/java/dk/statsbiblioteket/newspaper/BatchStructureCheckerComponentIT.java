@@ -4,7 +4,6 @@ import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.newspaper.eventhandlers.Util;
-import dk.statsbiblioteket.newspaper.mfpakintegration.configuration.ConfigurationProperties;
 import dk.statsbiblioteket.newspaper.mfpakintegration.configuration.MfPakConfiguration;
 import dk.statsbiblioteket.newspaper.mfpakintegration.database.MfPakDAO;
 import org.testng.annotations.BeforeMethod;
@@ -36,9 +35,9 @@ public class BatchStructureCheckerComponentIT {
         properties.setProperty("batchStructure.storageDir", createTempDir().getAbsolutePath());
 
         MfPakConfiguration mfPakConfiguration = new MfPakConfiguration();
-        mfPakConfiguration.setDatabaseUrl(properties.getProperty(ConfigurationProperties.DATABASE_URL));
-        mfPakConfiguration.setDatabaseUser(properties.getProperty(ConfigurationProperties.DATABASE_USER));
-        mfPakConfiguration.setDatabasePassword(properties.getProperty(ConfigurationProperties.DATABASE_PASSWORD));
+        mfPakConfiguration.setDatabaseUrl(properties.getProperty(ConfigConstants.MFPAK_URL));
+        mfPakConfiguration.setDatabaseUser(properties.getProperty(ConfigConstants.MFPAK_USER));
+        mfPakConfiguration.setDatabasePassword(properties.getProperty(ConfigConstants.MFPAK_PASSWORD));
 
         BatchStructureCheckerComponent batchStructureCheckerComponent =
                 new BatchStructureCheckerComponent(properties, new MfPakDAO(mfPakConfiguration));
@@ -60,9 +59,9 @@ public class BatchStructureCheckerComponentIT {
       public void testGoodBatchStructureCheckFedora() throws Exception {
 
           MfPakConfiguration mfPakConfiguration = new MfPakConfiguration();
-          mfPakConfiguration.setDatabaseUrl(properties.getProperty(ConfigurationProperties.DATABASE_URL));
-          mfPakConfiguration.setDatabaseUser(properties.getProperty(ConfigurationProperties.DATABASE_USER));
-          mfPakConfiguration.setDatabasePassword(properties.getProperty(ConfigurationProperties.DATABASE_PASSWORD));
+          mfPakConfiguration.setDatabaseUrl(properties.getProperty(ConfigConstants.MFPAK_URL));
+          mfPakConfiguration.setDatabaseUser(properties.getProperty(ConfigConstants.MFPAK_USER));
+          mfPakConfiguration.setDatabasePassword(properties.getProperty(ConfigConstants.MFPAK_PASSWORD));
 
 
           properties.setProperty(ConfigConstants.ITERATOR_USE_FILESYSTEM,"false");
@@ -93,9 +92,9 @@ public class BatchStructureCheckerComponentIT {
         properties.setProperty("batchStructure.storageDir", createTempDir().getAbsolutePath());
 
         MfPakConfiguration mfPakConfiguration = new MfPakConfiguration();
-        mfPakConfiguration.setDatabaseUrl(properties.getProperty(ConfigurationProperties.DATABASE_URL));
-        mfPakConfiguration.setDatabaseUser(properties.getProperty(ConfigurationProperties.DATABASE_USER));
-        mfPakConfiguration.setDatabasePassword(properties.getProperty(ConfigurationProperties.DATABASE_PASSWORD));
+        mfPakConfiguration.setDatabaseUrl(properties.getProperty(ConfigConstants.MFPAK_URL));
+        mfPakConfiguration.setDatabaseUser(properties.getProperty(ConfigConstants.MFPAK_USER));
+        mfPakConfiguration.setDatabasePassword(properties.getProperty(ConfigConstants.MFPAK_PASSWORD));
 
 
         BatchStructureCheckerComponent batchStructureCheckerComponent =
