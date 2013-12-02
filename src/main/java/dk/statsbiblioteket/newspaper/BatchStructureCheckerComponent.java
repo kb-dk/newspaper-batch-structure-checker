@@ -63,7 +63,7 @@ public class BatchStructureCheckerComponent extends AbstractRunnableComponent {
         }
         storeBatchStructure(batch, new ByteArrayInputStream(xml.getBytes("UTF-8")));
 
-        Validator validator1 = new StructureValidator(DEMANDS_SCH);
+        Validator validator1 = new StructureValidator(DEMANDS_SCH, mfPakDao);
         validator1.validate(batch, new ByteArrayInputStream(xml.getBytes("UTF-8")), resultCollector);
 
         Validator validator2 = new MFpakStructureChecks(mfPakDao);
