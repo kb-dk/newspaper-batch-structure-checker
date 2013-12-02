@@ -162,7 +162,7 @@
                    value="substring-before(../attribute[ends-with(@shortName,'.film.xml')]/@shortName,'.film.xml')"/>
             <s:let name="isoEnding" value="'-ISO-[0-9]{4}$'"/>
 
-            <s:assert test="count(matches(node/@shortName, concat('^', $isoName, $isoEnding))) > 0">
+            <s:assert test="count(node[matches(@shortName, ../concat('^', $isoName, $isoEnding))]) > 0">
                 <s:value-of select="@name"/>: 2F-S20:
                 No files found
             </s:assert>
