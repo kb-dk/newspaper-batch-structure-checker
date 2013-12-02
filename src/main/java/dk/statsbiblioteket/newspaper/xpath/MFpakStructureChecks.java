@@ -116,6 +116,7 @@ public class MFpakStructureChecks implements Validator {
                             for (NewspaperDateRange dateRange : dateRanges) {
                                 if (dateRange.isIncluded(editionDate)) {
                                     selectedDateRange = dateRange;
+                                    break;
                                 }
                             }
                             if (selectedDateRange == null) {
@@ -140,6 +141,7 @@ public class MFpakStructureChecks implements Validator {
                     }
                 }
                 dateRanges.remove(selectedDateRange);
+                selectedDateRange = null;
             }
             if (dateRanges.size() > 0) {
                 for (NewspaperDateRange dateRange : dateRanges) {
