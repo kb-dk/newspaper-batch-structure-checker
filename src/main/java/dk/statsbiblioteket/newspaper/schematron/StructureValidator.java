@@ -8,17 +8,17 @@ import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.newspaper.BatchStructureCheckerComponent;
 import dk.statsbiblioteket.newspaper.Validator;
 import dk.statsbiblioteket.newspaper.mfpakintegration.database.MfPakDAO;
-import dk.statsbiblioteket.newspaper.mfpakintegration.database.NewspaperBatchOptions;
+//import dk.statsbiblioteket.newspaper.mfpakintegration.database.NewspaperBatchOptions;
 import dk.statsbiblioteket.util.Strings;
 import dk.statsbiblioteket.util.xml.DOM;
 import dk.statsbiblioteket.util.xml.XPathSelector;
 import org.oclc.purl.dsdl.svrl.FailedAssert;
 import org.oclc.purl.dsdl.svrl.SchematronOutputType;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+//import org.w3c.dom.Element;
 
 import java.io.InputStream;
-import java.sql.SQLException;
+//import java.sql.SQLException;
 
 /**
  * Class containing general-purpose functionality to validate an xml document against a schematron document and gather
@@ -26,8 +26,8 @@ import java.sql.SQLException;
  */
 public class StructureValidator implements Validator {
 
-    private static final XPathSelector SCHEMATRON_XPATH_SELECTOR = DOM.createXPathSelector("s", "http://purl.oclc.org/dsdl/schematron");
-    private MfPakDAO mfPakDAO;
+    //private static final XPathSelector SCHEMATRON_XPATH_SELECTOR = DOM.createXPathSelector("s", "http://purl.oclc.org/dsdl/schematron");
+    //private MfPakDAO mfPakDAO;
     private final ClassPathResource schemaResource;
     private final SchematronResourcePure schematron;
 
@@ -43,7 +43,7 @@ public class StructureValidator implements Validator {
             throw new RuntimeException("Failed to validate schematron resource as '" + schematronPath + "'");
         }
 
-        this.mfPakDAO = mfPakDAO;
+        //this.mfPakDAO = mfPakDAO;
     }
 
     /**
@@ -59,8 +59,6 @@ public class StructureValidator implements Validator {
                             ResultCollector resultCollector) {
         Document document = DOM.streamToDOM(contents);
         boolean success = true;
-
-        document = setAltoCheckFlagIfNeeded(document, batch, resultCollector);
 
         SchematronOutputType result = null;
         try {
@@ -93,26 +91,5 @@ public class StructureValidator implements Validator {
             }
         }
         return success;
-    }
-
-    Document setAltoCheckFlagIfNeeded(Document document, Batch batch, ResultCollector resultCollector) {
-        String xpathForAlto = "/s:schema/s:let[@name='altoFlag']";
-        NewspaperBatchOptions options;
-
-        try {
-            options = mfPakDAO.getBatchOptions(batch.getBatchID());
-
-            if (options.isOptionB1() || options.isOptionB2()) {
-                ((Element)(SCHEMATRON_XPATH_SELECTOR.selectNode(document, xpathForAlto))).setAttribute("altoFlag", "true()");
-            } else {
-                ((Element)(SCHEMATRON_XPATH_SELECTOR.selectNode(document, xpathForAlto))).setAttribute("altoFlag", "false()");
-            }
-        } catch (SQLException e) {
-            resultCollector.addFailure(batch.getFullID(), "exception", getClass().getSimpleName(),
-                    "Couldn't read options from mfpak:" + e.toString(),
-                    Strings.getStackTrace(e));
-        }
-
-        return document;
     }
 }
