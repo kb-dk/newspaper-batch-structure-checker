@@ -68,7 +68,7 @@ public class StructureValidatorTest {
         mfPakConfiguration.setDatabaseUser(properties.getProperty(ConfigConstants.MFPAK_USER));
         mfPakConfiguration.setDatabasePassword(properties.getProperty(ConfigConstants.MFPAK_PASSWORD));
 
-        StructureValidator validator = new StructureValidator("demands.sch", new MfPakDAO(mfPakConfiguration));
+        StructureValidator validator = new StructureValidator("demands.sch");
         Batch batch = new Batch();
         batch.setRoundTripNumber(1);
         batch.setBatchID("400022028241");
@@ -107,7 +107,7 @@ public class StructureValidatorTest {
         mfPakConfiguration.setDatabaseUser(properties.getProperty(ConfigConstants.MFPAK_USER));
         mfPakConfiguration.setDatabasePassword(properties.getProperty(ConfigConstants.MFPAK_PASSWORD));
 
-        StructureValidator validator = new StructureValidator("demands.sch", new MfPakDAO(mfPakConfiguration));
+        StructureValidator validator = new StructureValidator("demands.sch");
         Batch batch = new Batch();
         batch.setRoundTripNumber(1);
         batch.setBatchID("400022028241");
