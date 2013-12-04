@@ -4,9 +4,6 @@
          with a comment of the form "Check: <pattern-name>: <explanation>" as this enables us to easily
          generate a list (by grep) of all the things that are checked for. -->
 
-    <!-- The following flag can be replaced with a placeholder, for replacing with true/false as needed for certain batches -->
-    <s:let name="altoFlag" value="true()"/>
-
     <s:let name="batchID" value="/node/@name"/>
 
     <s:let name="batchNumber" value="substring-after(substring-before($batchID,'-'),'B')"/>
@@ -241,18 +238,6 @@
                 <s:value-of select="@name"/>: 2F-S25:
                 Invalid prefix for page
             </s:assert>
-
-            <s:let name="altoAttribute" value="attribute[@shortName = concat(../@shortName,'.alto.xml')]"/>
-
-            <!-- Check: editionPageChecker: Any node not ending in .brik must contain a .alto.xml attribute with name prefix as that of parent node (if the altoFlag is set)-->
-            <s:report test="not($altoAttribute) and $altoFlag"><s:value-of select="@name"/>: 2F-S26:
-                Alto file '<s:value-of select="concat(@name,'.alto.xml')"/>' missing
-            </s:report>
-
-            <!-- Check: editionPageChecker: Any node not ending in .brik must not contain a .alto.xml attribute with name prefix as that of parent node (if the altoFlag is not set)-->
-            <s:report test="$altoAttribute and not($altoFlag)"><s:value-of select="@name"/>: 2F-S27:
-                Alto file '<s:value-of select="concat(@name,'.alto.xml')"/>' found but not expected
-            </s:report>
 
             <!-- Check: editionPageChecker: Any node not ending in .brik must contain a .mods.xml attribute with name prefix as that of parent node -->
             <s:assert test="attribute/@shortName = concat(@shortName,'.mods.xml')"><s:value-of select="@name"/>: 2F-S28:
