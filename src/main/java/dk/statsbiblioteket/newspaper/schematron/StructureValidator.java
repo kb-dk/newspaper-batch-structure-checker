@@ -7,11 +7,11 @@ import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.newspaper.BatchStructureCheckerComponent;
 import dk.statsbiblioteket.newspaper.Validator;
-import dk.statsbiblioteket.newspaper.mfpakintegration.database.MfPakDAO;
+//import dk.statsbiblioteket.newspaper.mfpakintegration.database.MfPakDAO;
 //import dk.statsbiblioteket.newspaper.mfpakintegration.database.NewspaperBatchOptions;
 import dk.statsbiblioteket.util.Strings;
 import dk.statsbiblioteket.util.xml.DOM;
-import dk.statsbiblioteket.util.xml.XPathSelector;
+//import dk.statsbiblioteket.util.xml.XPathSelector;
 import org.oclc.purl.dsdl.svrl.FailedAssert;
 import org.oclc.purl.dsdl.svrl.SchematronOutputType;
 import org.w3c.dom.Document;
@@ -36,7 +36,7 @@ public class StructureValidator implements Validator {
      * @param schematronPath the path to the schematron document. This must be on the classpath of the current
      *                       ClassLoader.
      */
-    public StructureValidator(String schematronPath, MfPakDAO mfPakDAO) {
+    public StructureValidator(String schematronPath) {
         schemaResource = new ClassPathResource(schematronPath);
         schematron = new SchematronResourcePure(schemaResource);
         if (!schematron.isValidSchematron()) {
