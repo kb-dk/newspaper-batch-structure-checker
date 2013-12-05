@@ -25,7 +25,7 @@ public class BatchStructureCheckerComponentIT {
     private final Properties properties = new Properties();
 
 
-    /** Tests that the BatchStructureChecker can parse a production like batch which should contain failures. */
+    /** Tests that the BatchStructureChecker can parse a production like batch which contain failures. */
     @Test(groups = "integrationTest")
     public void testGoodBatchStructureCheck() throws Exception {
         properties.setProperty(ConfigConstants.ITERATOR_FILESYSTEM_BATCHES_FOLDER, pathToTestBatch + "/" + "small-test-batch");
@@ -54,7 +54,7 @@ public class BatchStructureCheckerComponentIT {
         assertTrue(resultCollector.isSuccess(), "Found failure with run on good batch");
     }
 
-    /** Tests that the BatchStructureChecker can parse a production like batch which should contain failures. */
+    /** Tests that the BatchStructureChecker can parse a production like batch which contain failures. */
       @Test(groups = "integrationTest")
       public void testGoodBatchStructureCheckFedora() throws Exception {
 
