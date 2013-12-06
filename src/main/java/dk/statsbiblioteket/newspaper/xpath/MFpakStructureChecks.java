@@ -240,6 +240,8 @@ public class MFpakStructureChecks implements Validator {
     private boolean validateAlto(Batch batch, ResultCollector resultCollector, XPathSelector xpath, Document doc) {
         boolean success = true;
 
+        final String xpathNonBrikScanNodes = "node[not(ends-with(@shortName, '-brik'))]";
+        final String xpathEditionNodes = "node[@shortName != 'UNMATCHED' and @shortName != 'FILM-ISO-target']";
         final String xpathFilmNodes =
                 "/node[@shortName='" + batch.getFullID() + "']/node[starts-with(@shortName,'" + batch.getBatchID() + "')]";
         NodeList filmNodes = xpath.selectNodeList(doc, xpathFilmNodes);
@@ -247,13 +249,11 @@ public class MFpakStructureChecks implements Validator {
         for (int i = 0; i < filmNodes.getLength(); i++) {
             Node filmNode = filmNodes.item(i);
 
-            final String xpathEditionNodes = "node[@shortName != 'UNMATCHED' and @shortName != 'FILM-ISO-target']";
             NodeList editionNodes = xpath.selectNodeList(filmNode, xpathEditionNodes);
 
             for (int j = 0; j < editionNodes.getLength(); j++) {
                 Node editionNode = editionNodes.item(j);
 
-                final String xpathNonBrikScanNodes = "node[not(ends-with(@shortName, '-brik'))]";
                 NodeList nonBrikScanNodes = xpath.selectNodeList(editionNode, xpathNonBrikScanNodes);
 
                 success &= validateAltoOrNotForNodes(nonBrikScanNodes, batch, resultCollector, xpath);
@@ -275,38 +275,10 @@ public class MFpakStructureChecks implements Validator {
 
             if (options.isOptionB1() || options.isOptionB2() || options.isOptionB9()) {
                 // According to options, we should check for existence of alto-files
-                for (int i = 0; i < nonBrikScanNodes.getLength(); i++) {
-                    Node nonBrikScanNode = nonBrikScanNodes.item(i);
-
-                    final String xpathAltoAttribute = "attribute[@shortName = concat(../@shortName,'.alto.xml')]";
-                    NodeList altoAttributeNodes = xpath.selectNodeList(nonBrikScanNode, xpathAltoAttribute);
-
-                    String scanName = nonBrikScanNode.getAttributes().getNamedItem("shortName").getNodeValue();
-
-                    if (altoAttributeNodes.getLength() != 1) {
-                        String scanPath = nonBrikScanNode.getAttributes().getNamedItem("name").getNodeValue();
-
-                        addFailure(resultCollector, scanPath, "2F-M4: Could not find alto file for " + scanName);
-                        success = false;
-                    }
-                }
+                success = checkForAltoExistence(nonBrikScanNodes, resultCollector, xpath, success);
             } else {
                 // According to options, we should check that there exist no alto-files
-                for (int i = 0; i < nonBrikScanNodes.getLength(); i++) {
-                    Node nonBrikScanNode = nonBrikScanNodes.item(i);
-
-                    final String xpathAltoAttribute = "attribute[@shortName = concat(../@shortName,'.alto.xml')]";
-                    NodeList altoAttributeNodes = xpath.selectNodeList(nonBrikScanNode, xpathAltoAttribute);
-
-                    String scanName = nonBrikScanNode.getAttributes().getNamedItem("shortName").getNodeValue();
-                    if (altoAttributeNodes.getLength() != 0) {
-                        String scanPath = nonBrikScanNode.getAttributes().getNamedItem("name").getNodeValue();
-
-                        addFailure(resultCollector, scanPath, "2F-M5: Though there should be none, found alto file for "
-                                + scanName);
-                        success = false;
-                    }
-                }
+                success = checkForAltoNonExistence(nonBrikScanNodes, resultCollector, xpath, success);
             }
         } catch (SQLException e) {
             resultCollector.addFailure(batch.getFullID(), "exception", getClass().getSimpleName(),
@@ -315,6 +287,46 @@ public class MFpakStructureChecks implements Validator {
             success = false;
         }
 
+        return success;
+    }
+
+    private boolean checkForAltoNonExistence(NodeList nonBrikScanNodes, ResultCollector resultCollector, XPathSelector xpath,
+                                             boolean success) {
+        for (int i = 0; i < nonBrikScanNodes.getLength(); i++) {
+            Node nonBrikScanNode = nonBrikScanNodes.item(i);
+
+            final String xpathAltoAttribute = "attribute[@shortName = concat(../@shortName,'.alto.xml')]";
+            NodeList altoAttributeNodes = xpath.selectNodeList(nonBrikScanNode, xpathAltoAttribute);
+
+            String scanName = nonBrikScanNode.getAttributes().getNamedItem("shortName").getNodeValue();
+            if (altoAttributeNodes.getLength() != 0) {
+                String scanPath = nonBrikScanNode.getAttributes().getNamedItem("name").getNodeValue();
+
+                addFailure(resultCollector, scanPath, "2F-M5: Though there should be none, found alto file for "
+                        + scanName);
+                success = false;
+            }
+        }
+        return success;
+    }
+
+    private boolean checkForAltoExistence(NodeList nonBrikScanNodes, ResultCollector resultCollector, XPathSelector xpath,
+                                          boolean success) {
+        for (int i = 0; i < nonBrikScanNodes.getLength(); i++) {
+            Node nonBrikScanNode = nonBrikScanNodes.item(i);
+
+            final String xpathAltoAttribute = "attribute[@shortName = concat(../@shortName,'.alto.xml')]";
+            NodeList altoAttributeNodes = xpath.selectNodeList(nonBrikScanNode, xpathAltoAttribute);
+
+            String scanName = nonBrikScanNode.getAttributes().getNamedItem("shortName").getNodeValue();
+
+            if (altoAttributeNodes.getLength() != 1) {
+                String scanPath = nonBrikScanNode.getAttributes().getNamedItem("name").getNodeValue();
+
+                addFailure(resultCollector, scanPath, "2F-M4: Could not find alto file for " + scanName);
+                success = false;
+            }
+        }
         return success;
     }
 }
