@@ -7,27 +7,19 @@ import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.newspaper.BatchStructureCheckerComponent;
 import dk.statsbiblioteket.newspaper.Validator;
-//import dk.statsbiblioteket.newspaper.mfpakintegration.database.MfPakDAO;
-//import dk.statsbiblioteket.newspaper.mfpakintegration.database.NewspaperBatchOptions;
 import dk.statsbiblioteket.util.Strings;
 import dk.statsbiblioteket.util.xml.DOM;
-//import dk.statsbiblioteket.util.xml.XPathSelector;
 import org.oclc.purl.dsdl.svrl.FailedAssert;
 import org.oclc.purl.dsdl.svrl.SchematronOutputType;
 import org.w3c.dom.Document;
-//import org.w3c.dom.Element;
 
 import java.io.InputStream;
-//import java.sql.SQLException;
 
 /**
  * Class containing general-purpose functionality to validate an xml document against a schematron document and gather
  * the results in a ResultCollector object.
  */
 public class StructureValidator implements Validator {
-
-    //private static final XPathSelector SCHEMATRON_XPATH_SELECTOR = DOM.createXPathSelector("s", "http://purl.oclc.org/dsdl/schematron");
-    //private MfPakDAO mfPakDAO;
     private final ClassPathResource schemaResource;
     private final SchematronResourcePure schematron;
 
@@ -43,7 +35,6 @@ public class StructureValidator implements Validator {
             throw new RuntimeException("Failed to validate schematron resource as '" + schematronPath + "'");
         }
 
-        //this.mfPakDAO = mfPakDAO;
     }
 
     /**
