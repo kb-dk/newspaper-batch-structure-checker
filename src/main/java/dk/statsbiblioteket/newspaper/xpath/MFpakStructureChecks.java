@@ -263,7 +263,14 @@ public class MFpakStructureChecks implements Validator {
         return success;
     }
 
-
+    /**
+     * Validate that alto-files exist (or don't exist) where needed according to options as found in the MFpak database
+     * @param nonBrikScanNodes List of nodes representing newspaper page scans (not brik-scans)
+     * @param batch Batch for which to check for alto
+     * @param resultCollector For collecting the results of the check
+     * @param xpath The XPathSelector
+     * @return Whether or not validation passed with success
+     */
     private boolean validateAltoOrNotForNodes(NodeList nonBrikScanNodes, Batch batch, ResultCollector resultCollector,
                                               XPathSelector xpath) {
         // In this method, a "scan" means an image that was scanned from microfilm, whether a newspaper page, brik, target,...
