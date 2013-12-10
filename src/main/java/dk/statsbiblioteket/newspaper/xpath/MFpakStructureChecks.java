@@ -235,7 +235,7 @@ public class MFpakStructureChecks implements Validator {
      * @param resultCollector the result collector
      * @param xpath the xpath selector
      * @param doc the structure document
-     * @return false if any film contains a avisID not expected in MFpak.
+     * @return whether or not the existence of alto-files corresponds to the options found in the MFpak database
      */
     private boolean validateAlto(Batch batch, ResultCollector resultCollector, XPathSelector xpath, Document doc) {
         boolean success = true;
