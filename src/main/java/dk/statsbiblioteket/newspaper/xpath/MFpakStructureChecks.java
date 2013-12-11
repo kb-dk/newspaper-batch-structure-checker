@@ -297,6 +297,14 @@ public class MFpakStructureChecks implements Validator {
         return success;
     }
 
+    /**
+     * Check that there exist no alto-files
+     * @param nonBrikScanNodes List of nodes representing newspaper page scans (not brik-scans)
+     * @param resultCollector For collecting the results of the check
+     * @param xpath The XPathSelector
+     * @param success "Accumulating" success variable, that should be returned if no failure happened
+     * @return False if alto file was found. Returns the received success value otherwise.
+     */
     private boolean checkForAltoNonExistence(NodeList nonBrikScanNodes, ResultCollector resultCollector, XPathSelector xpath,
                                              boolean success) {
         for (int i = 0; i < nonBrikScanNodes.getLength(); i++) {
