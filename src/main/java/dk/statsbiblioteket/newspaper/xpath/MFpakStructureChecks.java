@@ -279,7 +279,11 @@ public class MFpakStructureChecks implements Validator {
 
         try {
             options = mfPakDAO.getBatchOptions(batch.getBatchID());
-
+            if (options == null){
+                success = false;
+                addFailure(resultCollector,batch.getFullID(),"MFPak did not have any batch options");
+                return success;
+            }
             if (options.isOptionB1() || options.isOptionB2() || options.isOptionB9()) {
                 // According to options, we should check for existence of alto-files
                 success = checkForAltoExistence(nonBrikScanNodes, resultCollector, xpath, success);
