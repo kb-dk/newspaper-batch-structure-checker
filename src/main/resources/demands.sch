@@ -20,7 +20,7 @@
 
     <s:let name="workshiftISOTargetPattern" value="concat('^','Target-[0-9]{6}-[0-9]{4}$')"/>
 
-    <s:let name="datoUdgaveLbNummer" value="'^[12][0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])-[0-9]{2}$'"/>
+    <s:let name="datoUdgaveLbNummer" value="'^[12][0-9]{3}((-(0[1-9]|1[0-2]))?-(0[1-9]|[12][0-9]|3[01]))?-[0-9]{2}$'"/>
 
 
     <s:pattern id="batchNodeChecker">
@@ -105,7 +105,7 @@
                 Cannot find film metadata file
             </s:assert>
 
-            <!-- Check: filmChecker: Existence of edition-folder(s) with name of form [12][0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])-[0-9]{2} -->
+            <!-- Check: filmChecker: Existence of edition-folder(s) with name of form [12][0-9]{3}((-(0[1-9]|1[0-2]))?-(0[1-9]|[12][0-9]|3[01]))?-[0-9]{2} -->
             <s:assert test="count(node[matches(@shortName,$datoUdgaveLbNummer)]) > 0"><s:value-of select="@name"/>:
                 2F-S15:
                 No editions in film
@@ -113,7 +113,7 @@
         </s:rule>
 
         <s:rule context="/node/node[@shortName != $workshiftISOTarget]/node">
-            <!-- Check: filmChecker: Only existence of FILM-ISO-target, UNMATCHED, or [12][0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])-[0-9]{2} are allowed
+            <!-- Check: filmChecker: Only existence of FILM-ISO-target, UNMATCHED, or [12][0-9]{3}((-(0[1-9]|1[0-2]))?-(0[1-9]|[12][0-9]|3[01]))?-[0-9]{2} are allowed
             -->
             <s:assert test="matches(@shortName,concat('(^FILM-ISO-target$|^UNMATCHED$|',$datoUdgaveLbNummer,')'))">
                 <s:value-of select="@name"/>: 2F-S16:
@@ -172,7 +172,7 @@
            node[@shortName != $workshiftISOTarget]/
            node[@shortName != 'FILM-ISO-target' and @shortName != 'UNMATCHED']">
 
-            <!-- Check: editionChecker: folder name has form: [dato]-[udgaveLbNummer] i.e. [12][0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])-[0-9]{2}
+            <!-- Check: editionChecker: folder name has form: [dato]-[udgaveLbNummer] i.e. [12][0-9]{3}((-(0[1-9]|1[0-2]))?-(0[1-9]|[12][0-9]|3[01]))?-[0-9]{2}
             -->
             <s:let name="filmID" value="../@shortName"/>
             <s:let name="editionID" value="@shortName"/>
