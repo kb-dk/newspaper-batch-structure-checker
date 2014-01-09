@@ -1,3 +1,8 @@
+1.2
+- Update to newspaper-batch-event-framework 1.4
+- Update to mfpak-integration 1.3
+- Add support for fuzzy dates
+
 1.1
 - Batch event framework to version 1.1 as 1.0 used invalid DOMS dependencies
 - Rework of the config files to remove redundancy, among other things
