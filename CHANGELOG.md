@@ -1,3 +1,6 @@
+1.2.1
+* Update to newpaper-batch-event-framework 1.4.2, to make the component quiet on stderr
+
 1.2
 - Update to newspaper-batch-event-framework 1.4
 - Update to mfpak-integration 1.3
