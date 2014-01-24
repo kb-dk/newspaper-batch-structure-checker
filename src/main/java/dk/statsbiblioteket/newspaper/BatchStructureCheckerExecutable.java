@@ -49,7 +49,7 @@ public class BatchStructureCheckerExecutable {
         RunnableComponent component = new BatchStructureCheckerComponent(properties, new MfPakDAO(mfPakConfiguration));
 
         CallResult result = AutonomousComponentUtils.startAutonomousComponent(properties, component);
-        System.out.println(result);
+        log.info(result.toString());
         return result.containsFailures();
     }
 }

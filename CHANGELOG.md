@@ -1,3 +1,6 @@
+1.2.2
+* Remove the last use of System.out.println()
+
 1.2.1
 * Update to newpaper-batch-event-framework 1.4.2, to make the component quiet on stderr
 
