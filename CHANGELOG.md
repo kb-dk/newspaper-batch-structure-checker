@@ -1,3 +1,7 @@
+1.2.3
+* Updated to newspaper-batch-event-framework 1.4.4.
+* Parameter autonomous.component.maxResults is now supported.
+
 1.2.2
 * Remove the last use of System.out.println()
 
