@@ -1,5 +1,5 @@
 1.2.3
-* Updated to newspaper-batch-event-framework 1.4.4.
+* Updated to newspaper-batch-event-framework 1.4.6.
 * Parameter autonomous.component.maxResults is now supported.
 
 1.2.2
