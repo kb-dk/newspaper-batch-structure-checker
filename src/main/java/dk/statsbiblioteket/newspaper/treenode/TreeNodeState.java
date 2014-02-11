@@ -76,6 +76,6 @@ public class TreeNodeState extends DefaultTreeEventHandler {
         }
         assert (nextNodeType != null);
         previousNode = currentNode;
-        currentNode = new TreeNode(event.getName(), nextNodeType, currentNode);
+        currentNode = new TreeNode(event.getName(), nextNodeType, currentNode, event.getLocation());
     }
 }

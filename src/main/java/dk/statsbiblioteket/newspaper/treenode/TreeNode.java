@@ -7,11 +7,20 @@ public class TreeNode {
     private final String name;
     private final NodeType type;
     private final TreeNode parent;
+    private final String location;
+
+    public TreeNode(String name, NodeType type, TreeNode parent, String location) {
+        this.name = name;
+        this.type = type;
+        this.parent = parent;
+        this.location = location;
+    }
 
     public TreeNode(String name, NodeType type, TreeNode parent) {
         this.name = name;
         this.type = type;
         this.parent = parent;
+        this.location = null;
     }
 
     /**
@@ -33,6 +42,14 @@ public class TreeNode {
      */
     public TreeNode getParent() {
         return parent;
+    }
+
+    /**
+     * The location of the node as either doms pid or filepath.
+     * @return
+     */
+    public String getLocation() {
+        return location;
     }
 
     @Override
