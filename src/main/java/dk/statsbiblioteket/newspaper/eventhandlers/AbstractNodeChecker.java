@@ -5,12 +5,13 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
+import dk.statsbibliokeket.newspaper.treenode.NodeType;
+import dk.statsbibliokeket.newspaper.treenode.TreeNodeState;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.AttributeParsingEvent;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeBeginsParsingEvent;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeEndParsingEvent;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.DefaultTreeEventHandler;
-import dk.statsbiblioteket.newspaper.treenode.NodeType;
-import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
+
 
 /**
  * A generic checker for a given node-level in the tree structure. This class just gathers up the names of all

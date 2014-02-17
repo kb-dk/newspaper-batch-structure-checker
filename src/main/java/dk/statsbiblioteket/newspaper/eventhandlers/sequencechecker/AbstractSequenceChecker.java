@@ -3,12 +3,13 @@ package dk.statsbiblioteket.newspaper.eventhandlers.sequencechecker;
 import java.util.HashMap;
 import java.util.Map;
 
+import dk.statsbibliokeket.newspaper.treenode.NodeType;
+import dk.statsbibliokeket.newspaper.treenode.TreeNodeState;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeBeginsParsingEvent;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeEndParsingEvent;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.DefaultTreeEventHandler;
-import dk.statsbiblioteket.newspaper.treenode.NodeType;
-import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
+
 
 /**
  * Implements the generic functionality for checking sequence numbers by collecting sequence numbers for a relevant

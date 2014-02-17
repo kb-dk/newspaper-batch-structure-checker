@@ -1,8 +1,9 @@
 package dk.statsbiblioteket.newspaper.eventhandlers.sequencechecker;
 
+import dk.statsbibliokeket.newspaper.treenode.NodeType;
+import dk.statsbibliokeket.newspaper.treenode.TreeNodeState;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
-import dk.statsbiblioteket.newspaper.treenode.NodeType;
-import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
+
 /**
  * Takes care of checking the film numbering is in sequence without any holes. See
  * https://sbforge.org/display/NEWSPAPER/Structure+checks+done 2F-Q4.

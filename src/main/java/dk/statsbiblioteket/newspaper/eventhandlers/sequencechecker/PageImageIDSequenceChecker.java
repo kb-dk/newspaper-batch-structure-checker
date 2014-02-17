@@ -6,14 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import dk.statsbibliokeket.newspaper.treenode.NodeType;
+import dk.statsbibliokeket.newspaper.treenode.TreeNode;
+import dk.statsbibliokeket.newspaper.treenode.TreeNodeState;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeBeginsParsingEvent;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeEndParsingEvent;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.DefaultTreeEventHandler;
 import dk.statsbiblioteket.newspaper.BatchStructureCheckerComponent;
-import dk.statsbiblioteket.newspaper.treenode.NodeType;
-import dk.statsbiblioteket.newspaper.treenode.TreeNode;
-import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

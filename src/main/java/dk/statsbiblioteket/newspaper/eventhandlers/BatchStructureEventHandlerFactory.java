@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import dk.statsbibliokeket.newspaper.treenode.TreeNodeState;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.EventHandlerFactory;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.TreeEventHandler;
@@ -13,7 +14,6 @@ import dk.statsbiblioteket.newspaper.eventhandlers.sequencechecker.PageImageIDSe
 import dk.statsbiblioteket.newspaper.eventhandlers.sequencechecker.WorkshiftIsoTargetSequenceChecker;
 import dk.statsbiblioteket.newspaper.mfpakintegration.configuration.MfPakConfiguration;
 import dk.statsbiblioteket.newspaper.schematron.XmlBuilderEventHandler;
-import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
 
 /**
  * Provides the complete set of structure checkers for the batch structure.
