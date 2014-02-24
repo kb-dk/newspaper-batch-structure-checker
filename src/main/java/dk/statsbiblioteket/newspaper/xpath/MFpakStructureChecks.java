@@ -1,35 +1,35 @@
 package dk.statsbiblioteket.newspaper.xpath;
 
-import dk.statsbiblioteket.medieplatform.autonomous.Batch;
-import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
-import dk.statsbiblioteket.newspaper.BatchStructureCheckerComponent;
-import dk.statsbiblioteket.newspaper.Validator;
-import dk.statsbiblioteket.newspaper.mfpakintegration.database.MfPakDAO;
-import dk.statsbiblioteket.newspaper.mfpakintegration.database.NewspaperBatchOptions;
-import dk.statsbiblioteket.newspaper.mfpakintegration.database.NewspaperDateRange;
-import dk.statsbiblioteket.util.Strings;
-import dk.statsbiblioteket.util.xml.DOM;
-import dk.statsbiblioteket.util.xml.XPathSelector;
+import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.io.InputStream;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import dk.statsbiblioteket.medieplatform.autonomous.Batch;
+import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
+import dk.statsbiblioteket.medieplatform.batchcontext.BatchContext;
+import dk.statsbiblioteket.newspaper.BatchStructureCheckerComponent;
+import dk.statsbiblioteket.newspaper.Validator;
+import dk.statsbiblioteket.newspaper.mfpakintegration.database.NewspaperBatchOptions;
+import dk.statsbiblioteket.newspaper.mfpakintegration.database.NewspaperDateRange;
+import dk.statsbiblioteket.util.xml.DOM;
+import dk.statsbiblioteket.util.xml.XPathSelector;
 
 /**
  *  This class performs the structure checks that require information from MFpak.
  *
  */
 public class MFpakStructureChecks implements Validator {
-    private MfPakDAO mfPakDAO;
+    private BatchContext context;
 
-    public MFpakStructureChecks(MfPakDAO mfPakDAO) {
-        this.mfPakDAO = mfPakDAO;
+    public MFpakStructureChecks(BatchContext context) {
+        this.context = context;
     }
 
     @Override
@@ -80,88 +80,72 @@ public class MFpakStructureChecks implements Validator {
 
         final String xpathEditionNode = "node[@shortName != 'UNMATCHED' and @shortName != 'FILM-ISO-target']";
         final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            List<NewspaperDateRange> dateRanges = mfPakDAO.getBatchDateRanges(batch.getBatchID());
+        List<NewspaperDateRange> dateRanges = new ArrayList<NewspaperDateRange>(context.getDateRanges());
 
-            if (dateRanges == null) {
-                resultCollector.addFailure(batch.getFullID(), "exception", getClass().getSimpleName(),
-                        "2F: Failed to find batch in MFPak", new String[]{});
-                return false;
-            }
+        NodeList filmNodes = xpath.selectNodeList(doc, xpathFilmNode);
 
-            NodeList filmNodes = xpath.selectNodeList(doc, xpathFilmNode);
+        if (filmNodes.getLength() != dateRanges.size()) {
+            addFailure(resultCollector,batch.getFullID(),"2F-M2: Wrong number of films. File structure contains '"
+                    + filmNodes.getLength()
+                    + "' but mfpak contains '" + dateRanges.size() + "'");
+            success = false;
+        }
 
-            if (filmNodes.getLength() != dateRanges.size()) {
-                addFailure(resultCollector,batch.getFullID(),"2F-M2: Wrong number of films. File structure contains '"
-                        + filmNodes.getLength()
-                        + "' but mfpak contains '" + dateRanges.size() + "'");
-                success = false;
-            }
+        NewspaperDateRange selectedDateRange = null;
 
-            NewspaperDateRange selectedDateRange = null;
+        for (int i = 0; i < filmNodes.getLength(); i++) {
+            Node filmNode = filmNodes.item(i);
 
-            for (int i = 0; i < filmNodes.getLength(); i++) {
-                Node filmNode = filmNodes.item(i);
+            NodeList editionNodes = xpath.selectNodeList(filmNode, xpathEditionNode);
 
-                NodeList editionNodes = xpath.selectNodeList(filmNode, xpathEditionNode);
+            for (int j = 0; j < editionNodes.getLength(); j++) {
+                Node editionNode = editionNodes.item(j);
+                String editionShortName = editionNode.getAttributes().getNamedItem("shortName").getNodeValue();
 
-                for (int j = 0; j < editionNodes.getLength(); j++) {
-                    Node editionNode = editionNodes.item(j);
-                    String editionShortName = editionNode.getAttributes().getNamedItem("shortName").getNodeValue();
+                String editionPath = editionNode.getAttributes().getNamedItem("name").getNodeValue();
 
-                    String editionPath = editionNode.getAttributes().getNamedItem("name").getNodeValue();
-
-                    try {
-                        Date editionDate = dateFormat.parse(editionShortName);
-                        if (selectedDateRange == null) {
-                            for (NewspaperDateRange dateRange : dateRanges) {
-                                if (dateRange.isIncluded(editionDate)) {
-                                    selectedDateRange = dateRange;
-                                    break;
-                                }
-                            }
-                            if (selectedDateRange == null) {
-                                addFailure(resultCollector, editionPath,
-                                        "2F-M3: This edition is not valid according to the date ranges "
-                                                + "from mfpak");
-                                success = false;
-                            }
-                        } else {
-                            if (!selectedDateRange.isIncluded(editionDate)) {
-                                addFailure(resultCollector, editionPath,
-                                        "2F-M3: This edition is not valid according to the date ranges "
-                                                + "from mfpak");
-                                success = false;
+                try {
+                    Date editionDate = dateFormat.parse(editionShortName);
+                    if (selectedDateRange == null) {
+                        for (NewspaperDateRange dateRange : dateRanges) {
+                            if (dateRange.isIncluded(editionDate)) {
+                                selectedDateRange = dateRange;
+                                break;
                             }
                         }
-
-                    } catch (ParseException e) {
-                        addFailure(resultCollector, editionPath,
-                                "2F-M3: Failed to parse date from edition folder: " + e.toString());
-                        success = false;
+                        if (selectedDateRange == null) {
+                            addFailure(resultCollector, editionPath,
+                                    "2F-M3: This edition is not valid according to the date ranges "
+                                            + "from mfpak");
+                            success = false;
+                        }
+                    } else {
+                        if (!selectedDateRange.isIncluded(editionDate)) {
+                            addFailure(resultCollector, editionPath,
+                                    "2F-M3: This edition is not valid according to the date ranges "
+                                            + "from mfpak");
+                            success = false;
+                        }
                     }
+
+                } catch (ParseException e) {
+                    addFailure(resultCollector, editionPath,
+                            "2F-M3: Failed to parse date from edition folder: " + e.toString());
+                    success = false;
                 }
-                dateRanges.remove(selectedDateRange);
-                selectedDateRange = null;
             }
-            if (dateRanges.size() > 0) {
-                for (NewspaperDateRange dateRange : dateRanges) {
-                    addFailure(resultCollector, batch.getFullID(),"2F-M3: There should have been a film covering the dateranges "
-                            + dateRange.getFromDate() + " to " + dateRange.getToDate());
-                }
-                success = false;
-
+            dateRanges.remove(selectedDateRange);
+            selectedDateRange = null;
+        }
+        if (dateRanges.size() > 0) {
+            for (NewspaperDateRange dateRange : dateRanges) {
+                addFailure(resultCollector, batch.getFullID(),"2F-M3: There should have been a film covering the dateranges "
+                        + dateRange.getFromDate() + " to " + dateRange.getToDate());
             }
-
-
-        } catch (SQLException e) {
-            resultCollector
-                    .addFailure(batch.getFullID(), "exception", getClass().getSimpleName(),
-                            "2F: Couldn't read batch information from mfpak: " + e.toString(),
-                            Strings.getStackTrace(e));
             success = false;
 
         }
+
         return success;
     }
 
@@ -200,32 +184,25 @@ public class MFpakStructureChecks implements Validator {
                 "/node[@shortName='" + batch.getFullID() + "']/node[starts-with(@shortName,'" + batch.getBatchID()
                         + "')]/attribute";
         String avisId = null;
-        try {
-            avisId = mfPakDAO.getNewspaperID(batch.getBatchID());
-            NodeList filmXmls = xpath.selectNodeList(doc, xpathFilmXml);
+        avisId = context.getAvisId();
+        NodeList filmXmls = xpath.selectNodeList(doc, xpathFilmXml);
 
-            for (int i = 0; i < filmXmls.getLength(); i++) {
-                Node filmXmlNode = filmXmls.item(i);
+        for (int i = 0; i < filmXmls.getLength(); i++) {
+            Node filmXmlNode = filmXmls.item(i);
 
-                String filmXmlName = filmXmlNode.getAttributes().getNamedItem("shortName").getNodeValue();
+            String filmXmlName = filmXmlNode.getAttributes().getNamedItem("shortName").getNodeValue();
 
-                String filmXmlPath = filmXmlNode.getAttributes().getNamedItem("name").getNodeValue();
+            String filmXmlPath = filmXmlNode.getAttributes().getNamedItem("name").getNodeValue();
 
-                String avisIdFromFilmXml = filmXmlName.replaceFirst("-.*$", "");
+            String avisIdFromFilmXml = filmXmlName.replaceFirst("-.*$", "");
 
-                if (avisIdFromFilmXml == null || avisId == null || !avisIdFromFilmXml.equals(avisId)) {
-                    addFailure(resultCollector,filmXmlPath,"2F-M1: avisId mismatch. Name gives " + avisIdFromFilmXml
-                            + " but mfpak gives " + avisId);
-                    success = false;
-                }
+            if (avisIdFromFilmXml == null || avisId == null || !avisIdFromFilmXml.equals(avisId)) {
+                addFailure(resultCollector,filmXmlPath,"2F-M1: avisId mismatch. Name gives " + avisIdFromFilmXml
+                        + " but mfpak gives " + avisId);
+                success = false;
             }
-
-        } catch (SQLException e) {
-            resultCollector.addFailure(batch.getFullID(), "exception", getClass().getSimpleName(),
-                    "2F: Couldn't read avisId from mfpak:" + e.toString(),
-                    Strings.getStackTrace(e));
-            success = false;
         }
+
         return success;
     }
 
@@ -277,25 +254,18 @@ public class MFpakStructureChecks implements Validator {
         NewspaperBatchOptions options;
         boolean success = true;
 
-        try {
-            options = mfPakDAO.getBatchOptions(batch.getBatchID());
-            if (options == null){
-                success = false;
-                addFailure(resultCollector,batch.getFullID(),"MFPak did not have any batch options");
-                return success;
-            }
-            if (options.isOptionB1() || options.isOptionB2() || options.isOptionB9()) {
-                // According to options, we should check for existence of alto-files
-                success = checkForAltoExistence(nonBrikScanNodes, resultCollector, xpath, success);
-            } else {
-                // According to options, we should check that there exist no alto-files
-                success = checkForAltoNonExistence(nonBrikScanNodes, resultCollector, xpath, success);
-            }
-        } catch (SQLException e) {
-            resultCollector.addFailure(batch.getFullID(), "exception", getClass().getSimpleName(),
-                    "Couldn't read options from mfpak:" + e.toString(),
-                    Strings.getStackTrace(e));
+        options = context.getBatchOptions();
+        if (options == null){
             success = false;
+            addFailure(resultCollector,batch.getFullID(),"MFPak did not have any batch options");
+            return success;
+        }
+        if (options.isOptionB1() || options.isOptionB2() || options.isOptionB9()) {
+            // According to options, we should check for existence of alto-files
+            success = checkForAltoExistence(nonBrikScanNodes, resultCollector, xpath, success);
+        } else {
+            // According to options, we should check that there exist no alto-files
+            success = checkForAltoNonExistence(nonBrikScanNodes, resultCollector, xpath, success);
         }
 
         return success;

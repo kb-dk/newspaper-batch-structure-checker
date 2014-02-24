@@ -3,9 +3,12 @@ package dk.statsbiblioteket.newspaper.xpath;
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
+import dk.statsbiblioteket.medieplatform.batchcontext.BatchContext;
+import dk.statsbiblioteket.medieplatform.batchcontext.BatchContextUtils;
 import dk.statsbiblioteket.newspaper.mfpakintegration.configuration.MfPakConfiguration;
 import dk.statsbiblioteket.newspaper.mfpakintegration.database.MfPakDAO;
 import dk.statsbiblioteket.newspaper.mfpakintegration.database.NewspaperBatchOptions;
+
 import org.testng.annotations.Test;
 
 import java.io.FileInputStream;
@@ -31,11 +34,13 @@ public class MFpakStructureChecksTest {
         mfPakConfiguration.setDatabaseUrl(properties.getProperty(ConfigConstants.MFPAK_URL));
         mfPakConfiguration.setDatabaseUser(properties.getProperty(ConfigConstants.MFPAK_USER));
         mfPakConfiguration.setDatabasePassword(properties.getProperty(ConfigConstants.MFPAK_PASSWORD));
-
-        MFpakStructureChecks mFpakStructureChecks = new MFpakStructureChecks(new MfPakDAO(mfPakConfiguration));
+        Batch batch = new Batch("400022028241");
+        
+        BatchContext context = BatchContextUtils.buildBatchContext(new MfPakDAO(mfPakConfiguration), batch);
+        MFpakStructureChecks mFpakStructureChecks = new MFpakStructureChecks(context);
 
         ResultCollector resultCollector = new ResultCollector("tool", "version");
-        mFpakStructureChecks.validate(new Batch("400022028241"),
+        mFpakStructureChecks.validate(batch,
                 Thread.currentThread()
                       .getContextClassLoader()
                       .getResourceAsStream("assumed-valid-structure.xml"),
@@ -54,7 +59,8 @@ public class MFpakStructureChecksTest {
 
         when(mfPakDAO.getBatchOptions(eq(batch.getBatchID()))).thenReturn(options);
 
-        MFpakStructureChecks mFpakStructureChecks = new MFpakStructureChecks(mfPakDAO);
+        BatchContext context = BatchContextUtils.buildBatchContext(mfPakDAO, batch);
+        MFpakStructureChecks mFpakStructureChecks = new MFpakStructureChecks(context);
 
         ResultCollector resultCollector = new ResultCollector("tool", "version");
         mFpakStructureChecks.validate(batch,
@@ -75,8 +81,8 @@ public class MFpakStructureChecksTest {
         options.setOptionB1(true);
 
         when(mfPakDAO.getBatchOptions(eq(batch.getBatchID()))).thenReturn(options);
-
-        MFpakStructureChecks mFpakStructureChecks = new MFpakStructureChecks(mfPakDAO);
+        BatchContext context = BatchContextUtils.buildBatchContext(mfPakDAO, batch);
+        MFpakStructureChecks mFpakStructureChecks = new MFpakStructureChecks(context);
 
         ResultCollector resultCollector = new ResultCollector("tool", "version");
         mFpakStructureChecks.validate(batch,
@@ -100,8 +106,8 @@ public class MFpakStructureChecksTest {
         options.setOptionB9(false);
 
         when(mfPakDAO.getBatchOptions(eq(batch.getBatchID()))).thenReturn(options);
-
-        MFpakStructureChecks mFpakStructureChecks = new MFpakStructureChecks(mfPakDAO);
+        BatchContext context = BatchContextUtils.buildBatchContext(mfPakDAO, batch);
+        MFpakStructureChecks mFpakStructureChecks = new MFpakStructureChecks(context);
 
         ResultCollector resultCollector = new ResultCollector("tool", "version");
         mFpakStructureChecks.validate(batch,
@@ -123,8 +129,8 @@ public class MFpakStructureChecksTest {
         options.setOptionB1(true);
 
         when(mfPakDAO.getBatchOptions(eq(batch.getBatchID()))).thenReturn(options);
-
-        MFpakStructureChecks mFpakStructureChecks = new MFpakStructureChecks(mfPakDAO);
+        BatchContext context = BatchContextUtils.buildBatchContext(mfPakDAO, batch);
+        MFpakStructureChecks mFpakStructureChecks = new MFpakStructureChecks(context);
 
         ResultCollector resultCollector = new ResultCollector("tool", "version");
         mFpakStructureChecks.validate(batch,

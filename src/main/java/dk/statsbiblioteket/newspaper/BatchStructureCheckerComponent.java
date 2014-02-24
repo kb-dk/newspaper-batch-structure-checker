@@ -1,6 +1,7 @@
 package dk.statsbiblioteket.newspaper;
 
 import java.io.ByteArrayInputStream;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
 
@@ -10,6 +11,8 @@ import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.EventHandlerFactory;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.EventRunner;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.TreeEventHandler;
+import dk.statsbiblioteket.medieplatform.batchcontext.BatchContext;
+import dk.statsbiblioteket.medieplatform.batchcontext.BatchContextUtils;
 import dk.statsbiblioteket.newspaper.eventhandlers.BatchStructureEventHandlerFactory;
 import dk.statsbiblioteket.newspaper.mfpakintegration.database.MfPakDAO;
 import dk.statsbiblioteket.newspaper.schematron.StructureValidator;
@@ -43,6 +46,17 @@ public class BatchStructureCheckerComponent extends AbstractRunnableComponent {
      */
     public void doWorkOnBatch(Batch batch,
                               ResultCollector resultCollector) throws Exception {
+        BatchContext context;
+        try {
+            context = BatchContextUtils.buildBatchContext(mfPakDao, batch);
+            if(context.getDateRanges() == null) {
+                throw new RuntimeException("F2: mfpak did not have any date ranges for the batch");
+            }
+            // TODO We should consider checking the context for sanity 
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to obtain the required information from mfpak database. "
+                    + "Check connection and try again", e);
+        }
         EventHandlerFactory eventHandlerFactory =
                 new BatchStructureEventHandlerFactory(getProperties(), resultCollector);
         EventRunner eventRunner = new EventRunner(createIterator(batch));
@@ -61,12 +75,13 @@ public class BatchStructureCheckerComponent extends AbstractRunnableComponent {
             throw new RuntimeException(
                     "Did not generate xml representation of directory structure. Could not complete tests.");
         }
+        
         storeBatchStructure(batch, new ByteArrayInputStream(xml.getBytes("UTF-8")));
 
         Validator validator1 = new StructureValidator(DEMANDS_SCH);
         validator1.validate(batch, new ByteArrayInputStream(xml.getBytes("UTF-8")), resultCollector);
 
-        Validator validator2 = new MFpakStructureChecks(mfPakDao);
+        Validator validator2 = new MFpakStructureChecks(context);
         validator2.validate(batch, new ByteArrayInputStream(xml.getBytes("UTF-8")), resultCollector);
     }
 }
