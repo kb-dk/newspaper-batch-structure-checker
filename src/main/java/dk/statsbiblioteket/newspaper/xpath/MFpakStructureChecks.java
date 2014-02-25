@@ -13,7 +13,7 @@ import org.w3c.dom.NodeList;
 
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
-import dk.statsbiblioteket.medieplatform.batchcontext.BatchContext;
+import dk.statsbiblioteket.newspaper.mfpakintegration.batchcontext.BatchContext;
 import dk.statsbiblioteket.newspaper.BatchStructureCheckerComponent;
 import dk.statsbiblioteket.newspaper.Validator;
 import dk.statsbiblioteket.newspaper.mfpakintegration.database.NewspaperBatchOptions;
