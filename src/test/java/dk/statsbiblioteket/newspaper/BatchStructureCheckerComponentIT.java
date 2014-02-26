@@ -26,7 +26,7 @@ public class BatchStructureCheckerComponentIT {
 
 
     /** Tests that the BatchStructureChecker can parse a production like batch which contain failures. */
-    @Test(groups = "integrationTest")
+    @Test(groups = "testDataTest")
     public void testGoodBatchStructureCheck() throws Exception {
         properties.setProperty(ConfigConstants.ITERATOR_FILESYSTEM_BATCHES_FOLDER, pathToTestBatch + "/" + "small-test-batch");
         properties.setProperty(
@@ -55,7 +55,7 @@ public class BatchStructureCheckerComponentIT {
     }
 
     /** Tests that the BatchStructureChecker can parse a production like batch which contain failures. */
-      @Test(groups = "integrationTest")
+      @Test(groups = "externalTest")
       public void testGoodBatchStructureCheckFedora() throws Exception {
 
           MfPakConfiguration mfPakConfiguration = new MfPakConfiguration();
@@ -85,7 +85,7 @@ public class BatchStructureCheckerComponentIT {
      * Tests that the BatchStructureChecker can parse a production like batch which should contain failures
      * for all .
      */
-    @Test(groups = "integrationTest")
+    @Test(groups = "testDataTest")
     public void testBadBatchStructureCheck() throws Exception {
         properties.setProperty(ConfigConstants.ITERATOR_FILESYSTEM_BATCHES_FOLDER, pathToTestBatch + "/" + "bad-bad-batch");
         properties.setProperty(ConfigConstants.AUTONOMOUS_BATCH_STRUCTURE_STORAGE_DIR, pathToTestBatch + "/" + "bad-bad-batch");
