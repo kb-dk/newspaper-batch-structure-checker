@@ -233,8 +233,8 @@
                                 substring-before(
                                     ../../attribute[ends-with(@shortName,'.film.xml')]/@shortName,'.film.xml'),$filmIdPartPattern,'')"/>
 
-            <!-- Check: editionPageChecker: Any node not ending in .brik must have name of the form [avisID]-[editionID]-[0-9]{4}[A-Z]? where avisID is as in film-xml and editionID is as parent directory name -->
-            <s:assert test="matches(@shortName,concat('^',$avisID,$editionID,'-[0-9]{4}[A-Z]?$'))">
+            <!-- Check: editionPageChecker: Any node not ending in .brik must have name of the form [avisID]-[editionID]-X?[0-9]{4}[A-Z]? where avisID is as in film-xml and editionID is as parent directory name -->
+            <s:assert test="matches(@shortName,concat('^',$avisID,$editionID,'-X?[0-9]{4}[A-Z]?$'))">
                 <s:value-of select="@name"/>: 2F-S25:
                 Invalid prefix for page
             </s:assert>
@@ -244,13 +244,13 @@
                 Mods file '<s:value-of select="concat(@name,'.mods.xml')"/>' missing
             </s:assert>
 
-            <!-- Check: editionPageChecker: Any node not ending in .brik must contain a .mix.xml attribute with name prefix as that of parent node -->
-            <s:assert test="attribute/@shortName = concat(@shortName,'.mix.xml')"><s:value-of select="@name"/>: 2F-S29:
+            <!-- Check: editionPageChecker: Any node not ending in .brik must be an extra page or contain a .mix.xml attribute with name prefix as that of parent node -->
+            <s:assert test="matches(@shortName,'-X[0-9]{4}$') or attribute/@shortName = concat(@shortName,'.mix.xml')"><s:value-of select="@name"/>: 2F-S29:
                 Mix file '<s:value-of select="concat(@name,'.mix.xml')"/>' missing
             </s:assert>
 
-            <!-- Check: editionPageChecker: Any node not ending in .brik must contain a .jp2 node with name prefix as that of parent node -->
-            <s:assert test="node/@shortName = concat(@shortName,'.jp2')"><s:value-of select="@name"/>: 2F-S30:
+            <!-- Check: editionPageChecker: Any node not ending in .brik must be an extra page or contain a .jp2 node with name prefix as that of parent node -->
+            <s:assert test="matches(@shortName,'-X[0-9]{4}$') or node/@shortName = concat(@shortName,'.jp2')"><s:value-of select="@name"/>: 2F-S30:
                 Jp2 file '<s:value-of select="concat(@name,'.jp2')"/>' missing
             </s:assert>
         </s:rule>

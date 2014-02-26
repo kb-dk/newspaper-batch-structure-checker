@@ -217,7 +217,7 @@ public class MFpakStructureChecks implements Validator {
     private boolean validateAlto(Batch batch, ResultCollector resultCollector, XPathSelector xpath, Document doc) {
         boolean success = true;
 
-        final String xpathNonBrikScanNodes = "node[not(ends-with(@shortName, '-brik'))]";
+        final String xpathNonEmptyOrBrikScanNodes = "node[not(ends-with(@shortName, '-brik') or matches(@shortName, '.*-X[0-9]{4}$'))]";
         final String xpathEditionNodes = "node[@shortName != 'UNMATCHED' and @shortName != 'FILM-ISO-target']";
         final String xpathFilmNodes =
                 "/node[@shortName='" + batch.getFullID() + "']/node[starts-with(@shortName,'" + batch.getBatchID() + "')]";
@@ -231,9 +231,9 @@ public class MFpakStructureChecks implements Validator {
             for (int j = 0; j < editionNodes.getLength(); j++) {
                 Node editionNode = editionNodes.item(j);
 
-                NodeList nonBrikScanNodes = xpath.selectNodeList(editionNode, xpathNonBrikScanNodes);
+                NodeList nonEmptyOrBrikScanNodes = xpath.selectNodeList(editionNode, xpathNonEmptyOrBrikScanNodes);
 
-                success &= validateAltoOrNotForNodes(nonBrikScanNodes, batch, resultCollector, xpath);
+                success &= validateAltoOrNotForNodes(nonEmptyOrBrikScanNodes, batch, resultCollector, xpath);
             }
         }
 
@@ -242,13 +242,13 @@ public class MFpakStructureChecks implements Validator {
 
     /**
      * Validate that alto-files exist (or don't exist) where needed according to options as found in the MFpak database
-     * @param nonBrikScanNodes List of nodes representing newspaper page scans (not brik-scans)
+     * @param nonEmptyOrBrikScanNodes List of nodes representing newspaper page scans (not brik-scans)
      * @param batch Batch for which to check for alto
      * @param resultCollector For collecting the results of the check
      * @param xpath The XPathSelector
      * @return Whether or not validation passed with success
      */
-    private boolean validateAltoOrNotForNodes(NodeList nonBrikScanNodes, Batch batch, ResultCollector resultCollector,
+    private boolean validateAltoOrNotForNodes(NodeList nonEmptyOrBrikScanNodes, Batch batch, ResultCollector resultCollector,
                                               XPathSelector xpath) {
         // In this method, a "scan" means an image that was scanned from microfilm, whether a newspaper page, brik, target,...
         NewspaperBatchOptions options;
@@ -262,10 +262,10 @@ public class MFpakStructureChecks implements Validator {
         }
         if (options.isOptionB1() || options.isOptionB2() || options.isOptionB9()) {
             // According to options, we should check for existence of alto-files
-            success = checkForAltoExistence(nonBrikScanNodes, resultCollector, xpath, success);
+            success = checkForAltoExistence(nonEmptyOrBrikScanNodes, resultCollector, xpath, success);
         } else {
             // According to options, we should check that there exist no alto-files
-            success = checkForAltoNonExistence(nonBrikScanNodes, resultCollector, xpath, success);
+            success = checkForAltoNonExistence(nonEmptyOrBrikScanNodes, resultCollector, xpath, success);
         }
 
         return success;
@@ -273,23 +273,23 @@ public class MFpakStructureChecks implements Validator {
 
     /**
      * Check that there exist no alto-files
-     * @param nonBrikScanNodes List of nodes representing newspaper page scans (not brik-scans)
+     * @param nonEmptyOrBrikScanNodes List of nodes representing newspaper page scans (not brik-scans)
      * @param resultCollector For collecting the results of the check
      * @param xpath The XPathSelector
      * @param success "Accumulating" success variable, that should be returned if no failure happened
      * @return False if alto file was found. Returns the received success value otherwise.
      */
-    private boolean checkForAltoNonExistence(NodeList nonBrikScanNodes, ResultCollector resultCollector, XPathSelector xpath,
-                                             boolean success) {
-        for (int i = 0; i < nonBrikScanNodes.getLength(); i++) {
-            Node nonBrikScanNode = nonBrikScanNodes.item(i);
+    private boolean checkForAltoNonExistence(NodeList nonEmptyOrBrikScanNodes, ResultCollector resultCollector,
+                                             XPathSelector xpath, boolean success) {
+        for (int i = 0; i < nonEmptyOrBrikScanNodes.getLength(); i++) {
+            Node nonEmptyOrBrikScanNode = nonEmptyOrBrikScanNodes.item(i);
 
             final String xpathAltoAttribute = "attribute[@shortName = concat(../@shortName,'.alto.xml')]";
-            NodeList altoAttributeNodes = xpath.selectNodeList(nonBrikScanNode, xpathAltoAttribute);
+            NodeList altoAttributeNodes = xpath.selectNodeList(nonEmptyOrBrikScanNode, xpathAltoAttribute);
 
-            String scanName = nonBrikScanNode.getAttributes().getNamedItem("shortName").getNodeValue();
+            String scanName = nonEmptyOrBrikScanNode.getAttributes().getNamedItem("shortName").getNodeValue();
             if (altoAttributeNodes.getLength() != 0) {
-                String scanPath = nonBrikScanNode.getAttributes().getNamedItem("name").getNodeValue();
+                String scanPath = nonEmptyOrBrikScanNode.getAttributes().getNamedItem("name").getNodeValue();
 
                 addFailure(resultCollector, scanPath, "2F-M5: Though there should be none, found alto file for "
                         + scanName);
@@ -301,24 +301,24 @@ public class MFpakStructureChecks implements Validator {
 
     /**
      * Check that there existe alto-files
-     * @param nonBrikScanNodes List of nodes representing newspaper page scans (not brik-scans)
+     * @param nonEmptyOrBrikScanNodes List of nodes representing newspaper page scans (not brik-scans)
      * @param resultCollector For collecting the results of the check
      * @param xpath The XPathSelector
      * @param success "Accumulating" success variable, that should be returned if no failure happened
      * @return False if alto file could not be found for one or more scans. Returns the received success value otherwise.
      */
-    private boolean checkForAltoExistence(NodeList nonBrikScanNodes, ResultCollector resultCollector, XPathSelector xpath,
-                                          boolean success) {
-        for (int i = 0; i < nonBrikScanNodes.getLength(); i++) {
-            Node nonBrikScanNode = nonBrikScanNodes.item(i);
+    private boolean checkForAltoExistence(NodeList nonEmptyOrBrikScanNodes, ResultCollector resultCollector,
+                                          XPathSelector xpath, boolean success) {
+        for (int i = 0; i < nonEmptyOrBrikScanNodes.getLength(); i++) {
+            Node nonEmptyOrBrikScanNode = nonEmptyOrBrikScanNodes.item(i);
 
             final String xpathAltoAttribute = "attribute[@shortName = concat(../@shortName,'.alto.xml')]";
-            NodeList altoAttributeNodes = xpath.selectNodeList(nonBrikScanNode, xpathAltoAttribute);
+            NodeList altoAttributeNodes = xpath.selectNodeList(nonEmptyOrBrikScanNode, xpathAltoAttribute);
 
-            String scanName = nonBrikScanNode.getAttributes().getNamedItem("shortName").getNodeValue();
+            String scanName = nonEmptyOrBrikScanNode.getAttributes().getNamedItem("shortName").getNodeValue();
 
             if (altoAttributeNodes.getLength() != 1) {
-                String scanPath = nonBrikScanNode.getAttributes().getNamedItem("name").getNodeValue();
+                String scanPath = nonEmptyOrBrikScanNode.getAttributes().getNamedItem("name").getNodeValue();
 
                 addFailure(resultCollector, scanPath, "2F-M4: Could not find alto file for " + scanName);
                 success = false;
