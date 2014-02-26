@@ -12,6 +12,7 @@ import dk.statsbiblioteket.newspaper.mfpakintegration.database.NewspaperBatchOpt
 import org.testng.annotations.Test;
 
 import java.io.FileInputStream;
+import java.util.Date;
 import java.util.Properties;
 
 import static org.mockito.Matchers.eq;
@@ -58,6 +59,8 @@ public class MFpakStructureChecksTest {
         options.setOptionB9(false);
 
         when(mfPakDAO.getBatchOptions(eq(batch.getBatchID()))).thenReturn(options);
+        when(mfPakDAO.getNewspaperID(eq(batch.getBatchID()))).thenReturn("foobar");
+        when(mfPakDAO.getBatchShipmentDate(eq(batch.getBatchID()))).thenReturn(new Date(0));
 
         BatchContext context = BatchContextUtils.buildBatchContext(mfPakDAO, batch);
         MFpakStructureChecks mFpakStructureChecks = new MFpakStructureChecks(context);
@@ -81,6 +84,9 @@ public class MFpakStructureChecksTest {
         options.setOptionB1(true);
 
         when(mfPakDAO.getBatchOptions(eq(batch.getBatchID()))).thenReturn(options);
+        when(mfPakDAO.getNewspaperID(eq(batch.getBatchID()))).thenReturn("foobar");
+        when(mfPakDAO.getBatchShipmentDate(eq(batch.getBatchID()))).thenReturn(new Date(0));
+        
         BatchContext context = BatchContextUtils.buildBatchContext(mfPakDAO, batch);
         MFpakStructureChecks mFpakStructureChecks = new MFpakStructureChecks(context);
 
@@ -106,6 +112,9 @@ public class MFpakStructureChecksTest {
         options.setOptionB9(false);
 
         when(mfPakDAO.getBatchOptions(eq(batch.getBatchID()))).thenReturn(options);
+        when(mfPakDAO.getNewspaperID(eq(batch.getBatchID()))).thenReturn("foobar");
+        when(mfPakDAO.getBatchShipmentDate(eq(batch.getBatchID()))).thenReturn(new Date(0));
+        
         BatchContext context = BatchContextUtils.buildBatchContext(mfPakDAO, batch);
         MFpakStructureChecks mFpakStructureChecks = new MFpakStructureChecks(context);
 
@@ -129,6 +138,9 @@ public class MFpakStructureChecksTest {
         options.setOptionB1(true);
 
         when(mfPakDAO.getBatchOptions(eq(batch.getBatchID()))).thenReturn(options);
+        when(mfPakDAO.getNewspaperID(eq(batch.getBatchID()))).thenReturn("foobar");
+        when(mfPakDAO.getBatchShipmentDate(eq(batch.getBatchID()))).thenReturn(new Date(0));
+        
         BatchContext context = BatchContextUtils.buildBatchContext(mfPakDAO, batch);
         MFpakStructureChecks mFpakStructureChecks = new MFpakStructureChecks(context);
 
