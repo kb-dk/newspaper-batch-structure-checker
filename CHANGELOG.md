@@ -1,5 +1,8 @@
-1.2.4
-* Updated to newspaper-parent 1.1
+1.3
+* Updated to newspaper-parent 1.1, supporting new test strategy
+* Use new tree iterator
+* Only read SQL database information once
+* Support new empty pages change request
 
 1.2.3
 * Updated to newspaper-batch-event-framework 1.4.6.
