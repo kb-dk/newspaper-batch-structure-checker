@@ -8,6 +8,7 @@ import java.util.Properties;
 import dk.statsbiblioteket.medieplatform.autonomous.AbstractRunnableComponent;
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
+import dk.statsbiblioteket.medieplatform.autonomous.SBOIBasedAbstractRunnableComponent;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.EventHandlerFactory;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.EventRunner;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.TreeEventHandler;
@@ -20,7 +21,7 @@ import dk.statsbiblioteket.newspaper.schematron.XmlBuilderEventHandler;
 import dk.statsbiblioteket.newspaper.xpath.MFpakStructureChecks;
 
 /** Checks the directory structure of a batch. This should run both at Ninestars and at SB. */
-public class BatchStructureCheckerComponent extends AbstractRunnableComponent {
+public class BatchStructureCheckerComponent extends SBOIBasedAbstractRunnableComponent {
 
     public static final String DEMANDS_SCH = "demands.sch";
     public static final String TYPE = "filestructure";
