@@ -55,13 +55,13 @@
         </dependency>
         <dependency>
             <groupId>dk.statsbiblioteket.newspaper</groupId>
-            <artifactId>autonomous-component</artifactId>
-            <version>${autonoumous.component.framework.version}</version>
+            <artifactId>sboi-doms-autonomous-component</artifactId>
+            <version>1.6-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>dk.statsbiblioteket.newspaper</groupId>
-            <artifactId>doms-event-client</artifactId>
-            <version>${autonoumous.component.framework.version}</version>
+            <artifactId>tree-processor-runnable-component</artifactId>
+            <version>1.6-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>dk.statsbiblioteket.newspaper</groupId>
