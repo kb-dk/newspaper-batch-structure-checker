@@ -1,3 +1,8 @@
+1.4
+* Update to newspaper-parent 1.2
+* Add unit tests for missing pages
+* Update to version 1.6 of batch event framework
+
 1.3
 * Updated to newspaper-parent 1.1, supporting new test strategy
 * Use new tree iterator
