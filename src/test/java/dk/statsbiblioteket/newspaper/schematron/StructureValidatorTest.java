@@ -9,13 +9,7 @@ import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.TreeE
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.filesystem.transforming.TransformingIteratorForFileSystems;
 import dk.statsbiblioteket.newspaper.eventhandlers.Util;
 import dk.statsbiblioteket.newspaper.mfpakintegration.configuration.MfPakConfiguration;
-import dk.statsbiblioteket.newspaper.mfpakintegration.database.MfPakDAO;
-import dk.statsbiblioteket.newspaper.mfpakintegration.database.NewspaperBatchOptions;
-import dk.statsbiblioteket.util.xml.DOM;
-import dk.statsbiblioteket.util.xml.XPathSelector;
 import org.testng.annotations.Test;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -25,9 +19,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
@@ -36,12 +27,29 @@ import static org.testng.Assert.assertTrue;
  */
 public class StructureValidatorTest {
 
+
+    /**
+         * Checks that running on a well-structured batch produces no errors.
+         * @throws Exception
+         */
+        @Test()
+        public void testValidate() throws Exception {
+            ResultCollector resultCollector = new ResultCollector("Batch Structure Checker", "v0.1");
+            StructureValidator validator = new StructureValidator("demands.sch");
+            Batch batch = new Batch();
+            batch.setRoundTripNumber(1);
+            batch.setBatchID("400022028241");
+            validator.validate(batch, Thread.currentThread().getContextClassLoader().getResourceAsStream("MissingPages.xml"), resultCollector);
+            System.out.println(resultCollector.toReport());
+        }
+
+
     /**
      * Checks that running on a well-structured batch produces no errors.
      * @throws Exception
      */
     @Test(groups = "integrationTest")
-    public void testValidate() throws Exception {
+    public void testValidateIT() throws Exception {
         String pathToProperties = System.getProperty("integration.test.newspaper.properties");
         String pathToTestBatch = System.getProperty("integration.test.newspaper.testdata");
         Properties properties = new Properties();
