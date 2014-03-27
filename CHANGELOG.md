@@ -2,6 +2,7 @@
 * Update to newspaper-parent 1.2
 * Add unit tests for missing pages
 * Update to version 1.6 of batch event framework
+* Update to version 1.5 of newspaper mfpak integration
 
 1.3
 * Updated to newspaper-parent 1.1, supporting new test strategy
