@@ -16,6 +16,8 @@
         <attribute name="B400022028241-RT1/400022028241-1/adresseavisen1759-400022028241-1.film.xml"
                    shortName="adresseavisen1759-400022028241-1.film.xml"
                    checksum="6b67e84d258575be9542753603e4b734"/>
+        <node name="B400022028241-RT1/400022028241-1/FILM-ISO-target" shortName="FILM-ISO-target">
+        </node>
         <node name="B400022028241-RT1/400022028241-1/1795-06-01" shortName="1795-06-01">
             <attribute name="B400022028241-RT1/400022028241-1/1795-06-01/adresseavisen1759-1795-06-01.edition.xml"
                        shortName="adresseavisen1759-1795-06-01.edition.xml"

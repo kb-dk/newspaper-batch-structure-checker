@@ -153,15 +153,11 @@
 
 
     <s:pattern id="filmIsoTargetFileChecker">
-        <!-- Check: filmIsoTargetFileChecker: If there is a FILM-ISO-target folder, it must contain atleast one file (node) -->
-        <s:rule context="/node/node[@shortName != $workshiftISOTarget]/node[@shortName = 'FILM-ISO-target']">
-            <s:let name="isoName"
-                   value="substring-before(../attribute[ends-with(@shortName,'.film.xml')]/@shortName,'.film.xml')"/>
-            <s:let name="isoEnding" value="'-ISO-[0-9]{4}$'"/>
-
-            <s:assert test="count(node[matches(@shortName, ../concat('^', $isoName, $isoEnding))]) > 0">
+        <!-- Check: filmIsoTargetFileChecker: FILM-ISO-target foldermust exist -->
+        <s:rule context="/node/node[@shortName != $workshiftISOTarget]">
+            <s:assert test="node[@shortName = 'FILM-ISO-target']">
                 <s:value-of select="@name"/>: 2F-S20:
-                No files found
+                FILM-ISO-target folder must exist
             </s:assert>
         </s:rule>
     </s:pattern>
