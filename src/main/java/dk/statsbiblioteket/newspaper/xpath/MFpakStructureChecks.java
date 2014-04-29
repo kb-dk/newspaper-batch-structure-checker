@@ -115,15 +115,18 @@ public class MFpakStructureChecks implements Validator {
                         }
                         if (selectedDateRange == null) {
                             addFailure(resultCollector, editionPath,
-                                    "2F-M3: This edition is not valid according to the date ranges "
+                                    "2F-M3: This edition is not valid according to any date range "
                                             + "from mfpak");
                             success = false;
                         }
                     } else {
                         if (!selectedDateRange.isIncluded(editionDate)) {
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
                             addFailure(resultCollector, editionPath,
-                                    "2F-M3: This edition is not valid according to the date ranges "
-                                            + "from mfpak");
+                                    "2F-M3: This edition is not in the same mfpak date range as other editions"
+                                            + "in the same film. Previously found range was "
+                                            + "(" + simpleDateFormat.format(selectedDateRange.getFromDate())
+                                            + "-" + simpleDateFormat.format(selectedDateRange.getToDate()) + ")");
                             success = false;
                         }
                     }
