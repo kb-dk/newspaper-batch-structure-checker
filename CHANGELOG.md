@@ -1,7 +1,6 @@
 1.5
 * Update check for ISO-FILM-target: Require the directory, but allow it to be empty
 * Update error message in mfpak date checks to be clearer
-* Update frameworks to newest versions. Now supports a wider range of triggers
 
 1.4
 * Update to newspaper-parent 1.2
