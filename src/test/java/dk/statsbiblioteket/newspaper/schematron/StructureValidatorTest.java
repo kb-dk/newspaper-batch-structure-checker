@@ -40,6 +40,7 @@ public class StructureValidatorTest {
             batch.setRoundTripNumber(1);
             batch.setBatchID("400022028241");
             validator.validate(batch, Thread.currentThread().getContextClassLoader().getResourceAsStream("MissingPages.xml"), resultCollector);
+            assertTrue(resultCollector.isSuccess());
             System.out.println(resultCollector.toReport());
         }
 
@@ -81,6 +82,7 @@ public class StructureValidatorTest {
         batch.setRoundTripNumber(1);
         batch.setBatchID("400022028241");
         validator.validate(batch, new ByteArrayInputStream(xml.getBytes("UTF-8")), resultCollector);
+        assertTrue(resultCollector.isSuccess());
         System.out.println(resultCollector.toReport());
     }
 
