@@ -6,20 +6,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
-import dk.statsbiblioteket.newspaper.mfpakintegration.batchcontext.BatchContext;
 import dk.statsbiblioteket.newspaper.BatchStructureCheckerComponent;
 import dk.statsbiblioteket.newspaper.Validator;
+import dk.statsbiblioteket.newspaper.mfpakintegration.batchcontext.BatchContext;
 import dk.statsbiblioteket.newspaper.mfpakintegration.database.NewspaperBatchOptions;
 import dk.statsbiblioteket.newspaper.mfpakintegration.database.NewspaperDateRange;
 import dk.statsbiblioteket.util.xml.DOM;
 import dk.statsbiblioteket.util.xml.XPathSelector;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  *  This class performs the structure checks that require information from MFpak.
@@ -27,6 +25,7 @@ import dk.statsbiblioteket.util.xml.XPathSelector;
  */
 public class MFpakStructureChecks implements Validator {
     private BatchContext context;
+    private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public MFpakStructureChecks(BatchContext context) {
         this.context = context;
@@ -68,7 +67,7 @@ public class MFpakStructureChecks implements Validator {
      * @param doc the structure document
      * @return true if these tests are valid
      */
-    private boolean validateDateRanges(Batch batch,
+    protected boolean validateDateRanges(Batch batch,
                                        ResultCollector resultCollector,
                                        XPathSelector xpath,
                                        Document doc) {
@@ -91,12 +90,14 @@ public class MFpakStructureChecks implements Validator {
             success = false;
         }
 
-        NewspaperDateRange selectedDateRange = null;
-
         for (int i = 0; i < filmNodes.getLength(); i++) {
+            List<NewspaperDateRange> matchingDateRanges = dateRanges;
             Node filmNode = filmNodes.item(i);
+            String filmShortName = filmNode.getAttributes().getNamedItem("shortName").getNodeValue();
 
             NodeList editionNodes = xpath.selectNodeList(filmNode, xpathEditionNode);
+            Date firstEdition = null;
+            Date lastEdition = null;
 
             for (int j = 0; j < editionNodes.getLength(); j++) {
                 Node editionNode = editionNodes.item(j);
@@ -106,44 +107,51 @@ public class MFpakStructureChecks implements Validator {
 
                 try {
                     Date editionDate = dateFormat.parse(editionShortName);
-                    if (selectedDateRange == null) {
-                        for (NewspaperDateRange dateRange : dateRanges) {
-                            if (dateRange.isIncluded(editionDate)) {
-                                selectedDateRange = dateRange;
-                                break;
-                            }
-                        }
-                        if (selectedDateRange == null) {
-                            addFailure(resultCollector, editionPath,
-                                    "2F-M3: This edition is not valid according to any date range "
-                                            + "from mfpak");
-                            success = false;
-                        }
+                    if (firstEdition == null) {
+                        firstEdition = lastEdition = editionDate;
                     } else {
-                        if (!selectedDateRange.isIncluded(editionDate)) {
-                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                            addFailure(resultCollector, editionPath,
-                                    "2F-M3: This edition is not in the same mfpak date range as other editions"
-                                            + "in the same film. Previously found range was "
-                                            + "(" + simpleDateFormat.format(selectedDateRange.getFromDate())
-                                            + "-" + simpleDateFormat.format(selectedDateRange.getToDate()) + ")");
-                            success = false;
+                        if (firstEdition.compareTo(editionDate) > 1) {
+                            firstEdition = editionDate;
+                        }
+                        if (lastEdition.compareTo(editionDate) < 1) {
+                            lastEdition = editionDate;
                         }
                     }
-
+                    List<NewspaperDateRange> newMmatchingDateRanges = new ArrayList();
+                    for (NewspaperDateRange dateRange : matchingDateRanges) {
+                        if (dateRange.isIncluded(editionDate)) {
+                            newMmatchingDateRanges.add(dateRange);
+                        }
+                    }
+                    matchingDateRanges = newMmatchingDateRanges;
                 } catch (ParseException e) {
                     addFailure(resultCollector, editionPath,
                             "2F-M3: Failed to parse date from edition folder: " + e.toString());
                     success = false;
                 }
             }
-            dateRanges.remove(selectedDateRange);
-            selectedDateRange = null;
+            if (matchingDateRanges.isEmpty()) {
+                addFailure(resultCollector, filmShortName,
+                        "2F-M3: The date range (" +
+                                simpleDateFormat.format(firstEdition) + " - " +
+                                simpleDateFormat.format(lastEdition) + ") for the film editions are not valid " +
+                                "according to any date range from mfpak");
+                success = false;
+            } else if (matchingDateRanges.size() < 1) {
+                addFailure(resultCollector, filmShortName,
+                "2F-M3: The date range (" +
+                        simpleDateFormat.format(firstEdition) + " - " +
+                        simpleDateFormat.format(lastEdition) + ") for the film editions match more than one " +
+                        "date range from mfpak");
+            } else {
+                dateRanges.remove(matchingDateRanges.get(0));
+            }
         }
         if (dateRanges.size() > 0) {
             for (NewspaperDateRange dateRange : dateRanges) {
                 addFailure(resultCollector, batch.getFullID(),"2F-M3: There should have been a film covering the dateranges "
-                        + dateRange.getFromDate() + " to " + dateRange.getToDate());
+                        + simpleDateFormat.format(dateRange.getFromDate()) + " - "
+                        + simpleDateFormat.format(dateRange.getToDate()));
             }
             success = false;
 
@@ -160,7 +168,7 @@ public class MFpakStructureChecks implements Validator {
      * @param details the details of the failure
      * @return false
      */
-    private boolean addFailure(ResultCollector resultCollector,
+    protected boolean addFailure(ResultCollector resultCollector,
                                String refToFailedThing,
                                String description,
                                String... details) {
@@ -178,7 +186,7 @@ public class MFpakStructureChecks implements Validator {
      * @param doc the structure document
      * @return false if any film contains a avisID not expected in MFpak.
      */
-    private boolean validateAvisId(Batch batch,
+    protected boolean validateAvisId(Batch batch,
                                    ResultCollector resultCollector,
                                    XPathSelector xpath,
                                    Document doc) {
