@@ -1,3 +1,6 @@
+1.6
+* Edition date checking now supports overlapping MFPak dates.
+
 1.5
 * Update check for ISO-FILM-target: Require the directory, but allow it to be empty
 * Update error message in mfpak date checks to be clearer

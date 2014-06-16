@@ -110,20 +110,20 @@ public class MFpakStructureChecks implements Validator {
                     if (firstEdition == null) {
                         firstEdition = lastEdition = editionDate;
                     } else {
-                        if (firstEdition.compareTo(editionDate) > 1) {
+                        if (firstEdition.after(editionDate)) {
                             firstEdition = editionDate;
                         }
-                        if (lastEdition.compareTo(editionDate) < 1) {
+                        if (lastEdition.before(editionDate)) {
                             lastEdition = editionDate;
                         }
                     }
-                    List<NewspaperDateRange> newMmatchingDateRanges = new ArrayList();
+                    List<NewspaperDateRange> newMatchingDateRanges = new ArrayList();
                     for (NewspaperDateRange dateRange : matchingDateRanges) {
                         if (dateRange.isIncluded(editionDate)) {
-                            newMmatchingDateRanges.add(dateRange);
+                            newMatchingDateRanges.add(dateRange);
                         }
                     }
-                    matchingDateRanges = newMmatchingDateRanges;
+                    matchingDateRanges = newMatchingDateRanges;
                 } catch (ParseException e) {
                     addFailure(resultCollector, editionPath,
                             "2F-M3: Failed to parse date from edition folder: " + e.toString());
@@ -141,8 +141,8 @@ public class MFpakStructureChecks implements Validator {
                 addFailure(resultCollector, filmShortName,
                 "2F-M3: The date range (" +
                         simpleDateFormat.format(firstEdition) + " - " +
-                        simpleDateFormat.format(lastEdition) + ") for the film editions match more than one " +
-                        "date range from mfpak");
+                        simpleDateFormat.format(lastEdition) + ") for the film editions match more than one (" +
+                        matchingDateRanges.size() + ") date range from mfpak");
             } else {
                 dateRanges.remove(matchingDateRanges.get(0));
             }

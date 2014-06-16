@@ -163,7 +163,7 @@ public class MFpakStructureChecksTest {
     }
 
     @Test
-    public void testDateValideFilmDates() throws ParseException {
+    public void testDateValidFilmDates() throws ParseException {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Batch testBatch = new Batch("500022028241");
         BatchContext contextMock = mock(BatchContext.class);
@@ -192,7 +192,7 @@ public class MFpakStructureChecksTest {
     }
 
     @Test
-    public void testDateInvalideFilmDates() throws ParseException {
+    public void testDateInvalidFilmDates() throws ParseException {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Batch testBatch = new Batch("500022028241");
         BatchContext contextMock = mock(BatchContext.class);
@@ -231,7 +231,7 @@ public class MFpakStructureChecksTest {
     }
 
     @Test
-    public void testDateRagesWithOverlappingValideFilmDates() throws ParseException {
+    public void testDateRagesWithOverlappingValidFilmDates() throws ParseException {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Batch testBatch = new Batch("500022028241");
         BatchContext contextMock = mock(BatchContext.class);
@@ -260,7 +260,7 @@ public class MFpakStructureChecksTest {
     }
 
     @Test
-    public void testDateRangesWithOverlappingInvalideFilmDates() throws ParseException {
+    public void testDateRangesWithOverlappingInvalidFilmDates() throws ParseException {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Batch testBatch = new Batch("500022028241");
         BatchContext contextMock = mock(BatchContext.class);
