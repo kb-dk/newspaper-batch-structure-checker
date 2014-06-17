@@ -9,10 +9,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.newspaper.BatchStructureCheckerComponent;
-import dk.statsbiblioteket.newspaper.BatchStructureCheckerExecutable;
 import dk.statsbiblioteket.newspaper.Validator;
 import dk.statsbiblioteket.newspaper.mfpakintegration.batchcontext.BatchContext;
 import dk.statsbiblioteket.newspaper.mfpakintegration.database.NewspaperBatchOptions;
@@ -20,20 +25,14 @@ import dk.statsbiblioteket.newspaper.mfpakintegration.database.NewspaperDateRang
 import dk.statsbiblioteket.util.xml.DOM;
 import dk.statsbiblioteket.util.xml.XPathSelector;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 /**
  *  This class performs the structure checks that require information from MFpak.
  *
  */
 public class MFpakStructureChecks implements Validator {
-    private static Logger log = LoggerFactory.getLogger(MFpakStructureChecks.class);
+    private final static Logger log = LoggerFactory.getLogger(MFpakStructureChecks.class);
     private BatchContext context;
-    private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private final static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public MFpakStructureChecks(BatchContext context) {
         this.context = context;
@@ -79,7 +78,6 @@ public class MFpakStructureChecks implements Validator {
                                        ResultCollector resultCollector,
                                        XPathSelector xpath,
                                        Document doc) {
-        boolean success = true;
         final String xpathFilmNode =
                 "/node[@shortName='" + batch.getFullID() + "']/node[starts-with(@shortName,'" + batch.getBatchID()
                         + "')]";
@@ -92,24 +90,14 @@ public class MFpakStructureChecks implements Validator {
             addFailure(resultCollector,batch.getFullID(),"2F-M2: Wrong number of films. File structure contains '"
                     + filmNodes.getLength()
                     + "' but mfpak contains '" + mfpakDateRanges.size() + "'");
-            success = false;
         }
 
-        List<FilmDateRange> filmRanges = buildBatchStructureDateRanges(filmNodes, xpath, resultCollector);
-        if(!resultCollector.isSuccess()) {
-            success = false;
-        }
+        List<FilmDateRange> unmappedFilmRanges = buildBatchStructureDateRanges(filmNodes, xpath, resultCollector);
+       
+        eliminateUniqueDateRanges(unmappedFilmRanges, mfpakDateRanges); 
         
-        Set<NewspaperDateRange> eliminatedNewspaperDateRanges;
-        Set<FilmDateRange> eliminatedFilmDateRanges;
-        do {
-            eliminatedNewspaperDateRanges = new HashSet<>();
-            eliminatedFilmDateRanges = new HashSet<>();
-            eliminateUniqueDateRanges(filmRanges, mfpakDateRanges, eliminatedFilmDateRanges, eliminatedNewspaperDateRanges); 
-        } while (!eliminatedNewspaperDateRanges.isEmpty() || !eliminatedFilmDateRanges.isEmpty());
-
-        if(!filmRanges.isEmpty()) {
-            for(FilmDateRange dateRange : filmRanges) {
+        if(!unmappedFilmRanges.isEmpty()) {
+            for(FilmDateRange dateRange : unmappedFilmRanges) {
                 if(dateRange.getMatchedRanges() < 1) {
                     addFailure(resultCollector, dateRange.getFilmShortName(),
                             "2F-M3: The date range (" +
@@ -123,11 +111,10 @@ public class MFpakStructureChecks implements Validator {
                                     simpleDateFormat.format(dateRange.getDateRange().getToDate()) + ") for the film editions match more than one (" +
                                     dateRange.getMatchedRanges() + ") date range from mfpak");
                 } else {
-                    log.error("A date range was matched excatly one time, "
-                            + "this should have gone in the bucket with uniquely matched ranges, not lefte over!");
+                    log.error("This should never happen. A date range was matched excatly one time, "
+                            + "this should have gone in the bucket with uniquely matched ranges, not left over!");
                 }
             }
-            success = false;
         }
         
         if (!mfpakDateRanges.isEmpty()) {
@@ -136,11 +123,9 @@ public class MFpakStructureChecks implements Validator {
                         + simpleDateFormat.format(dateRange.getFromDate()) + " - "
                         + simpleDateFormat.format(dateRange.getToDate()));
             }
-            success = false;
-
         }
         
-        return success;
+        return resultCollector.isSuccess();
     }
     
     /**
@@ -151,8 +136,10 @@ public class MFpakStructureChecks implements Validator {
      * @param uniqueFilmRanges FilmDateRanges uniquely identified
      * @param uniqueNewspaperDateRanges NewspaperDateRanges uniquely identified
      */
-    private void eliminateUniqueDateRanges(List<FilmDateRange> filmRanges, List<NewspaperDateRange> mfpakDateRanges,
-            Set<FilmDateRange> uniqueFilmRanges, Set<NewspaperDateRange> uniqueNewspaperDateRanges) {
+    private void eliminateUniqueDateRanges(List<FilmDateRange> filmRanges, List<NewspaperDateRange> mfpakDateRanges) {
+        Set<FilmDateRange> uniquelyMappedFilmRanges = new HashSet<>();
+        Set<NewspaperDateRange> uniquelyMappedNewspaperDateRanges = new HashSet<>();
+        
         for(FilmDateRange filmRange : filmRanges) {
             filmRange.setMatchedRanges(0);
         }
@@ -166,18 +153,22 @@ public class MFpakStructureChecks implements Validator {
                 }
             }
             if(matchesFound == 1) {
-                uniqueNewspaperDateRanges.add(dateRange);
+                uniquelyMappedNewspaperDateRanges.add(dateRange);
             }
         }
 
         for(FilmDateRange filmRange : filmRanges) {
             if(filmRange.getMatchedRanges() == 1) {
-                uniqueFilmRanges.add(filmRange);
+                uniquelyMappedFilmRanges.add(filmRange);
             }
         }
         
-        mfpakDateRanges.removeAll(uniqueNewspaperDateRanges);
-        filmRanges.removeAll(uniqueFilmRanges);
+        mfpakDateRanges.removeAll(uniquelyMappedNewspaperDateRanges);
+        filmRanges.removeAll(uniquelyMappedFilmRanges);
+        
+        if(!uniquelyMappedFilmRanges.isEmpty() || !uniquelyMappedNewspaperDateRanges.isEmpty()) {
+            eliminateUniqueDateRanges(filmRanges, mfpakDateRanges);
+        }
     }
     
     private List<FilmDateRange> buildBatchStructureDateRanges(NodeList filmNodes, XPathSelector xpath, ResultCollector resultCollector) {
