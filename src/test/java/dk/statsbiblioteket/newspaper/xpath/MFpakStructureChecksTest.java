@@ -1,12 +1,16 @@
 package dk.statsbiblioteket.newspaper.xpath;
 
 import java.io.FileInputStream;
+import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
@@ -17,8 +21,15 @@ import dk.statsbiblioteket.newspaper.mfpakintegration.configuration.MfPakConfigu
 import dk.statsbiblioteket.newspaper.mfpakintegration.database.MfPakDAO;
 import dk.statsbiblioteket.newspaper.mfpakintegration.database.NewspaperBatchOptions;
 import dk.statsbiblioteket.newspaper.mfpakintegration.database.NewspaperDateRange;
+import dk.statsbiblioteket.newspaper.xpath.MFpakStructureChecks.FilmDateRange;
 import dk.statsbiblioteket.util.xml.DOM;
+import dk.statsbiblioteket.util.xml.XPathSelector;
+
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+
 import static org.mockito.Matchers.anyVararg;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -27,9 +38,18 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertEquals;
 
 public class MFpakStructureChecksTest {
-
+/*
+    @BeforeMethod 
+    public void nukeBatchContext() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+        Field contexts = BatchContextUtils.class.getDeclaredField("batchContexts");
+        contexts.setAccessible(true);
+        Map m = (Map) contexts.get(null);
+        m.clear();
+    }
+*/    
     @Test(groups = "integrationTest")
     public void testValidate() throws Exception {
         String pathToProperties = System.getProperty("integration.test.newspaper.properties");
@@ -193,8 +213,8 @@ public class MFpakStructureChecksTest {
         when(contextMock.getDateRanges()).thenReturn(Arrays.asList(film1DateRange, film2DateRange));
         MFpakStructureChecks mFpakStructureChecks = new MFpakStructureChecks(contextMock);
         String batchXmlStructure = createBatchXmlDoc(testBatch.getBatchID(),
-                createFilmXml(testBatch.getBatchID(), 1, "1795-06-16", "1795-06-17"),
-                createFilmXml(testBatch.getBatchID(), 2, "1795-06-13", "1795-06-14", "1795-06-15"));
+                createBatchStructureXml(testBatch.getBatchID(), 1, "1795-06-16-01", "1795-06-17-01"),
+                createBatchStructureXml(testBatch.getBatchID(), 2, "1795-06-13-01", "1795-06-14-01", "1795-06-15-01"));
         mFpakStructureChecks.validateDateRanges(
                 testBatch,
                 resultCollectorMock,
@@ -221,7 +241,7 @@ public class MFpakStructureChecksTest {
         when(contextMock.getDateRanges()).thenReturn(Arrays.asList(film1DateRange));
         MFpakStructureChecks mFpakStructureChecks = new MFpakStructureChecks(contextMock);
         String batchXmlStructure = createBatchXmlDoc(testBatch.getBatchID(),
-                createFilmXml(testBatch.getBatchID(), 1, "1795-06-15", "1795-06-16"));
+                createBatchStructureXml(testBatch.getBatchID(), 1, "1795-06-15-01", "1795-06-16-01"));
         mFpakStructureChecks.validateDateRanges(
                 testBatch,
                 resultCollectorMock,
@@ -266,8 +286,8 @@ public class MFpakStructureChecksTest {
         when(contextMock.getDateRanges()).thenReturn(Arrays.asList(film1DateRange, film2DateRange));
         MFpakStructureChecks mFpakStructureChecks = new MFpakStructureChecks(contextMock);
         String batchXmlStructure = createBatchXmlDoc(testBatch.getBatchID(),
-                createFilmXml(testBatch.getBatchID(), 1, "1795-06-14", "1795-06-15", "1795-06-16", "1795-06-17"),
-                createFilmXml(testBatch.getBatchID(), 2, "1795-06-13", "1795-06-14", "1795-06-15"));
+                createBatchStructureXml(testBatch.getBatchID(), 1, "1795-06-14-01", "1795-06-15-01", "1795-06-16-01", "1795-06-17-01"),
+                createBatchStructureXml(testBatch.getBatchID(), 2, "1795-06-13-01", "1795-06-14-01", "1795-06-15-01"));
         mFpakStructureChecks.validateDateRanges(
                 testBatch,
                 resultCollectorMock,
@@ -297,8 +317,8 @@ public class MFpakStructureChecksTest {
         when(contextMock.getDateRanges()).thenReturn(Arrays.asList(film1DateRange, film2DateRange));
         MFpakStructureChecks mFpakStructureChecks = new MFpakStructureChecks(contextMock);
         String batchXmlStructure = createBatchXmlDoc(testBatch.getBatchID(),
-                createFilmXml(testBatch.getBatchID(), 1, "1795-06-14", "1795-06-15", "1795-06-16", "1795-06-17"),
-                createFilmXml(testBatch.getBatchID(), 2, "1795-06-13", "1795-06-14", "1795-06-15", "1795-06-16"));
+                createBatchStructureXml(testBatch.getBatchID(), 1, "1795-06-14-01", "1795-06-15-01", "1795-06-16-01", "1795-06-17-01"),
+                createBatchStructureXml(testBatch.getBatchID(), 2, "1795-06-13-01", "1795-06-14-01", "1795-06-15-01", "1795-06-16-01"));
         mFpakStructureChecks.validateDateRanges(
                 testBatch,
                 resultCollectorMock,
@@ -342,8 +362,8 @@ public class MFpakStructureChecksTest {
         when(contextMock.getDateRanges()).thenReturn(Arrays.asList(film1DateRange, film2DateRange));
         MFpakStructureChecks mFpakStructureChecks = new MFpakStructureChecks(contextMock);
         String batchXmlStructure = createBatchXmlDoc(testBatch.getBatchID(),
-                createFilmXml(testBatch.getBatchID(), 2, "1795-06-04", "1795-06-06", "1795-06-07"),
-                createFilmXml(testBatch.getBatchID(), 1, "1795-06-01", "1795-06-02", "1795-06-05", "1795-06-09"));
+                createBatchStructureXml(testBatch.getBatchID(), 2, "1795-06-04-01", "1795-06-06-01", "1795-06-07-01"),
+                createBatchStructureXml(testBatch.getBatchID(), 1, "1795-06-01-01", "1795-06-02-01", "1795-06-05-01", "1795-06-09-01"));
         mFpakStructureChecks.validateDateRanges(
                 testBatch,
                 resultCollectorMock,
@@ -355,6 +375,89 @@ public class MFpakStructureChecksTest {
         
         verifyNoMoreInteractions(resultCollectorMock);
     }    
+    
+    @Test 
+    public void testDateRangesFuzzyFilmDates() throws ParseException {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Batch testBatch = new Batch("500022028241");
+        BatchContext contextMock = mock(BatchContext.class);
+        ResultCollector resultCollectorMock = mock(ResultCollector.class);
+
+        NewspaperDateRange film1DateRange = new NewspaperDateRange(
+                dateFormat.parse("1795-06-01"),
+                dateFormat.parse("1795-06-30"));
+        
+        when(contextMock.getDateRanges()).thenReturn(Arrays.asList(film1DateRange));
+        MFpakStructureChecks mFpakStructureChecks = new MFpakStructureChecks(contextMock);
+        String batchXmlStructure = createBatchXmlDoc(testBatch.getBatchID(),
+                createBatchStructureXml(testBatch.getBatchID(), 1, "1795-06-01", "1795-06-06-01", "1795-06-30-01"));
+        mFpakStructureChecks.validateDateRanges(
+                testBatch,
+                resultCollectorMock,
+                DOM.createXPathSelector(),
+                DOM.stringToDOM(batchXmlStructure)
+        );
+
+        verify(resultCollectorMock).isSuccess();
+        
+        verifyNoMoreInteractions(resultCollectorMock);
+    }    
+    
+    @Test 
+    public void testFilmDateRangesFuzzyGeneration() throws ParseException {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Batch testBatch = new Batch("500022028241");
+        BatchContext contextMock = mock(BatchContext.class);
+        ResultCollector resultCollectorMock = mock(ResultCollector.class);
+
+        NewspaperDateRange film1DateRange = new NewspaperDateRange(
+                dateFormat.parse("1795-06-01"),
+                dateFormat.parse("1795-06-30"));
+        
+        when(contextMock.getDateRanges()).thenReturn(Arrays.asList(film1DateRange));
+        MFpakStructureChecks mFpakStructureChecks = new MFpakStructureChecks(contextMock);
+        String batchXmlStructure = createBatchXmlDoc(testBatch.getBatchID(),
+                createBatchStructureXml(testBatch.getBatchID(), 1, "1795-02-16-01", "1795-02-15-01", "1795-02-17-01"),
+                createBatchStructureXml(testBatch.getBatchID(), 2, "1795-02-17-01", "1795-02-15-01"),
+                createBatchStructureXml(testBatch.getBatchID(), 3, "1795-01-17-01", "1795-02-01"),
+                createBatchStructureXml(testBatch.getBatchID(), 4, "1795-02-17-01", "1795-02-01"),
+                createBatchStructureXml(testBatch.getBatchID(), 5, "1795-01"));
+        
+        XPathSelector xpath = DOM.createXPathSelector();
+        Document doc = DOM.stringToDOM(batchXmlStructure);
+        String xpathFilmNode =
+                "/node[@shortName='" + testBatch.getFullID() + "']/node[starts-with(@shortName,'" + testBatch.getBatchID()
+                        + "')]";
+        NodeList filmNodes = xpath.selectNodeList(doc, xpathFilmNode);
+        
+        List<MFpakStructureChecks.FilmDateRange> unmappedFilmRanges 
+            = mFpakStructureChecks.buildBatchStructureDateRanges(filmNodes, xpath, resultCollectorMock);
+        
+        assertEquals(5, unmappedFilmRanges.size());
+        
+        assertEquals(testBatch.getBatchID() + "-1", unmappedFilmRanges.get(0).getFilmShortName());
+        assertTrue(unmappedFilmRanges.get(0).startDate.compareTo(dateFormat.parse("1795-02-15")) == 0);
+        assertTrue(unmappedFilmRanges.get(0).endDate.compareTo(dateFormat.parse("1795-02-17")) == 0);
+        
+        assertEquals(testBatch.getBatchID() + "-2", unmappedFilmRanges.get(1).getFilmShortName());
+        assertTrue(unmappedFilmRanges.get(1).startDate.compareTo(dateFormat.parse("1795-02-15")) == 0);
+        assertTrue(unmappedFilmRanges.get(1).endDate.compareTo(dateFormat.parse("1795-02-17")) == 0);
+        
+        assertEquals(testBatch.getBatchID() + "-3", unmappedFilmRanges.get(2).getFilmShortName());
+        assertTrue(unmappedFilmRanges.get(2).startDate.compareTo(dateFormat.parse("1795-01-17")) == 0);
+        assertTrue(unmappedFilmRanges.get(2).endDate.compareTo(dateFormat.parse("1795-02-28")) == 0);
+        
+        assertEquals(testBatch.getBatchID() + "-4", unmappedFilmRanges.get(3).getFilmShortName());
+        assertTrue(unmappedFilmRanges.get(3).startDate.compareTo(dateFormat.parse("1795-02-01")) == 0);
+        assertTrue(unmappedFilmRanges.get(3).endDate.compareTo(dateFormat.parse("1795-02-28")) == 0);
+        
+        assertEquals(testBatch.getBatchID() + "-5", unmappedFilmRanges.get(4).getFilmShortName());
+        assertTrue(unmappedFilmRanges.get(4).startDate.compareTo(dateFormat.parse("1795-01-01")) == 0);
+        assertTrue(unmappedFilmRanges.get(4).endDate.compareTo(dateFormat.parse("1795-12-31")) == 0);
+       
+        verifyNoMoreInteractions(resultCollectorMock);
+    }    
+    
 
     private String createBatchXmlDoc(String batchID, String... filmNodes ) {
         StringBuilder xmlStructure = new StringBuilder(
@@ -367,7 +470,7 @@ public class MFpakStructureChecksTest {
         return xmlStructure.toString();
     }
 
-    private String createFilmXml(String batchID, int filmCounter, String... editionDates ) {
+    private String createBatchStructureXml(String batchID, int filmCounter, String... editionDates ) {
 
         StringBuilder xmlStructure = new StringBuilder(
                         "    <node " +
