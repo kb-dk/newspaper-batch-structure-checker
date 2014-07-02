@@ -41,7 +41,7 @@ import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertEquals;
 
 public class MFpakStructureChecksTest {
-/*
+
     @BeforeMethod 
     public void nukeBatchContext() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
         Field contexts = BatchContextUtils.class.getDeclaredField("batchContexts");
@@ -49,7 +49,7 @@ public class MFpakStructureChecksTest {
         Map m = (Map) contexts.get(null);
         m.clear();
     }
-*/    
+    
     @Test(groups = "integrationTest")
     public void testValidate() throws Exception {
         String pathToProperties = System.getProperty("integration.test.newspaper.properties");
@@ -90,11 +90,6 @@ public class MFpakStructureChecksTest {
         when(mfPakDAO.getBatchShipmentDate(eq(batch.getBatchID()))).thenReturn(new Date(0));
 
         BatchContext context = BatchContextUtils.buildBatchContext(mfPakDAO, batch);
-        /* FIXME Caching mfpak requests broke this test, so until someone finds a proper way around this
-            we're stuck with this hack..*/
-        context.getBatchOptions().setOptionB1(false);
-        context.getBatchOptions().setOptionB2(false);
-        context.getBatchOptions().setOptionB9(false);
         MFpakStructureChecks mFpakStructureChecks = new MFpakStructureChecks(context);
 
         ResultCollector resultCollector = new ResultCollector("tool", "version", 1000);
@@ -120,9 +115,6 @@ public class MFpakStructureChecksTest {
         when(mfPakDAO.getBatchShipmentDate(eq(batch.getBatchID()))).thenReturn(new Date(0));
         
         BatchContext context = BatchContextUtils.buildBatchContext(mfPakDAO, batch);
-        /* FIXME Caching mfpak requests broke this test, so until someone finds a proper way around this
-        we're stuck with this hack..*/
-        context.getBatchOptions().setOptionB1(true);
         MFpakStructureChecks mFpakStructureChecks = new MFpakStructureChecks(context);
 
         ResultCollector resultCollector = new ResultCollector("tool", "version", 1000);
@@ -151,12 +143,6 @@ public class MFpakStructureChecksTest {
         when(mfPakDAO.getBatchShipmentDate(eq(batch.getBatchID()))).thenReturn(new Date(0));
         
         BatchContext context = BatchContextUtils.buildBatchContext(mfPakDAO, batch);
-        /* FIXME Caching mfpak requests broke this test, so until someone finds a proper way around this
-        we're stuck with this hack..*/
-        context.getBatchOptions().setOptionB1(false);
-        context.getBatchOptions().setOptionB2(false);
-        context.getBatchOptions().setOptionB9(false);
-        
         MFpakStructureChecks mFpakStructureChecks = new MFpakStructureChecks(context);
 
         ResultCollector resultCollector = new ResultCollector("tool", "version", 1000);
