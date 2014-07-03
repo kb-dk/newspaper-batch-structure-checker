@@ -1,3 +1,6 @@
+1.7
+* Add support for check of partial edition dates
+
 1.6
 * Edition date checking now supports overlapping MFPak dates.
 

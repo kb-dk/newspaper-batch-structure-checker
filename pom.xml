@@ -52,18 +52,18 @@
         <dependency>
             <groupId>dk.statsbiblioteket.newspaper</groupId>
             <artifactId>sboi-doms-autonomous-component</artifactId>
-            <version>1.9-SNAPSHOT</version>
+            <version>1.8</version>
         </dependency>
         <dependency>
             <groupId>dk.statsbiblioteket.newspaper</groupId>
             <artifactId>tree-processor-runnable-component</artifactId>
-            <version>1.9-SNAPSHOT</version>
+            <version>1.8</version>
         </dependency>
 
         <dependency>
             <groupId>dk.statsbiblioteket.newspaper</groupId>
             <artifactId>batch-iterator</artifactId>
-            <version>1.9-SNAPSHOT</version>
+            <version>1.8</version>
         </dependency>
 
         <dependency>
