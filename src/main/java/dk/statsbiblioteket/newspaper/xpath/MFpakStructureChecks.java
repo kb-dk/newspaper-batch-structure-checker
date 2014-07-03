@@ -96,7 +96,7 @@ public class MFpakStructureChecks implements Validator {
 
         List<FilmDateRange> unmappedFilmRanges = buildBatchStructureDateRanges(filmNodes, xpath, resultCollector);
        
-        eliminateUniqueDateRanges(unmappedFilmRanges, mfpakDateRanges); 
+        eliminateUniqueDateRanges(unmappedFilmRanges, mfpakDateRanges);
         
         if(!unmappedFilmRanges.isEmpty()) {
             for(FilmDateRange dateRange : unmappedFilmRanges) {
@@ -137,47 +137,41 @@ public class MFpakStructureChecks implements Validator {
      * Elements remaining in the list after the return of the method could not be uniquely matched to a FilmDateRange. 
      */
     private void eliminateUniqueDateRanges(List<FilmDateRange> filmRanges, List<NewspaperDateRange> mfpakDateRanges) {
-        Map<NewspaperDateRange, Set<FilmDateRange>> matchMatrix = new HashMap<>();
-        
-        // Build the matrix
-        for(NewspaperDateRange dateRange : mfpakDateRanges) {
-            matchMatrix.put(dateRange, new HashSet<FilmDateRange>());
-            for(FilmDateRange filmRange : filmRanges) {
-                if(isFuzzyDateIncluded(dateRange, filmRange.getStartDate()) && isFuzzyDateIncluded(dateRange, filmRange.getEndDate())) {
-                    matchMatrix.get(dateRange).add(filmRange);
-                }
-            }
-        }
-                
-        boolean finishedElimination = false;
-        
-        while(!finishedElimination) {
-            finishedElimination = true;
-            
-            Map<NewspaperDateRange, Set<FilmDateRange>> reducedMatrix = new HashMap<>();
+        Map<NewspaperDateRange, Set<FilmDateRange>> matchMap = new HashMap<>();
+        boolean matchedFound = false;
+
+        while(!matchedFound && filmRanges.size()>0) {
+            matchedFound = true;
+            matchMap = new HashMap<>();
+
             Set<FilmDateRange> eliminatedFilmRanges = new HashSet<>();
             Set<NewspaperDateRange> eliminatedNewspaperRanges = new HashSet<>();
-            
-            for(NewspaperDateRange range : matchMatrix.keySet()) {
-                Set<FilmDateRange> column = matchMatrix.get(range);
-                column.removeAll(eliminatedFilmRanges);
-                if(column.size() == 1) {
-                    finishedElimination = false;
-                    eliminatedFilmRanges.addAll(column);
-                    eliminatedNewspaperRanges.add(range);
-                } else {
-                    reducedMatrix.put(range, column);
+
+            // Build the matchMap
+            for(NewspaperDateRange dateRange : mfpakDateRanges) {
+                matchMap.put(dateRange, new HashSet<FilmDateRange>());
+                for(FilmDateRange filmRange : filmRanges) {
+                    if(isFuzzyDateIncluded(dateRange, filmRange.getStartDate()) && isFuzzyDateIncluded(dateRange, filmRange.getEndDate())) {
+                        matchMap.get(dateRange).add(filmRange);
+                    }
                 }
             }
             
+            for(NewspaperDateRange range : matchMap.keySet()) {
+                Set<FilmDateRange> matchingFilmDateRanges = matchMap.get(range);
+                if(matchingFilmDateRanges.size() == 1) {
+                    matchedFound = false;
+                    eliminatedFilmRanges.addAll(matchingFilmDateRanges);
+                    eliminatedNewspaperRanges.add(range);
+                }
+            }
             filmRanges.removeAll(eliminatedFilmRanges);
             mfpakDateRanges.removeAll(eliminatedNewspaperRanges);
-            matchMatrix = reducedMatrix;
         }
         
-        if(!matchMatrix.isEmpty()) {
-            for(NewspaperDateRange range : matchMatrix.keySet()) {
-                for(FilmDateRange filmRange : matchMatrix.get(range)) {
+        if(!matchMap.isEmpty()) {
+            for(NewspaperDateRange range : matchMap.keySet()) {
+                for(FilmDateRange filmRange : matchMap.get(range)) {
                     filmRange.setMatchedRanges(filmRange.getMatchedRanges() + 1);
                 }
             }
@@ -451,6 +445,14 @@ public class MFpakStructureChecks implements Validator {
         public void setMatchedRanges(int matchedRanges) {
             this.matchedRanges = matchedRanges;
         }
-        
+
+        @Override public String toString() {
+            return "FilmDateRange{" +
+                    "filmShortName='" + filmShortName + '\'' +
+                    ", startDate=" + startDate +
+                    ", endDate=" + endDate +
+                    ", matchedRanges=" + matchedRanges +
+                    '}';
+        }
     }
 }
