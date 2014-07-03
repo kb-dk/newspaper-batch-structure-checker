@@ -151,7 +151,7 @@ public class MFpakStructureChecks implements Validator {
             for(NewspaperDateRange dateRange : mfpakDateRanges) {
                 matchMap.put(dateRange, new HashSet<FilmDateRange>());
                 for(FilmDateRange filmRange : filmRanges) {
-                    if(isFuzzyDateIncluded(dateRange, filmRange.getStartDate()) && isFuzzyDateIncluded(dateRange, filmRange.getEndDate())) {
+                    if(isFilmDateRangeIncluded(dateRange, filmRange)) {
                         matchMap.get(dateRange).add(filmRange);
                     }
                 }
@@ -177,6 +177,10 @@ public class MFpakStructureChecks implements Validator {
             }
         }
         
+    }
+    
+    private boolean isFilmDateRangeIncluded(NewspaperDateRange mfpakRange, FilmDateRange filmRange) {
+        return (isFuzzyDateIncluded(mfpakRange, filmRange.getStartDate()) && isFuzzyDateIncluded(mfpakRange, filmRange.getEndDate()));
     }
     
     private boolean isFuzzyDateIncluded(NewspaperDateRange range, FuzzyDate date) {

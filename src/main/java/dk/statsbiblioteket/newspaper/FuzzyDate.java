@@ -32,7 +32,7 @@ public final class FuzzyDate implements Comparable<FuzzyDate> {
      *        <li>FuzzyDate(2012-03-03).compareTo(FuzzyDate(2012-03-02)) will return 1.</li>
      *        <li>FuzzyDate(2012-03-00).compareTo(FuzzyDate(2012-03-02)) will return 0.</li>
      *        <li>FuzzyDate(2012-03-03).compareTo(FuzzyDate(2012-03-00)) will return 0.</li>
-     *        <li>FuzzyDate(2012-03-00).compareTo(FuzzyDate(2012-00-00)) will return -1.</li>
+     *        <li>FuzzyDate(2012-03-00).compareTo(FuzzyDate(2013-00-00)) will return -1.</li>
      *     </ol>
      * </p>
      * @param date The date to compare this date to.
