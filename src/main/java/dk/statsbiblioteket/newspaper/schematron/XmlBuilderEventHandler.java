@@ -3,7 +3,7 @@ package dk.statsbiblioteket.newspaper.schematron;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.AttributeParsingEvent;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeBeginsParsingEvent;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeEndParsingEvent;
-import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.TreeEventHandler;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.DefaultTreeEventHandler;
 import dk.statsbiblioteket.newspaper.eventhandlers.Util;
 
 import java.io.IOException;
@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * An event handler which builds an XML representation of the directory structure for later validation with schematron.
  */
-public class XmlBuilderEventHandler implements TreeEventHandler {
+public class XmlBuilderEventHandler extends DefaultTreeEventHandler {
 
     int indentSize;
 

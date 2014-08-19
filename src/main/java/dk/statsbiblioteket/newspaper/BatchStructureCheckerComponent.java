@@ -1,23 +1,23 @@
 package dk.statsbiblioteket.newspaper;
 
-import java.io.ByteArrayInputStream;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Properties;
-
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.TreeProcessorAbstractRunnableComponent;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.EventHandlerFactory;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.EventRunner;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.TreeEventHandler;
+import dk.statsbiblioteket.newspaper.eventhandlers.BatchStructureEventHandlerFactory;
 import dk.statsbiblioteket.newspaper.mfpakintegration.batchcontext.BatchContext;
 import dk.statsbiblioteket.newspaper.mfpakintegration.batchcontext.BatchContextUtils;
-import dk.statsbiblioteket.newspaper.eventhandlers.BatchStructureEventHandlerFactory;
 import dk.statsbiblioteket.newspaper.mfpakintegration.database.MfPakDAO;
 import dk.statsbiblioteket.newspaper.schematron.StructureValidator;
 import dk.statsbiblioteket.newspaper.schematron.XmlBuilderEventHandler;
 import dk.statsbiblioteket.newspaper.xpath.MFpakStructureChecks;
+
+import java.io.ByteArrayInputStream;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Properties;
 
 /** Checks the directory structure of a batch. This should run both at Ninestars and at SB. */
 public class BatchStructureCheckerComponent extends TreeProcessorAbstractRunnableComponent {
@@ -59,9 +59,10 @@ public class BatchStructureCheckerComponent extends TreeProcessorAbstractRunnabl
         }
         EventHandlerFactory eventHandlerFactory =
                 new BatchStructureEventHandlerFactory(getProperties(), resultCollector);
-        EventRunner eventRunner = new EventRunner(createIterator(batch));
         final List<TreeEventHandler> eventHandlers = eventHandlerFactory.createEventHandlers();
-        eventRunner.runEvents(eventHandlers, resultCollector);
+        EventRunner eventRunner = new EventRunner(createIterator(batch), eventHandlers, resultCollector);
+
+        eventRunner.run();
         String xml = null;
         //Need to find handler in the list returned by the EventHandlerFactory was the xml builder. One could imagine
         // refactoring

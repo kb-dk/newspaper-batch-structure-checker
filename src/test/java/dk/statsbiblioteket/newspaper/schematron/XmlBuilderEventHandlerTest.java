@@ -33,11 +33,11 @@ public class XmlBuilderEventHandlerTest {
         String checksumPostFix = properties.getProperty("checksumPostfix",".md5");
         TreeIterator iterator = new TransformingIteratorForFileSystems(new File(pathToTestBatch + "/" + "small-test-batch/B400022028241-RT1")
                 ,groupingChar,dataFilePattern,checksumPostFix);
-        EventRunner eventRunner = new EventRunner(iterator);
         List<TreeEventHandler> handlers = new ArrayList<TreeEventHandler>();
         XmlBuilderEventHandler xmlBuilderEventHandler = new XmlBuilderEventHandler();
         handlers.add(xmlBuilderEventHandler);
-        eventRunner.runEvents(handlers, null);
+        EventRunner eventRunner = new EventRunner(iterator, handlers, null);
+        eventRunner.run();
         String xml = xmlBuilderEventHandler.getXml();
         assertTrue(xml.split("<node").length > 10, "Should be at least 10 nodes in document.");
         assertTrue(xml.split("<attribute").length > 10, "Should be at least 10 nodes in document.");

@@ -63,11 +63,11 @@ public class StructureValidatorTest {
         String path = pathToTestBatch + "/" + "small-test-batch/B400022028241-RT1";
         TreeIterator iterator = new TransformingIteratorForFileSystems(new File(path), groupingChar,
                 dataFilePattern, checksumPostFix);
-        EventRunner eventRunner = new EventRunner(iterator);
         List<TreeEventHandler> handlers = new ArrayList<TreeEventHandler>();
         XmlBuilderEventHandler xmlBuilderEventHandler = new XmlBuilderEventHandler();
         handlers.add(xmlBuilderEventHandler);
-        eventRunner.runEvents(handlers, resultCollector);
+        EventRunner eventRunner = new EventRunner(iterator, handlers, resultCollector);
+        eventRunner.run();
 
         String xml = xmlBuilderEventHandler.getXml();
         //System.out.println(xml);
@@ -105,11 +105,12 @@ public class StructureValidatorTest {
         File batchRoot = new File(pathToTestBatch + "/" + "bad-bad-batch/B400022028241-RT1");
         TreeIterator iterator = new TransformingIteratorForFileSystems(batchRoot, groupingChar,
                 dataFilePattern,checksumPostFix);
-        EventRunner eventRunner = new EventRunner(iterator);
         List<TreeEventHandler> handlers = new ArrayList<TreeEventHandler>();
         XmlBuilderEventHandler xmlBuilderEventHandler = new XmlBuilderEventHandler();
         handlers.add(xmlBuilderEventHandler);
-        eventRunner.runEvents(handlers, resultCollector);
+        EventRunner eventRunner = new EventRunner(iterator, handlers, resultCollector);
+
+        eventRunner.run();
         String xml = xmlBuilderEventHandler.getXml();
 
         MfPakConfiguration mfPakConfiguration = new MfPakConfiguration();
