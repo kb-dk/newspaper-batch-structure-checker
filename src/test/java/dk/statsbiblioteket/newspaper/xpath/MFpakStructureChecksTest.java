@@ -1,5 +1,22 @@
 package dk.statsbiblioteket.newspaper.xpath;
 
+import dk.statsbiblioteket.medieplatform.autonomous.Batch;
+import dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants;
+import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
+import dk.statsbiblioteket.newspaper.BatchStructureCheckerComponent;
+import dk.statsbiblioteket.newspaper.mfpakintegration.batchcontext.BatchContext;
+import dk.statsbiblioteket.newspaper.mfpakintegration.batchcontext.BatchContextUtils;
+import dk.statsbiblioteket.newspaper.mfpakintegration.configuration.MfPakConfiguration;
+import dk.statsbiblioteket.newspaper.mfpakintegration.database.MfPakDAO;
+import dk.statsbiblioteket.newspaper.mfpakintegration.database.NewspaperBatchOptions;
+import dk.statsbiblioteket.newspaper.mfpakintegration.database.NewspaperDateRange;
+import dk.statsbiblioteket.util.xml.DOM;
+import dk.statsbiblioteket.util.xml.XPathSelector;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+
 import java.io.FileInputStream;
 import java.lang.reflect.Field;
 import java.text.DateFormat;
@@ -11,34 +28,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import dk.statsbiblioteket.medieplatform.autonomous.Batch;
-import dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants;
-import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
-import dk.statsbiblioteket.newspaper.BatchStructureCheckerComponent;
-import dk.statsbiblioteket.newspaper.mfpakintegration.batchcontext.BatchContext;
-import dk.statsbiblioteket.newspaper.mfpakintegration.batchcontext.BatchContextUtils;
-import dk.statsbiblioteket.newspaper.mfpakintegration.configuration.MfPakConfiguration;
-import dk.statsbiblioteket.newspaper.mfpakintegration.database.MfPakDAO;
-import dk.statsbiblioteket.newspaper.mfpakintegration.database.NewspaperBatchOptions;
-import dk.statsbiblioteket.newspaper.mfpakintegration.database.NewspaperDateRange;
-import dk.statsbiblioteket.newspaper.xpath.MFpakStructureChecks.FilmDateRange;
-import dk.statsbiblioteket.util.xml.DOM;
-import dk.statsbiblioteket.util.xml.XPathSelector;
-
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-
 import static org.mockito.Matchers.anyVararg;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.assertEquals;
 
 public class MFpakStructureChecksTest {
 
@@ -63,16 +61,14 @@ public class MFpakStructureChecksTest {
         mfPakConfiguration.setDatabaseUser(properties.getProperty(ConfigConstants.MFPAK_USER));
         mfPakConfiguration.setDatabasePassword(properties.getProperty(ConfigConstants.MFPAK_PASSWORD));
         Batch batch = new Batch("400022028241");
-        
-        BatchContext context = BatchContextUtils.buildBatchContext(new MfPakDAO(mfPakConfiguration), batch);
-        MFpakStructureChecks mFpakStructureChecks = new MFpakStructureChecks(context);
-
-        ResultCollector resultCollector = new ResultCollector("tool", "version", 1000);
-        mFpakStructureChecks.validate(batch,
-                Thread.currentThread()
-                      .getContextClassLoader()
-                      .getResourceAsStream("assumed-valid-structure.xml"),
-                resultCollector);
+        try(final MfPakDAO mfPakDAO = new MfPakDAO(mfPakConfiguration)) {
+            BatchContext context = BatchContextUtils.buildBatchContext(mfPakDAO, batch);
+            MFpakStructureChecks mFpakStructureChecks = new MFpakStructureChecks(context);
+            ResultCollector resultCollector = new ResultCollector("tool", "version", 1000);
+            mFpakStructureChecks.validate(batch,
+                    Thread.currentThread().getContextClassLoader().getResourceAsStream("assumed-valid-structure.xml"),
+                    resultCollector);
+        }
     }
 
     @Test

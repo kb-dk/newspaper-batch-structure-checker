@@ -38,20 +38,20 @@ public class BatchStructureCheckerComponentIT {
         mfPakConfiguration.setDatabaseUrl(properties.getProperty(ConfigConstants.MFPAK_URL));
         mfPakConfiguration.setDatabaseUser(properties.getProperty(ConfigConstants.MFPAK_USER));
         mfPakConfiguration.setDatabasePassword(properties.getProperty(ConfigConstants.MFPAK_PASSWORD));
-
-        BatchStructureCheckerComponent batchStructureCheckerComponent =
-                new BatchStructureCheckerComponent(properties, new MfPakDAO(mfPakConfiguration));
-
-        ResultCollector resultCollector = new ResultCollector("Batch Structure Checker", "v0.1");
-        Batch batch = new Batch();
-        batch.setBatchID(TEST_BATCH_ID);
-        batch.setRoundTripNumber(1);
-
-        batchStructureCheckerComponent.doWorkOnBatch(batch, resultCollector);
-        if (!resultCollector.isSuccess()) {
-            System.out.println(resultCollector.toReport());
+        try (final MfPakDAO mfPakDao = new MfPakDAO(mfPakConfiguration)) {
+            BatchStructureCheckerComponent batchStructureCheckerComponent = new BatchStructureCheckerComponent(
+                    properties,
+                    mfPakDao);
+            ResultCollector resultCollector = new ResultCollector("Batch Structure Checker", "v0.1");
+            Batch batch = new Batch();
+            batch.setBatchID(TEST_BATCH_ID);
+            batch.setRoundTripNumber(1);
+            batchStructureCheckerComponent.doWorkOnBatch(batch, resultCollector);
+            if (!resultCollector.isSuccess()) {
+                System.out.println(resultCollector.toReport());
+            }
+            assertTrue(resultCollector.isSuccess(), "Found failure with run on good batch");
         }
-        assertTrue(resultCollector.isSuccess(), "Found failure with run on good batch");
     }
 
     /** Tests that the BatchStructureChecker can parse a production like batch which contain failures. */
@@ -95,19 +95,18 @@ public class BatchStructureCheckerComponentIT {
         mfPakConfiguration.setDatabaseUrl(properties.getProperty(ConfigConstants.MFPAK_URL));
         mfPakConfiguration.setDatabaseUser(properties.getProperty(ConfigConstants.MFPAK_USER));
         mfPakConfiguration.setDatabasePassword(properties.getProperty(ConfigConstants.MFPAK_PASSWORD));
-
-
-        BatchStructureCheckerComponent batchStructureCheckerComponent =
-                new BatchStructureCheckerComponent(properties, new MfPakDAO(mfPakConfiguration));
-
-        ResultCollector resultCollector = new ResultCollector("Batch Structure Checker", "v0.1");
-        Batch batch = new Batch();
-        batch.setBatchID(TEST_BATCH_ID);
-        batch.setRoundTripNumber(1);
-
-        batchStructureCheckerComponent.doWorkOnBatch(batch, resultCollector);
-        assertFalse(resultCollector.isSuccess());
-        System.out.println("Found " + Util.countFailures(resultCollector) + " failures.");
+        try(final MfPakDAO mfPakDao = new MfPakDAO(mfPakConfiguration)) {
+            BatchStructureCheckerComponent batchStructureCheckerComponent = new BatchStructureCheckerComponent(
+                    properties,
+                    mfPakDao);
+            ResultCollector resultCollector = new ResultCollector("Batch Structure Checker", "v0.1");
+            Batch batch = new Batch();
+            batch.setBatchID(TEST_BATCH_ID);
+            batch.setRoundTripNumber(1);
+            batchStructureCheckerComponent.doWorkOnBatch(batch, resultCollector);
+            assertFalse(resultCollector.isSuccess());
+            System.out.println("Found " + Util.countFailures(resultCollector) + " failures.");
+        }
     }
 
     private File createTempDir() throws IOException {

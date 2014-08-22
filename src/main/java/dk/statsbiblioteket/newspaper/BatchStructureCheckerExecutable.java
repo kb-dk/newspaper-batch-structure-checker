@@ -46,10 +46,11 @@ public class BatchStructureCheckerExecutable {
         mfPakConfiguration.setDatabasePassword(properties.getProperty(ConfigConstants.MFPAK_PASSWORD));
 
         //make a new runnable component from the properties
-        RunnableComponent component = new BatchStructureCheckerComponent(properties, new MfPakDAO(mfPakConfiguration));
-
-        CallResult result = SBOIDomsAutonomousComponentUtils.startAutonomousComponent(properties, component);
-        log.info(result.toString());
-        return result.containsFailures();
+        try(final MfPakDAO mfPakDao = new MfPakDAO(mfPakConfiguration)) {
+            RunnableComponent component = new BatchStructureCheckerComponent(properties, mfPakDao);
+            CallResult result = SBOIDomsAutonomousComponentUtils.startAutonomousComponent(properties, component);
+            log.info(result.toString());
+            return result.containsFailures();
+        }
     }
 }
