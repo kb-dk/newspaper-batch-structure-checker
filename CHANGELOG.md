@@ -1,3 +1,7 @@
+1.8
+* Update to version 1.10 of batch event framework
+* Update to version 1.10 of mfpak integration 
+
 1.7
 * Add support for check of partial edition dates
 
