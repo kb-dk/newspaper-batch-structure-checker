@@ -44,7 +44,7 @@ public class BatchStructureCheckerComponent extends TreeProcessorAbstractRunnabl
      *
      * @throws IOException
      */
-    public void doWorkOnBatch(Batch batch,
+    public void doWorkOnItem(Batch batch,
                               ResultCollector resultCollector) throws Exception {
         BatchContext context;
         try {

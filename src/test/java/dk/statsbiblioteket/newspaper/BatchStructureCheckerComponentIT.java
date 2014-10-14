@@ -46,7 +46,7 @@ public class BatchStructureCheckerComponentIT {
             Batch batch = new Batch();
             batch.setBatchID(TEST_BATCH_ID);
             batch.setRoundTripNumber(1);
-            batchStructureCheckerComponent.doWorkOnBatch(batch, resultCollector);
+            batchStructureCheckerComponent.doWorkOnItem(batch, resultCollector);
             if (!resultCollector.isSuccess()) {
                 System.out.println(resultCollector.toReport());
             }
@@ -73,7 +73,7 @@ public class BatchStructureCheckerComponentIT {
           batch.setBatchID(TEST_BATCH_ID);
           batch.setRoundTripNumber(1);
 
-          batchStructureCheckerComponent.doWorkOnBatch(batch, resultCollector);
+          batchStructureCheckerComponent.doWorkOnItem(batch, resultCollector);
           if (!resultCollector.isSuccess()) {
               System.out.println(resultCollector.toReport());
           }
@@ -103,7 +103,7 @@ public class BatchStructureCheckerComponentIT {
             Batch batch = new Batch();
             batch.setBatchID(TEST_BATCH_ID);
             batch.setRoundTripNumber(1);
-            batchStructureCheckerComponent.doWorkOnBatch(batch, resultCollector);
+            batchStructureCheckerComponent.doWorkOnItem(batch, resultCollector);
             assertFalse(resultCollector.isSuccess());
             System.out.println("Found " + Util.countFailures(resultCollector) + " failures.");
         }

@@ -1,6 +1,6 @@
 package dk.statsbiblioteket.newspaper;
 
-import dk.statsbiblioteket.medieplatform.autonomous.SBOIDomsAutonomousComponentUtils;
+import dk.statsbiblioteket.medieplatform.autonomous.NewspaperBatchAutonomousComponentUtils;
 import dk.statsbiblioteket.medieplatform.autonomous.CallResult;
 import dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants;
 import dk.statsbiblioteket.medieplatform.autonomous.RunnableComponent;
@@ -21,7 +21,7 @@ public class BatchStructureCheckerExecutable {
      * @param args the arguments.
      *
      * @throws Exception
-     * @see SBOIDomsAutonomousComponentUtils#parseArgs(String[])
+     * @see NewspaperBatchAutonomousComponentUtils#parseArgs(String[])
      */
     public static void main(String... args) throws Exception {
         System.exit(doMain(args));
@@ -32,13 +32,13 @@ public class BatchStructureCheckerExecutable {
      * @param args the arguments.
      *
      * @throws Exception
-     * @see SBOIDomsAutonomousComponentUtils#parseArgs(String[])
+     * @see NewspaperBatchAutonomousComponentUtils#parseArgs(String[])
      */
     private static int doMain(String[] args) throws Exception {
         log.info("Starting with args {}", args);
 
         //Parse the args to a properties construct
-        Properties properties = SBOIDomsAutonomousComponentUtils.parseArgs(args);
+        Properties properties = NewspaperBatchAutonomousComponentUtils.parseArgs(args);
 
         MfPakConfiguration mfPakConfiguration = new MfPakConfiguration();
         mfPakConfiguration.setDatabaseUrl(properties.getProperty(ConfigConstants.MFPAK_URL));
@@ -48,7 +48,7 @@ public class BatchStructureCheckerExecutable {
         //make a new runnable component from the properties
         try(final MfPakDAO mfPakDao = new MfPakDAO(mfPakConfiguration)) {
             RunnableComponent component = new BatchStructureCheckerComponent(properties, mfPakDao);
-            CallResult result = SBOIDomsAutonomousComponentUtils.startAutonomousComponent(properties, component);
+            CallResult result = NewspaperBatchAutonomousComponentUtils.startAutonomousComponent(properties, component);
             log.info(result.toString());
             return result.containsFailures();
         }
