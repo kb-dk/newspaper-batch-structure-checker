@@ -59,11 +59,11 @@ public class StructureValidatorTest {
         properties.setProperty("scratch", pathToTestBatch + "/" + "small-test-batch");
         ResultCollector resultCollector = new ResultCollector("Batch Structure Checker", "v0.1");
         String groupingChar = Pattern.quote(properties.getProperty("groupingChar", "."));
-        String dataFilePattern = properties.getProperty("dataFilePattern", ".*\\.jp2$");
-        String checksumPostFix = properties.getProperty("checksumPostfix",".md5");
+        String dataFilePattern = properties.getProperty("dataFilePattern", TransformingIteratorForFileSystems.DATA_FILE_PATTERN_JP2_VALUE);
+        String checksumPostFix = properties.getProperty("checksumPostfix", TransformingIteratorForFileSystems.CHECKSUM_POSTFIX_DEFAULT_VALUE);
         String path = pathToTestBatch + "/" + "small-test-batch/B400022028241-RT1";
         TreeIterator iterator = new TransformingIteratorForFileSystems(new File(path), groupingChar,
-                dataFilePattern, checksumPostFix, Arrays.asList("transfer_complete", "transfer_acknowledged"));
+                dataFilePattern, checksumPostFix, Arrays.asList(TransformingIteratorForFileSystems.IGNORED_FILES_DEFAULT_VALUE.split(",")));
         List<TreeEventHandler> handlers = new ArrayList<TreeEventHandler>();
         XmlBuilderEventHandler xmlBuilderEventHandler = new XmlBuilderEventHandler();
         handlers.add(xmlBuilderEventHandler);
@@ -101,11 +101,11 @@ public class StructureValidatorTest {
         properties.setProperty("scratch", pathToTestBatch + "/" + "bad-bad-batch");
         ResultCollector resultCollector = new ResultCollector("Batch Structure Checker", "v0.1");
         String groupingChar = Pattern.quote(properties.getProperty("groupingChar", "."));
-        String dataFilePattern = properties.getProperty("dataFilePattern", ".*\\.jp2$");
-        String checksumPostFix = properties.getProperty("checksumPostfix",".md5");
+        String dataFilePattern = properties.getProperty("dataFilePattern", TransformingIteratorForFileSystems.DATA_FILE_PATTERN_JP2_VALUE);
+        String checksumPostFix = properties.getProperty("checksumPostfix",TransformingIteratorForFileSystems.CHECKSUM_POSTFIX_DEFAULT_VALUE);
         File batchRoot = new File(pathToTestBatch + "/" + "bad-bad-batch/B400022028241-RT1");
         TreeIterator iterator = new TransformingIteratorForFileSystems(batchRoot, groupingChar,
-                dataFilePattern,checksumPostFix, Arrays.asList("transfer_complete", "transfer_acknowledged"));
+                dataFilePattern,checksumPostFix, Arrays.asList(TransformingIteratorForFileSystems.IGNORED_FILES_DEFAULT_VALUE.split(",")));
         List<TreeEventHandler> handlers = new ArrayList<TreeEventHandler>();
         XmlBuilderEventHandler xmlBuilderEventHandler = new XmlBuilderEventHandler();
         handlers.add(xmlBuilderEventHandler);

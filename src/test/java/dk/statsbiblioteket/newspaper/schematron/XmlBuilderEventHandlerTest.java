@@ -30,11 +30,10 @@ public class XmlBuilderEventHandlerTest {
         Properties properties = new Properties();
         properties.load(new FileInputStream(pathToProperties));
         properties.setProperty("scratch", pathToTestBatch + "/" + "small-test-batch");String groupingChar = Pattern.quote(properties.getProperty("groupingChar", "."));
-        String dataFilePattern = properties.getProperty("dataFilePattern", ".*\\.jp2$");
-        String checksumPostFix = properties.getProperty("checksumPostfix",".md5");
+        String dataFilePattern = properties.getProperty("dataFilePattern", TransformingIteratorForFileSystems.DATA_FILE_PATTERN_JP2_VALUE);
+        String checksumPostFix = properties.getProperty("checksumPostfix", TransformingIteratorForFileSystems.CHECKSUM_POSTFIX_DEFAULT_VALUE);
         TreeIterator iterator = new TransformingIteratorForFileSystems(new File(pathToTestBatch + "/" + "small-test-batch/B400022028241-RT1")
-                ,groupingChar,dataFilePattern,checksumPostFix, Arrays.asList("transfer_complete",
-                                                                             "transfer_acknowledged"));
+                ,groupingChar,dataFilePattern,checksumPostFix, Arrays.asList(TransformingIteratorForFileSystems.IGNORED_FILES_DEFAULT_VALUE.split(",")));
         List<TreeEventHandler> handlers = new ArrayList<TreeEventHandler>();
         XmlBuilderEventHandler xmlBuilderEventHandler = new XmlBuilderEventHandler();
         handlers.add(xmlBuilderEventHandler);
