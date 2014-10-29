@@ -15,6 +15,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.regex.Pattern;
@@ -62,7 +63,7 @@ public class StructureValidatorTest {
         String checksumPostFix = properties.getProperty("checksumPostfix",".md5");
         String path = pathToTestBatch + "/" + "small-test-batch/B400022028241-RT1";
         TreeIterator iterator = new TransformingIteratorForFileSystems(new File(path), groupingChar,
-                dataFilePattern, checksumPostFix);
+                dataFilePattern, checksumPostFix, Arrays.asList("transfer_complete", "transfer_acknowledged"));
         List<TreeEventHandler> handlers = new ArrayList<TreeEventHandler>();
         XmlBuilderEventHandler xmlBuilderEventHandler = new XmlBuilderEventHandler();
         handlers.add(xmlBuilderEventHandler);
@@ -104,7 +105,7 @@ public class StructureValidatorTest {
         String checksumPostFix = properties.getProperty("checksumPostfix",".md5");
         File batchRoot = new File(pathToTestBatch + "/" + "bad-bad-batch/B400022028241-RT1");
         TreeIterator iterator = new TransformingIteratorForFileSystems(batchRoot, groupingChar,
-                dataFilePattern,checksumPostFix);
+                dataFilePattern,checksumPostFix, Arrays.asList("transfer_complete", "transfer_acknowledged"));
         List<TreeEventHandler> handlers = new ArrayList<TreeEventHandler>();
         XmlBuilderEventHandler xmlBuilderEventHandler = new XmlBuilderEventHandler();
         handlers.add(xmlBuilderEventHandler);

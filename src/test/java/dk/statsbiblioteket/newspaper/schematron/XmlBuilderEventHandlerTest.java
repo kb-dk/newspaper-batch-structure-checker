@@ -10,6 +10,7 @@ import org.testng.annotations.Test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.regex.Pattern;
@@ -32,7 +33,8 @@ public class XmlBuilderEventHandlerTest {
         String dataFilePattern = properties.getProperty("dataFilePattern", ".*\\.jp2$");
         String checksumPostFix = properties.getProperty("checksumPostfix",".md5");
         TreeIterator iterator = new TransformingIteratorForFileSystems(new File(pathToTestBatch + "/" + "small-test-batch/B400022028241-RT1")
-                ,groupingChar,dataFilePattern,checksumPostFix);
+                ,groupingChar,dataFilePattern,checksumPostFix, Arrays.asList("transfer_complete",
+                                                                             "transfer_acknowledged"));
         List<TreeEventHandler> handlers = new ArrayList<TreeEventHandler>();
         XmlBuilderEventHandler xmlBuilderEventHandler = new XmlBuilderEventHandler();
         handlers.add(xmlBuilderEventHandler);
