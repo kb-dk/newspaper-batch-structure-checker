@@ -1,3 +1,6 @@
+1.9
+* Use newest version of item event framework. No functional changes for this module.
+
 1.8
 * Update to version 1.10 of batch event framework
 * Update to version 1.10 of mfpak integration 
