@@ -1,8 +1,8 @@
 package dk.statsbiblioteket.newspaper.eventhandlers;
 
 
-import dk.statsbibliokeket.newspaper.treenode.TreeNode;
-import dk.statsbibliokeket.newspaper.treenode.TreeNodeState;
+import dk.statsbiblioteket.newspaper.treenode.TreeNode;
+import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
 
 /**
 * Created with IntelliJ IDEA.

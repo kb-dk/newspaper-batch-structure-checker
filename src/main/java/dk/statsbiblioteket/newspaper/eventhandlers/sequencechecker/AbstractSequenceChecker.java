@@ -3,8 +3,8 @@ package dk.statsbiblioteket.newspaper.eventhandlers.sequencechecker;
 import java.util.HashMap;
 import java.util.Map;
 
-import dk.statsbibliokeket.newspaper.treenode.NodeType;
-import dk.statsbibliokeket.newspaper.treenode.TreeNodeState;
+import dk.statsbiblioteket.newspaper.treenode.NodeType;
+import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeBeginsParsingEvent;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeEndParsingEvent;
