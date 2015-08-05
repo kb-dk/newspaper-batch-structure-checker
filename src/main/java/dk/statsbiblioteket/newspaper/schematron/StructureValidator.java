@@ -49,6 +49,19 @@ public class StructureValidator implements Validator {
                             InputStream contents,
                             ResultCollector resultCollector) {
         Document document = DOM.streamToDOM(contents);
+        return validate(batch,document,resultCollector);
+    }
+
+        /**
+         * Validate an xml document against this objects schematron and collect any failures.
+         * @param batch The Batch object being validated.
+         * @param document The xml to be validated
+         * @param resultCollector the ResultCollector in which the results are stored.
+         * @return
+         */
+    public boolean validate(Batch batch,
+                            Document document,
+                            ResultCollector resultCollector) {
         boolean success = true;
 
         SchematronOutputType result = null;
