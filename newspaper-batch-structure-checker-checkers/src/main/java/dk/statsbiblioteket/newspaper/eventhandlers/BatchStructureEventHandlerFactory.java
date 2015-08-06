@@ -19,22 +19,11 @@ import dk.statsbiblioteket.newspaper.schematron.XmlBuilderEventHandler;
  * Provides the complete set of structure checkers for the batch structure.
  */
 public class BatchStructureEventHandlerFactory implements EventHandlerFactory {
-    
-    
-    /** mf-pak Database Url property */
-    private final static String MFPAK_DATABASE_URL = "mfpak.postgres.url";
-    private final static String MFPAK_DATABASE_USER = "mfpak.postgres.user";
-    private final static String MFPAK_DATABASE_PASS = "mfpak.postgres.password";
+
     private final ResultCollector resultCollector;
-    private final MfPakConfiguration mfpakConfig;
 
     public BatchStructureEventHandlerFactory(Properties properties, ResultCollector resultCollector) {
         this.resultCollector = resultCollector;
-        //TODO This mfpak initialisation is expected to be replaced by a BatchContext class elsewhere.
-        mfpakConfig = new MfPakConfiguration();
-        mfpakConfig.setDatabaseUrl(properties.getProperty(MFPAK_DATABASE_URL));
-        mfpakConfig.setDatabaseUser(properties.getProperty(MFPAK_DATABASE_USER));
-        mfpakConfig.setDatabasePassword(properties.getProperty(MFPAK_DATABASE_PASS));
     }
 
     @Override
