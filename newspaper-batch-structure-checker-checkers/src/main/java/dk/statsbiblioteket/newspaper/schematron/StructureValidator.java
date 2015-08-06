@@ -5,8 +5,8 @@ import com.phloc.schematron.SchematronException;
 import com.phloc.schematron.pure.SchematronResourcePure;
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
-import dk.statsbiblioteket.newspaper.BatchStructureCheckerComponent;
 import dk.statsbiblioteket.newspaper.Validator;
+import dk.statsbiblioteket.newspaper.structureChecker.Constants;
 import dk.statsbiblioteket.util.Strings;
 import dk.statsbiblioteket.util.xml.DOM;
 import org.oclc.purl.dsdl.svrl.FailedAssert;
@@ -85,11 +85,11 @@ public class StructureValidator implements Validator {
                 message = message.trim().replaceAll("\\s+"," ");
                 if (message.contains(":")) {
                     resultCollector.addFailure(message.substring(0, message.indexOf(':')),
-                            BatchStructureCheckerComponent.TYPE, getClass().getSimpleName(),
+                            Constants.TYPE, getClass().getSimpleName(),
                             message.substring(message.indexOf(':') + 1).trim());
                 } else {
                     resultCollector.addFailure(batch.getFullID(),
-                            BatchStructureCheckerComponent.TYPE, getClass().getSimpleName(),
+                            Constants.TYPE, getClass().getSimpleName(),
                             message);
                 }
             }

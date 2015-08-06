@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import dk.statsbiblioteket.newspaper.structureChecker.Constants;
 import dk.statsbiblioteket.newspaper.treenode.NodeType;
 import dk.statsbiblioteket.newspaper.treenode.TreeNode;
 import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
@@ -13,7 +14,6 @@ import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeBeginsParsingEvent;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeEndParsingEvent;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.DefaultTreeEventHandler;
-import dk.statsbiblioteket.newspaper.BatchStructureCheckerComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -117,7 +117,7 @@ public class PageImageIDSequenceChecker extends DefaultTreeEventHandler {
     }
 
     private void registerFailure(String imageID, String description) {
-        resultCollector.addFailure(imageID, BatchStructureCheckerComponent.TYPE, getClass().getSimpleName(),
+        resultCollector.addFailure(imageID, Constants.TYPE, getClass().getSimpleName(),
                                    description);
     }
 

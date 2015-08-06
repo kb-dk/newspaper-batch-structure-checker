@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import dk.statsbiblioteket.newspaper.structureChecker.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -18,7 +19,6 @@ import org.w3c.dom.NodeList;
 
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
-import dk.statsbiblioteket.newspaper.BatchStructureCheckerComponent;
 import dk.statsbiblioteket.newspaper.FuzzyDate;
 import dk.statsbiblioteket.newspaper.Validator;
 import dk.statsbiblioteket.newspaper.mfpakintegration.batchcontext.BatchContext;
@@ -53,7 +53,7 @@ public class MFpakStructureChecks implements Validator {
         doc = DOM.streamToDOM(contents);
         if (doc == null) {
             resultCollector.addFailure(batch.getFullID(),
-                    BatchStructureCheckerComponent.TYPE,
+                    Constants.TYPE,
                     getClass().getSimpleName(),
                     "2F: Could not parse data structure of " + batch.getFullID());
             return false;
@@ -252,7 +252,7 @@ public class MFpakStructureChecks implements Validator {
                                String description,
                                String... details) {
         resultCollector.addFailure(refToFailedThing,
-                BatchStructureCheckerComponent.TYPE,
+                Constants.TYPE,
                 getClass().getSimpleName(), description, details);
         return false;
     }

@@ -3,13 +3,13 @@ package dk.statsbiblioteket.newspaper.xpath;
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
-import dk.statsbiblioteket.newspaper.BatchStructureCheckerComponent;
 import dk.statsbiblioteket.newspaper.mfpakintegration.batchcontext.BatchContext;
 import dk.statsbiblioteket.newspaper.mfpakintegration.batchcontext.BatchContextUtils;
 import dk.statsbiblioteket.newspaper.mfpakintegration.configuration.MfPakConfiguration;
 import dk.statsbiblioteket.newspaper.mfpakintegration.database.MfPakDAO;
 import dk.statsbiblioteket.newspaper.mfpakintegration.database.NewspaperBatchOptions;
 import dk.statsbiblioteket.newspaper.mfpakintegration.database.NewspaperDateRange;
+import dk.statsbiblioteket.newspaper.structureChecker.Constants;
 import dk.statsbiblioteket.util.xml.DOM;
 import dk.statsbiblioteket.util.xml.XPathSelector;
 import org.testng.annotations.BeforeMethod;
@@ -235,7 +235,7 @@ public class MFpakStructureChecksTest {
         
         verify(resultCollectorMock).addFailure(
                 eq("500022028241-1"),
-                eq(BatchStructureCheckerComponent.TYPE),
+                eq(Constants.TYPE),
                 eq(MFpakStructureChecks.class.getSimpleName()),
                 eq("2F-M3: The date range (1795-06-15 - 1795-06-16) for the film editions are not valid according to " +
                         "any date range from mfpak"),
@@ -243,7 +243,7 @@ public class MFpakStructureChecksTest {
 
         verify(resultCollectorMock).addFailure(
                 eq("B500022028241-RT1"),
-                eq(BatchStructureCheckerComponent.TYPE),
+                eq(Constants.TYPE),
                 eq(MFpakStructureChecks.class.getSimpleName()),
                 eq("2F-M3: There should have been a film covering the dateranges 1795-06-01 - 1795-06-15"),
                 (String)anyVararg());
@@ -310,14 +310,14 @@ public class MFpakStructureChecksTest {
 
         verify(resultCollectorMock).addFailure(
                 eq("500022028241-2"),
-                eq(BatchStructureCheckerComponent.TYPE),
+                eq(Constants.TYPE),
                 eq(MFpakStructureChecks.class.getSimpleName()),
                 eq("2F-M3: The date range (1795-06-13 - 1795-06-16) for the film editions are not valid according " +
                         "to any date range from mfpak"),
                 (String)anyVararg());
         verify(resultCollectorMock).addFailure(
                 eq("B500022028241-RT1"),
-                eq(BatchStructureCheckerComponent.TYPE),
+                eq(Constants.TYPE),
                 eq(MFpakStructureChecks.class.getSimpleName()),
                 eq("2F-M3: There should have been a film covering the dateranges 1795-06-01 - 1795-06-15"),
                 (String)anyVararg());

@@ -23,7 +23,6 @@ import java.util.Properties;
 public class BatchStructureCheckerComponent extends TreeProcessorAbstractRunnableComponent {
 
     public static final String DEMANDS_SCH = "demands.sch";
-    public static final String TYPE = "filestructure";
     private MfPakDAO mfPakDao;
 
     public BatchStructureCheckerComponent(Properties properties,

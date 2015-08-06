@@ -45,7 +45,10 @@
 
     <modules>
         <module>newspaper-batch-structure-checker-component</module>
+        <module>newspaper-batch-structure-checker-common</module>
+        <module>newspaper-batch-structure-checker-checkers</module>
     </modules>
+
 
     <dependencyManagement>
         <dependencies>

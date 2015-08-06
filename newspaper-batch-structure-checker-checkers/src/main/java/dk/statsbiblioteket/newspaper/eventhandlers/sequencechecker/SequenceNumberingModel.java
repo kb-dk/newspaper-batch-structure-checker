@@ -6,7 +6,7 @@ import java.util.List;
 
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.DefaultTreeEventHandler;
-import dk.statsbiblioteket.newspaper.BatchStructureCheckerComponent;
+import dk.statsbiblioteket.newspaper.structureChecker.Constants;
 
 /**
  * Used for building a set of number-name pairs, which can later be verified for completeness. This means:
@@ -71,7 +71,7 @@ public class SequenceNumberingModel extends DefaultTreeEventHandler {
 
     private void addFailure(String reference, String description) {
         resultCollector.addFailure(
-                reference, BatchStructureCheckerComponent.TYPE, getClass().getSimpleName(),
+                reference, Constants.TYPE, getClass().getSimpleName(),
                 descriptionPrefix + description);
     }
 
