@@ -31,7 +31,6 @@
             <groupId>dk.statsbiblioteket.newspaper</groupId>
             <artifactId>batch-iterator</artifactId>
         </dependency>
-        <!--schematron. This must be the first dependency, reason unknown-->
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
