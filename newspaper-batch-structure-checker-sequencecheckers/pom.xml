@@ -10,22 +10,18 @@
         <version>1.10-SNAPSHOT</version>
     </parent>
 
-    <artifactId>newspaper-batch-structure-checker-checkers</artifactId>
-
+    <groupId>dk.statsbiblioteket.newspaper</groupId>
+    <artifactId>newspaper-batch-structure-checker-sequencecheckers</artifactId>
+    <version>1.10-SNAPSHOT</version>
 
     <dependencies>
-        <dependency>
-            <groupId>dk.statsbiblioteket.newspaper</groupId>
-            <artifactId>newspaper-batch-structure-checker-mfpakcheckers</artifactId>
-            <version>1.10-SNAPSHOT</version>
-        </dependency>
 
         <dependency>
             <groupId>dk.statsbiblioteket.newspaper</groupId>
-            <artifactId>newspaper-batch-structure-checker-sequencecheckers</artifactId>
+            <artifactId>newspaper-batch-structure-checker-common</artifactId>
             <version>1.10-SNAPSHOT</version>
         </dependency>
+
 
     </dependencies>
-    
 </project>

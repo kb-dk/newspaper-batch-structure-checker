@@ -12,7 +12,6 @@ import dk.statsbiblioteket.newspaper.eventhandlers.sequencechecker.EditionSequen
 import dk.statsbiblioteket.newspaper.eventhandlers.sequencechecker.FilmSuffixSequenceChecker;
 import dk.statsbiblioteket.newspaper.eventhandlers.sequencechecker.PageImageIDSequenceChecker;
 import dk.statsbiblioteket.newspaper.eventhandlers.sequencechecker.WorkshiftIsoTargetSequenceChecker;
-import dk.statsbiblioteket.newspaper.mfpakintegration.configuration.MfPakConfiguration;
 import dk.statsbiblioteket.newspaper.schematron.XmlBuilderEventHandler;
 
 /**
