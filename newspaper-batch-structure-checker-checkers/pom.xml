@@ -16,6 +16,19 @@
     <dependencies>
         <dependency>
             <groupId>dk.statsbiblioteket.newspaper</groupId>
+            <artifactId>tree-processor-runnable-component</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>dk.statsbiblioteket.newspaper</groupId>
+            <artifactId>newspaper-batch-structure-checker-common</artifactId>
+            <version>1.10-SNAPSHOT</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>dk.statsbiblioteket.newspaper</groupId>
             <artifactId>newspaper-batch-structure-checker-mfpakcheckers</artifactId>
             <version>1.10-SNAPSHOT</version>
         </dependency>

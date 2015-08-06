@@ -10,41 +10,20 @@
 
     <artifactId>newspaper-batch-structure-checker-component</artifactId>
 
-
-
     <dependencies>
-
-
         <dependency>
             <groupId>dk.statsbiblioteket.newspaper</groupId>
             <artifactId>newspaper-batch-structure-checker-checkers</artifactId>
             <version>1.10-SNAPSHOT</version>
         </dependency>
-
-        <dependency>
-            <groupId>dk.statsbiblioteket.newspaper</groupId>
-            <artifactId>tree-processor-runnable-component</artifactId>
-        </dependency>
         <dependency>
             <groupId>dk.statsbiblioteket.newspaper</groupId>
             <artifactId>newspaper-autonomous-component</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>dk.statsbiblioteket.newspaper</groupId>
-            <artifactId>batch-iterator</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>dk.statsbiblioteket.newspaper</groupId>
-            <artifactId>newspaper-mfpak-integration</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jul-to-slf4j</artifactId>
@@ -57,7 +36,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
         </dependency>
-
     </dependencies>
 
     <build>
