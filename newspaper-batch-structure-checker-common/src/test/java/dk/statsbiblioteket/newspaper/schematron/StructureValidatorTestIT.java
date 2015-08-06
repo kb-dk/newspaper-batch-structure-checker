@@ -75,7 +75,7 @@ public class StructureValidatorTestIT {
         EventRunner eventRunner = new EventRunner(iterator, handlers, resultCollector);
         eventRunner.run();
         String xml = xmlBuilderEventHandler.getXml();
-        StructureValidator validator = new StructureValidator("demands.sch");
+        StructureValidator validator = new StructureValidator("newspaper_batch_structure_demands.sch");
         Batch batch = new Batch();
         batch.setRoundTripNumber(1);
         batch.setBatchID("400022028241");

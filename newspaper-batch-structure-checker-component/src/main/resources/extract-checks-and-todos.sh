@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # The purpose of this script is simply to generate a quick list of "checks" (and TODOs) from
-# demands.sch, the checks being all the different things that demands.sch asserts or reports about
+# newspaper_batch_structure_demands.sch, the checks being all the different things that newspaper_batch_structure_demands.sch asserts or reports about
 # the input batch structure in case of an error.
 
 # Extract checks

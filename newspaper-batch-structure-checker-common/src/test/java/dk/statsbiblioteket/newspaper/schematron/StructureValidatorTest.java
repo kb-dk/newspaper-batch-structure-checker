@@ -1,14 +1,12 @@
 package dk.statsbiblioteket.newspaper.schematron;
 
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
-import dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.TreeIterator;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.EventRunner;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.TreeEventHandler;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.filesystem.transforming.TransformingIteratorForFileSystems;
 import dk.statsbiblioteket.newspaper.eventhandlers.Util;
-import dk.statsbiblioteket.newspaper.mfpakintegration.configuration.MfPakConfiguration;
 import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;
@@ -36,7 +34,7 @@ public class StructureValidatorTest {
         @Test()
         public void testValidate() throws Exception {
             ResultCollector resultCollector = new ResultCollector("Batch Structure Checker", "v0.1");
-            StructureValidator validator = new StructureValidator("demands.sch");
+            StructureValidator validator = new StructureValidator("newspaper_batch_structure_demands.sch");
             Batch batch = new Batch();
             batch.setRoundTripNumber(1);
             batch.setBatchID("400022028241");
@@ -73,12 +71,7 @@ public class StructureValidatorTest {
         String xml = xmlBuilderEventHandler.getXml();
         //System.out.println(xml);
 
-        MfPakConfiguration mfPakConfiguration = new MfPakConfiguration();
-        mfPakConfiguration.setDatabaseUrl(properties.getProperty(ConfigConstants.MFPAK_URL));
-        mfPakConfiguration.setDatabaseUser(properties.getProperty(ConfigConstants.MFPAK_USER));
-        mfPakConfiguration.setDatabasePassword(properties.getProperty(ConfigConstants.MFPAK_PASSWORD));
-
-        StructureValidator validator = new StructureValidator("demands.sch");
+        StructureValidator validator = new StructureValidator("newspaper_batch_structure_demands.sch");
         Batch batch = new Batch();
         batch.setRoundTripNumber(1);
         batch.setBatchID("400022028241");
@@ -114,12 +107,7 @@ public class StructureValidatorTest {
         eventRunner.run();
         String xml = xmlBuilderEventHandler.getXml();
 
-        MfPakConfiguration mfPakConfiguration = new MfPakConfiguration();
-        mfPakConfiguration.setDatabaseUrl(properties.getProperty(ConfigConstants.MFPAK_URL));
-        mfPakConfiguration.setDatabaseUser(properties.getProperty(ConfigConstants.MFPAK_USER));
-        mfPakConfiguration.setDatabasePassword(properties.getProperty(ConfigConstants.MFPAK_PASSWORD));
-
-        StructureValidator validator = new StructureValidator("demands.sch");
+        StructureValidator validator = new StructureValidator("newspaper_batch_structure_demands.sch");
         Batch batch = new Batch();
         batch.setRoundTripNumber(1);
         batch.setBatchID("400022028241");

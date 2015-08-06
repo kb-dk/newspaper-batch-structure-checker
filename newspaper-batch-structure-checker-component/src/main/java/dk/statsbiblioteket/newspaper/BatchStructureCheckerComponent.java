@@ -22,7 +22,7 @@ import java.util.Properties;
 /** Checks the directory structure of a batch. This should run both at Ninestars and at SB. */
 public class BatchStructureCheckerComponent extends TreeProcessorAbstractRunnableComponent {
 
-    public static final String DEMANDS_SCH = "demands.sch";
+    public static final String DEMANDS_SCH = "newspaper_batch_structure_demands.sch";
     private MfPakDAO mfPakDao;
 
     public BatchStructureCheckerComponent(Properties properties,

@@ -60,6 +60,12 @@
             </dependency>
 
             <dependency>
+                <groupId>dk.statsbiblioteket.doms.central</groupId>
+                <artifactId>centralWebservice-lib</artifactId>
+                <version>1.18-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
                 <groupId>dk.statsbiblioteket.newspaper</groupId>
                 <artifactId>tree-processor-runnable-component</artifactId>
                 <version>2.10-SNAPSHOT</version>
@@ -109,6 +115,12 @@
                 <artifactId>jcl-over-slf4j</artifactId>
                 <version>1.7.7</version>
             </dependency>
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>2.5</version>
+            </dependency>
+
 
         </dependencies>
     </dependencyManagement>
