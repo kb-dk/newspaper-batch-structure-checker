@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import static dk.statsbiblioteket.newspaper.eventhandlers.Util.getMethodName;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -47,8 +48,9 @@ public class MFpakStructureChecksTest {
         m.clear();
     }
     
-    @Test(groups = "integrationTest")
+    @Test(groups = "externalTest")
     public void testValidate() throws Exception {
+        System.out.println("Running test: " + getMethodName(0));
         String pathToProperties = System.getProperty("integration.test.newspaper.properties");
         String pathToTestBatch = System.getProperty("integration.test.newspaper.testdata");
         Properties properties = new Properties();
@@ -72,6 +74,7 @@ public class MFpakStructureChecksTest {
 
     @Test
     public void testValidateFailForNoAltoOption() throws Exception {
+        System.out.println("Running test: " + getMethodName(0));
         Batch batch = new Batch("400022028241");
 
         MfPakDAO mfPakDAO = mock(MfPakDAO.class);
@@ -125,6 +128,7 @@ public class MFpakStructureChecksTest {
 
     @Test
     public void testValidateSucceedForNoAltoOption() throws Exception {
+        System.out.println("Running test: " + getMethodName(0));
         Batch batch = new Batch("400022028241");
 
         MfPakDAO mfPakDAO = mock(MfPakDAO.class);
@@ -153,6 +157,7 @@ public class MFpakStructureChecksTest {
 
     @Test
     public void testValidateFailForAltoOptionB1() throws Exception {
+        System.out.println("Running test: " + getMethodName(0));
         Batch batch = new Batch("400022028241");
 
         MfPakDAO mfPakDAO = mock(MfPakDAO.class);
@@ -179,6 +184,8 @@ public class MFpakStructureChecksTest {
 
     @Test
     public void testDateValidFilmDates() throws ParseException {
+        System.out.println("Running test: " + getMethodName(0));
+
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Batch testBatch = new Batch("500022028241");
         BatchContext contextMock = mock(BatchContext.class);
@@ -210,6 +217,7 @@ public class MFpakStructureChecksTest {
 
     @Test
     public void testDateInvalidFilmDates() throws ParseException {
+        System.out.println("Running test: " + getMethodName(0));
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Batch testBatch = new Batch("500022028241");
         BatchContext contextMock = mock(BatchContext.class);
@@ -252,6 +260,7 @@ public class MFpakStructureChecksTest {
 
     @Test
     public void testDateRagesWithOverlappingValidFilmDates() throws ParseException {
+        System.out.println("Running test: " + getMethodName(0));
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Batch testBatch = new Batch("500022028241");
         BatchContext contextMock = mock(BatchContext.class);
@@ -283,6 +292,7 @@ public class MFpakStructureChecksTest {
 
     @Test
     public void testDateRangesWithOverlappingInvalidFilmDates() throws ParseException {
+        System.out.println("Running test: " + getMethodName(0));
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Batch testBatch = new Batch("500022028241");
         BatchContext contextMock = mock(BatchContext.class);
@@ -328,6 +338,7 @@ public class MFpakStructureChecksTest {
     
     @Test 
     public void testDateRangesWithOverlappingSubsetFilmDates() throws ParseException {
+        System.out.println("Running test: " + getMethodName(0));
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Batch testBatch = new Batch("500022028241");
         BatchContext contextMock = mock(BatchContext.class);
@@ -359,6 +370,7 @@ public class MFpakStructureChecksTest {
     
     @Test 
     public void testDateRangesFuzzyFilmDates() throws ParseException {
+        System.out.println("Running test: " + getMethodName(0));
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Batch testBatch = new Batch("500022028241");
         BatchContext contextMock = mock(BatchContext.class);
@@ -386,6 +398,7 @@ public class MFpakStructureChecksTest {
     
     @Test 
     public void testFilmDateRangesFuzzyGeneration() throws ParseException {
+        System.out.println("Running test: " + getMethodName(0));
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Batch testBatch = new Batch("500022028241");
         BatchContext contextMock = mock(BatchContext.class);

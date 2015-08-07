@@ -14,6 +14,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+import static dk.statsbiblioteket.newspaper.eventhandlers.Util.getMethodName;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
@@ -28,6 +29,8 @@ public class BatchStructureCheckerComponentIT {
     /** Tests that the BatchStructureChecker can parse a production like batch which contain failures. */
     @Test(groups = "testDataTest")
     public void testGoodBatchStructureCheck() throws Exception {
+        System.out.println("Running test: " + getMethodName(0));
+
         properties.setProperty(ConfigConstants.ITERATOR_FILESYSTEM_BATCHES_FOLDER, pathToTestBatch + "/" + "small-test-batch");
         properties.setProperty(
                 ConfigConstants.AUTONOMOUS_BATCH_STRUCTURE_STORAGE_DIR,
@@ -87,6 +90,8 @@ public class BatchStructureCheckerComponentIT {
      */
     @Test(groups = "testDataTest")
     public void testBadBatchStructureCheck() throws Exception {
+        System.out.println("Running test: " + getMethodName(0));
+
         properties.setProperty(ConfigConstants.ITERATOR_FILESYSTEM_BATCHES_FOLDER, pathToTestBatch + "/" + "bad-bad-batch");
         properties.setProperty(ConfigConstants.AUTONOMOUS_BATCH_STRUCTURE_STORAGE_DIR, pathToTestBatch + "/" + "bad-bad-batch");
         properties.setProperty("batchStructure.storageDir", createTempDir().getAbsolutePath());

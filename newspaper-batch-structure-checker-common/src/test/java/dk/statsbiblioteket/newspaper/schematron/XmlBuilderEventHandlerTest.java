@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
+import static dk.statsbiblioteket.newspaper.eventhandlers.Util.getMethodName;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
@@ -23,8 +24,9 @@ import static org.testng.Assert.assertTrue;
  */
 public class XmlBuilderEventHandlerTest {
 
-    @Test(groups = "integrationTest")
+    @Test(groups = "testDataTest")
     public void testGetXml() throws Exception {
+        System.out.println("Running test: " + getMethodName(0));
         String pathToProperties = System.getProperty("integration.test.newspaper.properties");
         String pathToTestBatch = System.getProperty("integration.test.newspaper.testdata");
         Properties properties = new Properties();

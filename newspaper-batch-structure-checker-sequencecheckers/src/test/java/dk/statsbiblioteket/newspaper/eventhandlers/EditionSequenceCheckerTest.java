@@ -10,6 +10,7 @@ import dk.statsbiblioteket.newspaper.eventhandlers.sequencechecker.EditionSequen
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import static dk.statsbiblioteket.newspaper.eventhandlers.Util.getMethodName;
 import static org.mockito.Mockito.*;
 
 public class EditionSequenceCheckerTest {
@@ -27,6 +28,8 @@ public class EditionSequenceCheckerTest {
 
     @Test
     public void simpleSuccessTest() {
+        System.out.println("Running test: " + getMethodName(0));
+
         registerFilmBegin();
 
         registerEdition("1860-10-18-01");
@@ -38,6 +41,8 @@ public class EditionSequenceCheckerTest {
 
     @Test
     public void highStartFailureTest() {
+        System.out.println("Running test: " + getMethodName(0));
+
         registerFilmBegin();
 
         registerEdition("1860-10-18-02");
@@ -49,6 +54,8 @@ public class EditionSequenceCheckerTest {
 
     @Test
     public void simpleMissingEditionTest() {
+        System.out.println("Running test: " + getMethodName(0));
+
         registerFilmBegin();
 
         registerEdition("1860-10-18-01");
@@ -61,6 +68,8 @@ public class EditionSequenceCheckerTest {
 
     @Test
     public void multipleDatesTest() {
+        System.out.println("Running test: " + getMethodName(0));
+
         registerFilmBegin();
 
         registerEdition("1860-10-18-01");

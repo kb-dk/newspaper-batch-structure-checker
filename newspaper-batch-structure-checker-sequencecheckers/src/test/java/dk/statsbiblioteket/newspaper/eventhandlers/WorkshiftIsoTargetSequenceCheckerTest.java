@@ -10,6 +10,7 @@ import dk.statsbiblioteket.newspaper.eventhandlers.sequencechecker.WorkshiftIsoT
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import static dk.statsbiblioteket.newspaper.eventhandlers.Util.getMethodName;
 import static org.mockito.Mockito.*;
 
 public class WorkshiftIsoTargetSequenceCheckerTest {
@@ -27,6 +28,8 @@ public class WorkshiftIsoTargetSequenceCheckerTest {
 
     @Test
     public void simpleSuccessTest() {
+        System.out.println("Running test: " + getMethodName(0));
+
         registerWorkshiftIsoTargetBegin();
 
         registerWorkshiftTarget("Target-000387-0001");
@@ -38,6 +41,8 @@ public class WorkshiftIsoTargetSequenceCheckerTest {
 
     @Test
     public void pageHighStartFailureTest() {
+        System.out.println("Running test: " + getMethodName(0));
+
         registerWorkshiftIsoTargetBegin();
 
         registerWorkshiftTarget("Target-000387-0002");
@@ -49,6 +54,8 @@ public class WorkshiftIsoTargetSequenceCheckerTest {
 
     @Test
     public void simpleMissingEditionTest() {
+        System.out.println("Running test: " + getMethodName(0));
+
         registerWorkshiftIsoTargetBegin();
 
         registerWorkshiftTarget("Target-000387-0001");
@@ -61,6 +68,8 @@ public class WorkshiftIsoTargetSequenceCheckerTest {
 
     @Test
     public void multipleDatesTest() {
+        System.out.println("Running test: " + getMethodName(0));
+
         registerWorkshiftIsoTargetBegin();
 
         registerWorkshiftTarget("Target-000387-0001");

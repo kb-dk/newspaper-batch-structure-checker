@@ -11,6 +11,7 @@ import dk.statsbiblioteket.newspaper.eventhandlers.sequencechecker.PageImageIDSe
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import static dk.statsbiblioteket.newspaper.eventhandlers.Util.getMethodName;
 import static org.mockito.Mockito.*;
 
 public class PageImageIDSequenceCheckerTest {
@@ -28,6 +29,8 @@ public class PageImageIDSequenceCheckerTest {
 
     @Test
     public void pageSimpleSuccessTest() {
+        System.out.println("Running test: " + getMethodName(0));
+
         when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("First page", NodeType.PAGE_IMAGE, null));
         checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0001.jp2"));
         when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Second page", NodeType.PAGE_IMAGE, null));
@@ -41,6 +44,8 @@ public class PageImageIDSequenceCheckerTest {
 
     @Test
     public void pageHighStartFailureTest() {
+        System.out.println("Running test: " + getMethodName(0));
+
         when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("First page", NodeType.PAGE_IMAGE, null));
         checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0004.jp2"));
 
@@ -51,6 +56,8 @@ public class PageImageIDSequenceCheckerTest {
 
     @Test
     public void pageABSuccessTest() {
+        System.out.println("Running test: " + getMethodName(0));
+
         when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("First page", NodeType.PAGE_IMAGE, null));
         checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0001.jp2"));
         when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Second page", NodeType.PAGE_IMAGE, null));
@@ -64,6 +71,8 @@ public class PageImageIDSequenceCheckerTest {
 
     @Test
     public void simpleMissingPageTest() {
+        System.out.println("Running test: " + getMethodName(0));
+
         when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("First page", NodeType.PAGE_IMAGE, null));
         checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0001.jp2"));
         when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Third page", NodeType.PAGE_IMAGE, null));
@@ -76,6 +85,8 @@ public class PageImageIDSequenceCheckerTest {
 
     @Test
     public void missingFinalBPageTest() {
+        System.out.println("Running test: " + getMethodName(0));
+
         when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("First page", NodeType.PAGE_IMAGE, null));
         checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0001.jp2"));
         when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Last page", NodeType.PAGE_IMAGE, null));
@@ -88,6 +99,8 @@ public class PageImageIDSequenceCheckerTest {
 
     @Test
     public void missingBPageTest() {
+        System.out.println("Running test: " + getMethodName(0));
+
         when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("First page", NodeType.PAGE_IMAGE, null));
         checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0001.jp2"));
         when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Second page", NodeType.PAGE_IMAGE, null));
@@ -102,6 +115,8 @@ public class PageImageIDSequenceCheckerTest {
 
     @Test
     public void cPageTest() {
+        System.out.println("Running test: " + getMethodName(0));
+
         when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("First page", NodeType.PAGE_IMAGE, null));
         checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0001.jp2"));
         when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Second page", NodeType.PAGE_IMAGE, null));
@@ -117,6 +132,8 @@ public class PageImageIDSequenceCheckerTest {
 
     @Test
     public void brikPageExclusionTest() {
+        System.out.println("Running test: " + getMethodName(0));
+
         when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Brik page", NodeType.PAGE_IMAGE, null));
         checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0001-brik.jp2"));
         when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("First page", NodeType.PAGE_IMAGE, null));
@@ -132,6 +149,8 @@ public class PageImageIDSequenceCheckerTest {
 
     @Test
     public void cPageMissingBPageTest() {
+        System.out.println("Running test: " + getMethodName(0));
+
         when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("First page", NodeType.PAGE_IMAGE, null));
         checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0001.jp2"));
         when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Second page", NodeType.PAGE_IMAGE, null));
@@ -146,6 +165,8 @@ public class PageImageIDSequenceCheckerTest {
 
     @Test
     public void pageMultiFilmTest() {
+        System.out.println("Running test: " + getMethodName(0));
+
         when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("First page", NodeType.PAGE_IMAGE, null));
         checker.handleNodeBegin(new NodeBeginsParsingEvent("JP2-PAGE_IMAGE-0001.jp2"));
         when(treeNodeState.getCurrentNode()).thenReturn(new TreeNode("Second page", NodeType.PAGE_IMAGE, null));

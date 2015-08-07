@@ -23,6 +23,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
+import static dk.statsbiblioteket.newspaper.eventhandlers.Util.getMethodName;
+import static org.testng.Assert.assertTrue;
+
 /** Integration test for StructureValidator */
 public class StructureValidatorTestIT {
 
@@ -31,10 +34,9 @@ public class StructureValidatorTestIT {
      *
      * @throws Exception
      */
-    @Test(groups = "integrationTest", enabled = true)
+    @Test(groups = "externalTest", enabled = true)
     public void testValidateOnFedora() throws Exception {
-
-        System.out.println("Starting integration test against Fedora instance");
+        System.out.println("Running test: " + getMethodName(0));
         String pathToProperties = System.getProperty("integration.test.newspaper.properties");
         Properties properties = new Properties();
         properties.load(new FileInputStream(pathToProperties));
@@ -61,7 +63,8 @@ public class StructureValidatorTestIT {
                                                                                    "FILM",
                                                                                    "EDITION",
                                                                                    "ALTO",
-                                                                                   "MIX"),
+                                                                                   "MIX",
+                                                                                    "CONTENTS"),
                                                                      Arrays.asList(
                                                                              "info:fedora/fedora-system:def/relations-external#hasPart")),
                                               ConfigConstants.ITERATOR_DATAFILEPATTERN);
@@ -80,7 +83,9 @@ public class StructureValidatorTestIT {
         batch.setRoundTripNumber(1);
         batch.setBatchID("400022028241");
         validator.validate(batch, new ByteArrayInputStream(xml.getBytes("UTF-8")), resultCollector);
+        assertTrue(resultCollector.isSuccess(),resultCollector.toReport());
     }
+
 
 
 }
