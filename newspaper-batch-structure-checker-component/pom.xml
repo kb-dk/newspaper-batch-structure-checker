@@ -60,7 +60,7 @@
                 <version>2.4</version>
                 <configuration>
                     <descriptors>
-                        <descriptor>newspaper-batch-structure-checker-component/src/main/assembly/assembly.xml</descriptor>
+                        <descriptor>src/main/assembly/assembly.xml</descriptor>
                     </descriptors>
                 </configuration>
                 <executions>
