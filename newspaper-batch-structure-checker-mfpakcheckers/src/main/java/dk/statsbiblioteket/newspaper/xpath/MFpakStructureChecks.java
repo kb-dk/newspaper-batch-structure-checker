@@ -1,5 +1,21 @@
 package dk.statsbiblioteket.newspaper.xpath;
 
+import dk.statsbiblioteket.medieplatform.autonomous.Batch;
+import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
+import dk.statsbiblioteket.newspaper.FuzzyDate;
+import dk.statsbiblioteket.newspaper.Validator;
+import dk.statsbiblioteket.newspaper.mfpakintegration.batchcontext.BatchContext;
+import dk.statsbiblioteket.newspaper.mfpakintegration.database.NewspaperBatchOptions;
+import dk.statsbiblioteket.newspaper.mfpakintegration.database.NewspaperDateRange;
+import dk.statsbiblioteket.newspaper.structureChecker.Constants;
+import dk.statsbiblioteket.util.xml.DOM;
+import dk.statsbiblioteket.util.xml.XPathSelector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,23 +25,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import dk.statsbiblioteket.newspaper.structureChecker.Constants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import dk.statsbiblioteket.medieplatform.autonomous.Batch;
-import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
-import dk.statsbiblioteket.newspaper.FuzzyDate;
-import dk.statsbiblioteket.newspaper.Validator;
-import dk.statsbiblioteket.newspaper.mfpakintegration.batchcontext.BatchContext;
-import dk.statsbiblioteket.newspaper.mfpakintegration.database.NewspaperBatchOptions;
-import dk.statsbiblioteket.newspaper.mfpakintegration.database.NewspaperDateRange;
-import dk.statsbiblioteket.util.xml.DOM;
-import dk.statsbiblioteket.util.xml.XPathSelector;
 
 /**
  *  This class performs the structure checks that require information from MFpak.

@@ -1,10 +1,5 @@
 package dk.statsbiblioteket.newspaper.eventhandlers;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-
-import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.EventHandlerFactory;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.TreeEventHandler;
@@ -13,6 +8,11 @@ import dk.statsbiblioteket.newspaper.eventhandlers.sequencechecker.FilmSuffixSeq
 import dk.statsbiblioteket.newspaper.eventhandlers.sequencechecker.PageImageIDSequenceChecker;
 import dk.statsbiblioteket.newspaper.eventhandlers.sequencechecker.WorkshiftIsoTargetSequenceChecker;
 import dk.statsbiblioteket.newspaper.schematron.XmlBuilderEventHandler;
+import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * Provides the complete set of structure checkers for the batch structure.

@@ -1,12 +1,12 @@
 package dk.statsbiblioteket.newspaper.eventhandlers.sequencechecker;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.DefaultTreeEventHandler;
 import dk.statsbiblioteket.newspaper.structureChecker.Constants;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Used for building a set of number-name pairs, which can later be verified for completeness. This means:

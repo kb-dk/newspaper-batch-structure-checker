@@ -3,7 +3,6 @@ package dk.statsbiblioteket.newspaper.eventhandlers;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import org.apache.commons.lang.StringUtils;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 

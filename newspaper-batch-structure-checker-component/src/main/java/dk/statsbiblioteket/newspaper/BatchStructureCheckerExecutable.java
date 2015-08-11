@@ -1,8 +1,8 @@
 package dk.statsbiblioteket.newspaper;
 
-import dk.statsbiblioteket.medieplatform.autonomous.NewspaperBatchAutonomousComponentUtils;
 import dk.statsbiblioteket.medieplatform.autonomous.CallResult;
 import dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants;
+import dk.statsbiblioteket.medieplatform.autonomous.NewspaperBatchAutonomousComponentUtils;
 import dk.statsbiblioteket.medieplatform.autonomous.RunnableComponent;
 import dk.statsbiblioteket.newspaper.mfpakintegration.configuration.MfPakConfiguration;
 import dk.statsbiblioteket.newspaper.mfpakintegration.database.MfPakDAO;
