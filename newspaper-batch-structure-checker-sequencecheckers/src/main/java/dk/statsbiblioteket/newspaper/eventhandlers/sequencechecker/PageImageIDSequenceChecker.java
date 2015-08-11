@@ -1,21 +1,21 @@
 package dk.statsbiblioteket.newspaper.eventhandlers.sequencechecker;
 
+import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeBeginsParsingEvent;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeEndParsingEvent;
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.DefaultTreeEventHandler;
+import dk.statsbiblioteket.newspaper.structureChecker.Constants;
+import dk.statsbiblioteket.newspaper.treenode.NodeType;
+import dk.statsbiblioteket.newspaper.treenode.TreeNode;
+import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
-import dk.statsbiblioteket.newspaper.structureChecker.Constants;
-import dk.statsbiblioteket.newspaper.treenode.NodeType;
-import dk.statsbiblioteket.newspaper.treenode.TreeNode;
-import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
-import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
-import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeBeginsParsingEvent;
-import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeEndParsingEvent;
-import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.DefaultTreeEventHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Checks the the scanned pages are named in sequence without holes and starting with 1. The sequence covers a full film, eg. the UNMATCH dir and all the edition dir for a single film. The rules are: <ol>

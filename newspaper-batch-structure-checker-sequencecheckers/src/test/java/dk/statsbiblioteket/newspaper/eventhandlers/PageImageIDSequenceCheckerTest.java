@@ -1,17 +1,20 @@
 package dk.statsbiblioteket.newspaper.eventhandlers;
 
-import dk.statsbiblioteket.newspaper.treenode.NodeType;
-import dk.statsbiblioteket.newspaper.treenode.TreeNode;
-import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeBeginsParsingEvent;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeEndParsingEvent;
 import dk.statsbiblioteket.newspaper.eventhandlers.sequencechecker.PageImageIDSequenceChecker;
-
+import dk.statsbiblioteket.newspaper.treenode.NodeType;
+import dk.statsbiblioteket.newspaper.treenode.TreeNode;
+import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 public class PageImageIDSequenceCheckerTest {
     private TreeNodeState treeNodeState;

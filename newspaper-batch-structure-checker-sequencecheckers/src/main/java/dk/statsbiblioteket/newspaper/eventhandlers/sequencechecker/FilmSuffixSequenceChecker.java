@@ -1,8 +1,8 @@
 package dk.statsbiblioteket.newspaper.eventhandlers.sequencechecker;
 
+import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.newspaper.treenode.NodeType;
 import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
-import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 
 /**
  * Takes care of checking the film numbering is in sequence without any holes. See

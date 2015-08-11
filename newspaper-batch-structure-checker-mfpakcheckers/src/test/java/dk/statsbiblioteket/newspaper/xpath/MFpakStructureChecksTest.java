@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import static dk.statsbiblioteket.newspaper.eventhandlers.Util.getMethodName;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -47,7 +48,7 @@ public class MFpakStructureChecksTest {
         m.clear();
     }
     
-    @Test(groups = "integrationTest")
+    @Test(groups = "externalTest")
     public void testValidate() throws Exception {
         String pathToProperties = System.getProperty("integration.test.newspaper.properties");
         String pathToTestBatch = System.getProperty("integration.test.newspaper.testdata");
@@ -125,6 +126,7 @@ public class MFpakStructureChecksTest {
 
     @Test
     public void testValidateSucceedForNoAltoOption() throws Exception {
+        System.out.println("Running test: " + getMethodName(0));
         Batch batch = new Batch("400022028241");
 
         MfPakDAO mfPakDAO = mock(MfPakDAO.class);

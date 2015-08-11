@@ -23,7 +23,7 @@ import static org.testng.Assert.assertTrue;
  */
 public class XmlBuilderEventHandlerTest {
 
-    @Test(groups = "integrationTest")
+    @Test(groups = "testDataTest")
     public void testGetXml() throws Exception {
         String pathToProperties = System.getProperty("integration.test.newspaper.properties");
         String pathToTestBatch = System.getProperty("integration.test.newspaper.testdata");

@@ -97,6 +97,12 @@
 
             <dependency>
                 <groupId>dk.statsbiblioteket.newspaper</groupId>
+                <artifactId>tree-processor</artifactId>
+                <version>2.10-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>dk.statsbiblioteket.newspaper</groupId>
                 <artifactId>newspaper-mfpak-integration</artifactId>
                 <version>2.3-SNAPSHOT</version>
             </dependency>

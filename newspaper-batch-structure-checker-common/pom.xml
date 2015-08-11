@@ -24,12 +24,9 @@
             <artifactId>centralWebservice-lib</artifactId>
             <scope>test</scope><!--This is just for the integration tests-->
         </dependency>
-
-
-
         <dependency>
             <groupId>dk.statsbiblioteket.newspaper</groupId>
-            <artifactId>batch-iterator</artifactId>
+            <artifactId>tree-processor</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>

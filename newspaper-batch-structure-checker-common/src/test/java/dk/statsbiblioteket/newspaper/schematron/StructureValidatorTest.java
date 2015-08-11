@@ -48,7 +48,7 @@ public class StructureValidatorTest {
      * Checks that running on a well-structured batch produces no errors.
      * @throws Exception
      */
-    @Test(groups = "integrationTest")
+    @Test(groups = "testDataTest")
     public void testValidateIT() throws Exception {
         String pathToProperties = System.getProperty("integration.test.newspaper.properties");
         String pathToTestBatch = System.getProperty("integration.test.newspaper.testdata");
@@ -85,7 +85,7 @@ public class StructureValidatorTest {
      * Checks that running on a badly-structured batch produces many errors.
      * @throws Exception
      */
-    @Test(groups = "integrationTest", enabled = false)
+    @Test(groups = "testDataTest", enabled = false)
     public void testValidateBadBadBatch() throws Exception {
         String pathToProperties = System.getProperty("integration.test.newspaper.properties");
         String pathToTestBatch = System.getProperty("integration.test.newspaper.testdata");

@@ -3,7 +3,6 @@ package dk.statsbiblioteket.newspaper.eventhandlers;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import org.apache.commons.lang.StringUtils;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -51,5 +50,17 @@ public class Util {
     public static int countFailures(ResultCollector resultCollector) {
         String resultCollectorXml = resultCollector.toReport();
         return StringUtils.countMatches(resultCollectorXml, "<failure>");
+    }
+
+    /**
+     * Get the method name for a depth in call stack. <br />
+     * Utility function
+     * @param depth depth in the call stack (0 means current method, 1 means call method, ...)
+     * @return method name
+     */
+    public static String getMethodName(final int depth)
+    {
+        final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
+        return ste[2+depth].toString();
     }
 }
