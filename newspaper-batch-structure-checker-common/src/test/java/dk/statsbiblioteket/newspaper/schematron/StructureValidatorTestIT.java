@@ -4,7 +4,6 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import dk.statsbiblioteket.doms.central.connectors.EnhancedFedora;
 import dk.statsbiblioteket.doms.central.connectors.EnhancedFedoraImpl;
-import dk.statsbiblioteket.sbutil.webservices.authentication.Credentials;
 import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.ConfigConstants;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
@@ -13,6 +12,7 @@ import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.Event
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.eventhandlers.TreeEventHandler;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.fedora3.ConfigurableFilter;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.fedora3.IteratorForFedora3;
+import dk.statsbiblioteket.sbutil.webservices.authentication.Credentials;
 import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;
@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-import static dk.statsbiblioteket.newspaper.eventhandlers.Util.getMethodName;
 import static org.testng.Assert.assertTrue;
 
 /** Integration test for StructureValidator */
@@ -36,7 +35,6 @@ public class StructureValidatorTestIT {
      */
     @Test(groups = "externalTest", enabled = true)
     public void testValidateOnFedora() throws Exception {
-        System.out.println("Running test: " + getMethodName(0));
         String pathToProperties = System.getProperty("integration.test.newspaper.properties");
         Properties properties = new Properties();
         properties.load(new FileInputStream(pathToProperties));
@@ -83,7 +81,7 @@ public class StructureValidatorTestIT {
         batch.setRoundTripNumber(1);
         batch.setBatchID("400022028241");
         validator.validate(batch, new ByteArrayInputStream(xml.getBytes("UTF-8")), resultCollector);
-        assertTrue(resultCollector.isSuccess(),resultCollector.toReport());
+        assertTrue(resultCollector.isSuccess(), resultCollector.toReport());
     }
 
 

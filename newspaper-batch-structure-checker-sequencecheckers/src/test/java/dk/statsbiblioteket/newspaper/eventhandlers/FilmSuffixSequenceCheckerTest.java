@@ -1,17 +1,21 @@
 package dk.statsbiblioteket.newspaper.eventhandlers;
 
-import dk.statsbiblioteket.newspaper.treenode.NodeType;
-import dk.statsbiblioteket.newspaper.treenode.TreeNode;
-import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeBeginsParsingEvent;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeEndParsingEvent;
 import dk.statsbiblioteket.newspaper.eventhandlers.sequencechecker.FilmSuffixSequenceChecker;
+import dk.statsbiblioteket.newspaper.treenode.NodeType;
+import dk.statsbiblioteket.newspaper.treenode.TreeNode;
+import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static dk.statsbiblioteket.newspaper.eventhandlers.Util.getMethodName;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 public class FilmSuffixSequenceCheckerTest {
     private TreeNodeState treeNodeState;
@@ -41,8 +45,6 @@ public class FilmSuffixSequenceCheckerTest {
 
     @Test
     public void pageHighStartFailureTest() {
-        System.out.println("Running test: " + getMethodName(0));
-
         registerBatchBegin();
 
         registerFilm(2);
@@ -54,8 +56,6 @@ public class FilmSuffixSequenceCheckerTest {
 
     @Test
     public void simpleMissingTargetTest() {
-        System.out.println("Running test: " + getMethodName(0));
-
         registerBatchBegin();
 
         registerFilm(1);

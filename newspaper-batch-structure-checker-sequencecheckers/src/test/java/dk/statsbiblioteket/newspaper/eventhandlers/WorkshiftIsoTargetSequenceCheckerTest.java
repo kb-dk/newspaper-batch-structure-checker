@@ -1,17 +1,20 @@
 package dk.statsbiblioteket.newspaper.eventhandlers;
 
-import dk.statsbiblioteket.newspaper.treenode.NodeType;
-import dk.statsbiblioteket.newspaper.treenode.TreeNode;
-import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeBeginsParsingEvent;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeEndParsingEvent;
 import dk.statsbiblioteket.newspaper.eventhandlers.sequencechecker.WorkshiftIsoTargetSequenceChecker;
+import dk.statsbiblioteket.newspaper.treenode.NodeType;
+import dk.statsbiblioteket.newspaper.treenode.TreeNode;
+import dk.statsbiblioteket.newspaper.treenode.TreeNodeState;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static dk.statsbiblioteket.newspaper.eventhandlers.Util.getMethodName;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 public class WorkshiftIsoTargetSequenceCheckerTest {
     private TreeNodeState treeNodeState;
@@ -28,8 +31,6 @@ public class WorkshiftIsoTargetSequenceCheckerTest {
 
     @Test
     public void simpleSuccessTest() {
-        System.out.println("Running test: " + getMethodName(0));
-
         registerWorkshiftIsoTargetBegin();
 
         registerWorkshiftTarget("Target-000387-0001");
@@ -41,8 +42,6 @@ public class WorkshiftIsoTargetSequenceCheckerTest {
 
     @Test
     public void pageHighStartFailureTest() {
-        System.out.println("Running test: " + getMethodName(0));
-
         registerWorkshiftIsoTargetBegin();
 
         registerWorkshiftTarget("Target-000387-0002");
@@ -54,8 +53,6 @@ public class WorkshiftIsoTargetSequenceCheckerTest {
 
     @Test
     public void simpleMissingEditionTest() {
-        System.out.println("Running test: " + getMethodName(0));
-
         registerWorkshiftIsoTargetBegin();
 
         registerWorkshiftTarget("Target-000387-0001");
@@ -68,8 +65,6 @@ public class WorkshiftIsoTargetSequenceCheckerTest {
 
     @Test
     public void multipleDatesTest() {
-        System.out.println("Running test: " + getMethodName(0));
-
         registerWorkshiftIsoTargetBegin();
 
         registerWorkshiftTarget("Target-000387-0001");

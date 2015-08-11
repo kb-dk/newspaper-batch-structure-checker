@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
-import static dk.statsbiblioteket.newspaper.eventhandlers.Util.getMethodName;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
@@ -34,7 +33,6 @@ public class StructureValidatorTest {
          */
         @Test()
         public void testValidate() throws Exception {
-            System.out.println("Running test: " + getMethodName(0));
             ResultCollector resultCollector = new ResultCollector("Batch Structure Checker", "v0.1");
             StructureValidator validator = new StructureValidator("newspaper_batch_structure_demands.sch");
             Batch batch = new Batch();
@@ -52,8 +50,6 @@ public class StructureValidatorTest {
      */
     @Test(groups = "testDataTest")
     public void testValidateIT() throws Exception {
-        System.out.println(getMethodName(0));
-
         String pathToProperties = System.getProperty("integration.test.newspaper.properties");
         String pathToTestBatch = System.getProperty("integration.test.newspaper.testdata");
         Properties properties = new Properties();
@@ -91,7 +87,6 @@ public class StructureValidatorTest {
      */
     @Test(groups = "testDataTest", enabled = false)
     public void testValidateBadBadBatch() throws Exception {
-        System.out.println("Running test: " + getMethodName(0));
         String pathToProperties = System.getProperty("integration.test.newspaper.properties");
         String pathToTestBatch = System.getProperty("integration.test.newspaper.testdata");
         Properties properties = new Properties();
