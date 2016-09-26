@@ -10,6 +10,23 @@
 
     <artifactId>newspaper-batch-structure-checker-component</artifactId>
 
+    <properties>
+        <doms.username>fedoraAdmin</doms.username>
+        <doms.password>fedoraAdminPass</doms.password>
+        <doms.host>achernar</doms.host>
+        <doms.port>7880</doms.port>
+
+        <mfpak.postgres.url>jdbc:postgresql://achernar/mfpak-devel</mfpak.postgres.url>
+        <mfpak.postgres.username>mfpak</mfpak.postgres.username>
+        <mfpak.postgres.password>JJ1KM0bvVf</mfpak.postgres.password>
+
+        <zookeeper.host>achernar</zookeeper.host>
+        <zookeeper.port>2181</zookeeper.port>
+
+        <sboi.host>achernar</sboi.host>
+        <sboi.port>58608</sboi.port>
+    </properties>
+
     <dependencies>
         <!--schematron. This must be the first dependency, reason unknown-->
         <dependency>
