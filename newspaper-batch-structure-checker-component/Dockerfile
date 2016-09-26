@@ -1,21 +1,27 @@
 FROM openjdk:7-jre
 
-#develro user
-RUN useradd -ms /bin/bash develro
+RUN apt-get update; \
+    apt-get install -y sudo
 
-#Create non-root user
-RUN useradd -ms /bin/bash newspapr
-USER newspapr
+ENV component="newspaper-batch-structure-checker-component-1.10-SNAPSHOT" \
+    user="newspapr"
 
-#Copy component to docker container
-COPY target/newspaper-batch-structure-checker-component-1.10-SNAPSHOT-package.tar.gz /home/newspapr/newspaper-batch-structure-checker-component-package.tar.gz
+# #Create non-root user
+# 2002 just because it does not overlap with anything
+RUN useradd -ms /bin/bash -u 2002 ${user}
 
-#Extract component
+#Copy component to docker container and extract
+ADD target/${component}-package.tar.gz /home/${user}/
 
-#Bake in config
+#Skip the annoying middle layer, create the log folder and chown all to the created user
+RUN mv /home/${user}/${component}/* /home/${user}/; \
+    rm -r /home/${user}/${component}/; \
+    mkdir "/home/${user}/logs"; \
+    chown ${user}:${user} /home/${user} -R
 
-#Run
+VOLUME ["conf", "/home/${user}/logs"]
 
+WORKDIR /home/${user}
+ENTRYPOINT [ "bin/entry.sh" ]
 
-#Show how to make derived docker with other config
 
