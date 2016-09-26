@@ -142,7 +142,7 @@
                     <execution>
                         <!--Push the image to SBs account on docker hub-->
                         <id>push-image</id>
-                        <phase>install</phase>
+                        <phase>deploy</phase>
                         <goals>
                             <goal>push</goal>
                         </goals>
