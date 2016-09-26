@@ -56,6 +56,29 @@
             <directoryMode>
                 775
             </directoryMode>
+            <excludes>
+                <exclude>logback.xml</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <filtered>
+                false
+            </filtered>
+            <directory>
+                src/main/config
+            </directory>
+            <outputDirectory>
+                conf
+            </outputDirectory>
+            <fileMode>
+                664
+            </fileMode>
+            <directoryMode>
+                775
+            </directoryMode>
+            <includes>
+                <include>logback.xml</include>
+            </includes>
         </fileSet>
     </fileSets>
 
