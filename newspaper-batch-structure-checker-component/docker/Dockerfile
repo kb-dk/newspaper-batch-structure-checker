@@ -1,8 +1,5 @@
 FROM openjdk:7-jre
 
-RUN apt-get update; \
-    apt-get install -y sudo
-
 ENV component="newspaper-batch-structure-checker-component-1.10-SNAPSHOT" \
     user="newspapr"
 
@@ -10,8 +7,11 @@ ENV component="newspaper-batch-structure-checker-component-1.10-SNAPSHOT" \
 # 2002 just because it does not overlap with anything
 RUN useradd -ms /bin/bash -u 2002 ${user}
 
+RUN apt-get update; \
+    apt-get install -y sudo
+
 #Copy component to docker container and extract
-ADD target/${component}-package.tar.gz /home/${user}/
+ADD ${component}-package.tar.gz /home/${user}/
 
 #Skip the annoying middle layer, create the log folder and chown all to the created user
 RUN mv /home/${user}/${component}/* /home/${user}/; \
