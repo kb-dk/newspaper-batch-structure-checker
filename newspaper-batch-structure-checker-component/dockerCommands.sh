@@ -20,7 +20,7 @@ docker run \
     -e USER_ID=$(id -u) \
     -v $(pwd)/target/logs:/home/newspapr/logs \
     -v $(pwd)/src/main/config:/home/newspapr/conf \
-    statsbiblioteket/newspaper-batch-structure-checker-component
+    statsbiblioteket/newspaper-batch-structure-checker-component:1.10-SNAPSHOT
 
 #Set the docker users UID to the invoking user. Nessesary for having write permissions to the log dir (if used)
 #   -e USER_ID=$(id -u)
@@ -30,3 +30,6 @@ docker run \
 
 #Specify an external folder with the config files
 #    -v $(pwd)/src/main/config:/home/newspapr/conf \
+
+
+docker run statsbiblioteket/newspaper-batch-structure-checker-component:1.10-SNAPSHOT
