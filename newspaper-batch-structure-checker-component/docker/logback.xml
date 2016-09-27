@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <configuration scan="true">
-    <property name="LOGFILE" value="${user.home}/logs/batch-structure-checker.log"/>
+    <property name="LOGFILE" value="/var/logs/batch-structure-checker.log"/>
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <prudent>true</prudent>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -16,9 +16,17 @@
             <pattern>%date{ISO8601} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%date{ISO8601} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
     <logger name="dk.statsbiblioteket" level="INFO"/>
     <root level="WARN">
         <appender-ref ref="FILE"/>
+        <appender-ref ref="STDOUT"/>
     </root>
+    <logger name="org.apache.zookeeper.ZooKeeper" level="WARN"/>
 
 </configuration>

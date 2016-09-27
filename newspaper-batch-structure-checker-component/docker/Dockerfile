@@ -1,27 +1,16 @@
 FROM openjdk:7-jre
 
-ENV component="newspaper-batch-structure-checker-component-1.10-SNAPSHOT" \
-    user="newspapr"
+ENV component="newspaper-batch-structure-checker-component-1.10-SNAPSHOT"
 
-# #Create non-root user
-# 2002 just because it does not overlap with anything
-RUN useradd -ms /bin/bash -u 2002 ${user}
-
-RUN apt-get update; \
-    apt-get install -y sudo
+WORKDIR /opt/
 
 #Copy component to docker container and extract
-ADD ${component}-package.tar.gz /home/${user}/
+ADD ${component}-package.tar.gz .
 
-#Skip the annoying middle layer, create the log folder and chown all to the created user
-RUN mv /home/${user}/${component}/* /home/${user}/; \
-    rm -r /home/${user}/${component}/; \
-    mkdir "/home/${user}/logs"; \
-    chown ${user}:${user} /home/${user} -R
+WORKDIR /opt/${component}
 
-VOLUME ["conf", "/home/${user}/logs"]
+COPY config.properties logback.xml conf/
 
-WORKDIR /home/${user}
-ENTRYPOINT [ "bin/entry.sh" ]
+ENTRYPOINT [ "java", "-classpath", "conf:lib/*", "dk.statsbiblioteket.newspaper.BatchStructureCheckerExecutable", "-c", "conf/config.properties"]
 
 
