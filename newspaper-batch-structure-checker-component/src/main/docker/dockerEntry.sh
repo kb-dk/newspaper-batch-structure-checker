@@ -4,7 +4,7 @@
 CONFDIR="/opt/${artifactId}/conf"
 
 #Delete it, so we can overrule it
-rm -f $CONFDIR
+rm -fr $CONFDIR
 
 #The /conf folder is a shorthand so people can easily mount another conf folder
 # If we have something in the /conf folder, use that
