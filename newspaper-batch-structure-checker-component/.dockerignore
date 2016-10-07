@@ -1,5 +1,0 @@
-src/
-target/
-!target/newspaper-batch-structure-checker-component-*-package.tar.gz
-*.iml
-pom.xml
