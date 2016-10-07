@@ -22,6 +22,13 @@ docker run \
     -v $(pwd)/src/main/config:/home/newspapr/conf \
     statsbiblioteket/newspaper-batch-structure-checker-component:1.10-SNAPSHOT
 
+
+#TODO the host folders MUST exist before invocation or they will be unreadable inside....
+docker run \
+    -v $(pwd)/target/logs:/home/newspapr/logs \
+    statsbiblioteket/newspaper-batch-structure-checker-component:1.10-SNAPSHOT
+
+
 #Set the docker users UID to the invoking user. Nessesary for having write permissions to the log dir (if used)
 #   -e USER_ID=$(id -u)
 
