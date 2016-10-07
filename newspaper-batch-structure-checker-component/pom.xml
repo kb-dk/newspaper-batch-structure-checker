@@ -143,12 +143,12 @@
                                 </resource>
                                 <resource>
                                     <targetPath>/tmp/</targetPath>
-                                    <directory>src/main/docker</directory>
+                                    <directory>${project.basedir}/src/main/docker</directory>
                                     <include>logback.xml</include>
                                 </resource>
                                 <resource>
                                     <targetPath>/</targetPath>
-                                    <directory>src/main/docker</directory>
+                                    <directory>${project.basedir}/src/main/docker</directory>
                                     <include>dockerEntry.sh</include>
                                 </resource>
                             </resources>
